@@ -2,9 +2,87 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Checkers Game</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="app.js"></script>
+
+    <style>
+        body { background-color: #fff7f7;
+            overflow-x:hidden;
+            overflow-y:hidden;
+            scroll:no;}
+    </style>
 </head>
 <body>
+    <div class="row">
+        <div class="col-md-4" id="div_id_name">
+            <p id="id_name">Enter your name</p>
+            <input id="id_name_value"></input>
+            <button class=".btn" id="button1" onclick="enterName()">Enter</button>
+        </div>
+
+        <!--theDifferentOptionsToPlayAreShown-->
+        <div class="col-md-4 btn-group" id="div_id_menu">
+            <button class=".btn" id="create_room" onclick="create_room()">Create a Room  </button>
+            <button class=".btn" id="join_room" onclick="join_a_room()"> Join a Room </button>
+            <button class=".btn" id="matchmaking" onclick="action_matchmaking()"> Matchmaking </button>
+            <button class=".btn" id="chat" onclick="enter_chat()"> Chat </button>
+        </div>
+    </div>
+
+    <!-- createRoom -->
+    <div class="col-md-4" id="div_id_create_room">
+        <p id="titCrear">Enter the name of the room and the difficulty</p>
+        <input id="room_id"></input>
+
+        <label id="opc" class="radio-inline"><input type="radio" id="radio1" name="optradio" checked="checked">Easy</label>
+        <label id="opc2" class="radio-inline"><input type="radio" id="radio2" name="optradio">Normal</label>
+        <label id="opc3" class="radio-inline"><input type="radio" id="radio3" name="optradio">Hard</label>
+
+        <button class=".btn" id="button2" onclick="enter_game_room()">Create Room</button>
+    </div>
+
+    <!-- Chat -->
+    <div class="col-md-3" id="div_id_chat">
+        <div id="console">
+
+        </div>
+        <div id="divChat">
+            <input type="text" id="mensaje">
+            <button class=".btn" id="btnMsg" onclick="actionMensajeChat()">Send</button>
+        </div>
+    </div>
+
+
+    <!-- The canvas will be hidden at the beginning first the user name will be requested-->
+    <div class="col-md-7" id="canvas">
+        <canvas id="playground" width="640" height="480"></canvas>
+
+        <div id="modal3">
+            <button class=".btn" id="button5" onclick="actionIniciar()">Start</button>
+        </div>
+
+        <div id="cancel">
+            <button class=".btn" id="cancelar" onclick="actionCancelar()"> Cancel </button>
+        </div>
+
+        <div id="modal4">
+            <button class=".btn" id="button6" onclick="actionMuro()">See wall of fame</button>
+        </div>
+    </div>
 
 </body>
 </html>

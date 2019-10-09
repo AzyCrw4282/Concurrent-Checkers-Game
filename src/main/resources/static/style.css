@@ -1,0 +1,56 @@
+#div_id_name{
+    width: 640px;
+    height: 480px;
+    margin-left: 3%;
+    font-family: myFont2;
+
+}
+#id_name{
+    font-size: 170%;
+    margin-top: 20%;
+    margin-left: 32%;
+    font-weight: bold;
+}
+
+#div_id_menu{
+    width: 640px;
+    height: 480px;
+    margin-top: 20%;
+    margin-left: 32%;
+    display: none;
+    font-family: myFont2;
+
+}
+#id_name_value{
+    margin-left: 32%;
+    margin-top: 2%;
+    border-radius: 3px;
+
+}
+.btn-group button {
+    border: 1px solid green; /* Green border */
+    color: white; /* White text */
+    padding: 10px 24px; /* Some padding */
+    cursor: pointer; /* Pointer/hand icon */
+    width: 50%; /* Set a width if needed */
+    display: block; /* Make the buttons appear below each other */
+}
+
+.btn-group button:not(:last-child) {
+    border-bottom: none; /* Prevent double borders */
+}
+
+/* Add a background color on hover */
+.btn-group button:hover {
+    background-color: #3e8e41;
+}
+
+#div_id_create_room{
+    width: 640px;
+    height: 480px;
+    margin-top: 20%;
+    margin-left: 32%;
+    display: none;
+    font-family: myFont2;
+
+}
