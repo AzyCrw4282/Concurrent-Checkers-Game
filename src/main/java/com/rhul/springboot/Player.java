@@ -51,7 +51,7 @@ public class Player {
     }
 
 
-    private synchronized void sendMessage(String msg) throws Exception{
+    public synchronized void sendMessage(String msg) throws Exception{
         try{
             if(this.session.isOpen())
                 this.session.sendMessage(new TextMessage(msg));

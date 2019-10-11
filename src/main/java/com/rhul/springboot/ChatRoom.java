@@ -21,7 +21,7 @@ public class ChatRoom {
 
      */
 
-    private ConcurrentHashMap<Integer,String> players = new ConcurrentHashMap<Integer, String>();
+    private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
 
     AtomicInteger counter;
 
@@ -36,14 +36,14 @@ public class ChatRoom {
         counter.getAndIncrement();
         System.out.println("----------------------roomLIST-----------------");
 
-        for (Player p : players.values()) {
+        for (Player p : players_hm.values()) {
             System.out.println(p.getId());
         }
         System.out.println("----------------------FIN-----------------");
     }
 
     private void sendMsgToAllPlayers(String message){
-        for (Player plyr : player.values()) {
+        for (Player plyr : players_hm.values()) {
             try {
                 plyr.sendMessage(message);
 
@@ -56,7 +56,7 @@ public class ChatRoom {
 
     //Remove a player if it exists
     public boolean removePlayerIfExists(String n){
-        for (Player plyr : players.values()){
+        for (Player plyr : players_hm.values()){
             if (plyr.getName().equals(n)){
                 players.remove(Integer.valueOf(plyr.getId()));
                 return true;
@@ -66,7 +66,7 @@ public class ChatRoom {
     }
 
     private void eliminatePlayerFromRoom(Player playr){
-        players.remove(Integer.valueOf(playr.getID()));
+        players_hm.remove(Integer.valueOf(playr.getID()));
         counter.getAndDecrement();
 
     }
