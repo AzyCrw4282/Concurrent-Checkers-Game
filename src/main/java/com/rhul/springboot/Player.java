@@ -64,7 +64,10 @@ public class Player {
 
 
     //getters and setters achieved through lombok
-
+    //lombok not working!!!
+     public int getId(){
+        return id;
+     }
 
 
 

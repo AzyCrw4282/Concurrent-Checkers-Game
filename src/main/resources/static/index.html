@@ -69,7 +69,133 @@
 
     <!-- The canvas will be hidden at the beginning first the user name will be requested-->
     <div class="col-md-7" id="canvas">
-        <canvas id="playground" width="640" height="480"></canvas>
+<!--        <canvas id="playground" width="640" height="480"></canvas>-->
+
+        <!-- astea 2 sunt puse ca indexarea claselor sa inceapa de la 1 -->
+        <div class="checker white_checker" style="display:none"> </div>
+        <div class="checker black_checker" style="display:none"> </div>
+
+
+
+        <!--        canvas will not be used, instead a div style method to be used. First one defined below-->
+        <div class="square" style="display: none" id ="ht"> </div>
+        <div class="black_background" id="black_background"> </div>
+
+        <div class="score" id="score">
+            <br>
+        </div>
+        <div class="table" style = "display: none" id="table">
+
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+            <div class="checker white_checker"> </div>
+
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+            <div class="checker black_checker"> </div>
+
+
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="square white_square"> </div>
+            <div class="square black_square"> </div>
+            <div class="clear_float"> </div>
+
+        </div>
+
+
 
         <div id="modal3">
             <button class=".btn" id="button5" onclick="actionIniciar()">Start</button>

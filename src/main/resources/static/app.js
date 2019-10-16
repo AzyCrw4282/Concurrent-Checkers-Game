@@ -1,11 +1,156 @@
-
+//global variables
 var user;
 var room;
 var difficulty;
 var players= [];
 var chat = false;
 
+var square_class = document.getElementsByClassName("square");
+var white_checker_class = document.getElementsByClassName("white_checker");
+var black_checker_class = document.getElementsByClassName("black_checker");
+var table = document.getElementById("table");
+var score = document.getElementById("score");
 
+var moveSound = document.getElementById("moveSound");
+var winSound = document.getElementById("winSound");
+var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+var windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+var moveLength = 80 ;
+var moveDeviation = 10;
+var Dimension = 1;
+var selectedPiece,selectedPieceindex;
+var upRight,upLeft,downLeft,downRight;  // toate variantele posibile de mers pt o  dama
+var contor = 0 , gameOver = 0;
+var bigScreen = 1;
+
+var block = [];
+var w_checker = [];
+var b_checker = [];
+var the_checker ;
+var oneMove;
+var anotherMove;
+var mustAttack = false;
+var multiplier = 1; // 2 daca face saritura 1 in caz contrat
+
+var tableLimit,reverse_tableLimit ,  moveUpLeft, moveUpRight, moveDownLeft, moveDownRight , tableLimitLeft, tableLimitRight;
+
+//Code sync with f/e and b/e and some code will be sent to b/e for processing.
+
+//these will have to be changed for new game method
+var square_p = function(square,index){
+    //this.gameId = game_id; //identifies the game of which there can be many
+    this.id = square;
+    this.occupied = false;
+    this.pieceId = undefined;
+    this.id.onclick = function(){
+        // b/e process to send to check for moves
+        makeMove(index);
+
+    }
+};
+
+//these when implemented needs to be uniquely idenfitied for each game
+var checker = function(piece,color,square) {//unique idenfitification for each counter
+    this.id = piece;
+    this.color = color;
+    this.king = false;
+    this.ocupied_square = square;
+    this.alive = true;
+    this.attack = false;
+    if(square%8){
+        this.coordX= square%8;
+        this.coordY = Math.floor(square/8) + 1 ;
+    }
+    else{
+        this.coordX = 8;
+        this.coordY = square/8 ;
+    }
+    //clickable function
+    this.id.onclick = function  () {
+        showMoves(piece);
+    }
+};//identifies each checker
+
+checker.prototype.setCoord = function(X,Y){
+    var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+    var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+    this.id.style.top = y + 'px';
+    this.id.style.left = x + 'px';
+};
+
+checker.prototype.changeCoord = function(X,Y){
+    this.coordY += Y;
+    this.coordX += X;
+};
+
+
+function initialize_game() {
+
+    /*===============initializingThePlayingFields =================================*/
+
+
+    for (var i = 1; i <= 64; i++)
+    {
+
+        block[i] = new square_p(square_class[i], i);
+        console.log("46")
+    }
+
+
+    /*==================================================*/
+
+
+    /*================initializarea white black counters =================================*/
+    console.log("43")
+    // white Ladies
+    for (var i = 1; i <= 4; i++) {
+        w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
+        w_checker[i].setCoord(0, 0);
+        block[2 * i - 1].ocupied = true;
+        block[2 * i - 1].pieceId = w_checker[i];
+    }
+
+    for (var i = 5; i <= 8; i++) {
+        w_checker[i] = new checker(white_checker_class[i], "white", 2 * i);
+        w_checker[i].setCoord(0, 0);
+        block[2 * i].ocupied = true;
+        block[2 * i].pieceId = w_checker[i];
+    }
+
+    for (var i = 9; i <= 12; i++) {
+        w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
+        w_checker[i].setCoord(0, 0);
+        block[2 * i - 1].ocupied = true;
+        block[2 * i - 1].pieceId = w_checker[i];
+    }
+
+    //black Ladies
+    for (var i = 1; i <= 4; i++) {
+        b_checker[i] = new checker(black_checker_class[i], "black", 56 + 2 * i);
+        b_checker[i].setCoord(0, 0);
+        block[56 + 2 * i].ocupied = true;
+        block[56 + 2 * i].pieceId = b_checker[i];
+    }
+
+    for (var i = 5; i <= 8; i++) {
+        b_checker[i] = new checker(black_checker_class[i], "black", 40 + 2 * i - 1);
+        b_checker[i].setCoord(0, 0);
+        block[40 + 2 * i - 1].ocupied = true;
+        block[40 + 2 * i - 1].pieceId = b_checker[i];
+    }
+
+    for (var i = 9; i <= 12; i++) {
+        b_checker[i] = new checker(black_checker_class[i], "black", 24 + 2 * i);
+        b_checker[i].setCoord(0, 0);
+        block[24 + 2 * i].ocupied = true;
+        block[24 + 2 * i].pieceId = b_checker[i];
+    }
+}
+
+
+function makeMove(index){
+
+}
 
 function enterName(){
 
@@ -76,7 +221,7 @@ function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
     document.getElementById('canvas').style.display = "block";
     document.getElementById('div_id_create_room').style.display = "none";
-
+    document.getElementById('table').style.display = "block";
     /*weGetTheValues​​toCreateTheRoom*/
     room = $("#room_id").val();
     comandoSala="Crear";
@@ -88,18 +233,19 @@ function enter_game_room(){
         difficulty = 2;
     }
 
-    /*If we are in the chat we remove the user from the chat*/
-    if (!chat){
-        juego();
-    }else{
-        let data = {"type": "delete", "name": user};
-        game.process_data(data);
-        $("#player-box").text("");
-        chat = false;
-        game.open();
-    }
+    initialize_game();
+    console.log("232")
+    // /*game loop here*/
+    // if (!chat){
+    //     juego();
+    // }else{
+    //     let data = {"type": "delete", "name": user};
+    //     game.process_data(data);
+    //     $("#player-box").text("");
+    //     chat = false;
+    //     game.open();
+    // }
 }
-
 
 class Player {
 
@@ -107,12 +253,6 @@ class Player {
         this.name = name;
     }
 }
-
-
-
-
-
-
 
 
 //A game class
@@ -372,11 +512,6 @@ class Game {
 
 
 }
-
-
-
-
-
 
 
 let game = new Game();

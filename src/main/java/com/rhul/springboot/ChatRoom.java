@@ -32,7 +32,7 @@ public class ChatRoom {
 
 
     private void addPlayerToRoom(Player playr) throws Exception{
-        players.put(playr.getId(), playr);
+        players_hm.put(playr.getId(), playr);
         counter.getAndIncrement();
         System.out.println("----------------------roomLIST-----------------");
 
@@ -48,7 +48,7 @@ public class ChatRoom {
                 plyr.sendMessage(message);
 
             } catch (Throwable ex) {
-                System.err.println("Execption sending message to snake " + snake.getId());
+                System.err.println("Execption sending message to snake " + plyr.getId());
                 ex.printStackTrace(System.err);
             }
         }
@@ -58,7 +58,7 @@ public class ChatRoom {
     public boolean removePlayerIfExists(String n){
         for (Player plyr : players_hm.values()){
             if (plyr.getName().equals(n)){
-                players.remove(Integer.valueOf(plyr.getId()));
+                players_hm.remove(Integer.valueOf(plyr.getId()));
                 return true;
             }
         }
@@ -66,7 +66,7 @@ public class ChatRoom {
     }
 
     private void eliminatePlayerFromRoom(Player playr){
-        players_hm.remove(Integer.valueOf(playr.getID()));
+        players_hm.remove(Integer.valueOf(playr.getId()));
         counter.getAndDecrement();
 
     }
