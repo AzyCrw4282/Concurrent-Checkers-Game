@@ -34,124 +34,6 @@ var multiplier = 1; // 2 daca face saritura 1 in caz contrat
 
 var tableLimit,reverse_tableLimit ,  moveUpLeft, moveUpRight, moveDownLeft, moveDownRight , tableLimitLeft, tableLimitRight;
 
-//Code sync with f/e and b/e and some code will be sent to b/e for processing.
-
-//these will have to be changed for new game method
-var square_p = function(square,index){
-    //this.gameId = game_id; //identifies the game of which there can be many
-    this.id = square;
-    this.occupied = false;
-    this.pieceId = undefined;
-    this.id.onclick = function(){
-        // b/e process to send to check for moves
-        makeMove(index);
-
-    }
-};
-
-//these when implemented needs to be uniquely idenfitied for each game
-var checker = function(piece,color,square) {//unique idenfitification for each counter
-    this.id = piece;
-    this.color = color;
-    this.king = false;
-    this.ocupied_square = square;
-    this.alive = true;
-    this.attack = false;
-    if(square%8){
-        this.coordX= square%8;
-        this.coordY = Math.floor(square/8) + 1 ;
-    }
-    else{
-        this.coordX = 8;
-        this.coordY = square/8 ;
-    }
-    //clickable function
-    this.id.onclick = function  () {
-        showMoves(piece);
-    }
-};//identifies each checker
-
-checker.prototype.setCoord = function(X,Y){
-    var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-    var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-    this.id.style.top = y + 'px';
-    this.id.style.left = x + 'px';
-};
-
-checker.prototype.changeCoord = function(X,Y){
-    this.coordY += Y;
-    this.coordX += X;
-};
-
-
-function initialize_game() {
-
-    /*===============initializingThePlayingFields =================================*/
-
-
-    for (var i = 1; i <= 64; i++)
-    {
-
-        block[i] = new square_p(square_class[i], i);
-        console.log("46")
-    }
-
-
-    /*==================================================*/
-
-
-    /*================initializarea white black counters =================================*/
-    console.log("43")
-    // white Ladies
-    for (var i = 1; i <= 4; i++) {
-        w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
-        w_checker[i].setCoord(0, 0);
-        block[2 * i - 1].ocupied = true;
-        block[2 * i - 1].pieceId = w_checker[i];
-    }
-
-    for (var i = 5; i <= 8; i++) {
-        w_checker[i] = new checker(white_checker_class[i], "white", 2 * i);
-        w_checker[i].setCoord(0, 0);
-        block[2 * i].ocupied = true;
-        block[2 * i].pieceId = w_checker[i];
-    }
-
-    for (var i = 9; i <= 12; i++) {
-        w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
-        w_checker[i].setCoord(0, 0);
-        block[2 * i - 1].ocupied = true;
-        block[2 * i - 1].pieceId = w_checker[i];
-    }
-
-    //black Ladies
-    for (var i = 1; i <= 4; i++) {
-        b_checker[i] = new checker(black_checker_class[i], "black", 56 + 2 * i);
-        b_checker[i].setCoord(0, 0);
-        block[56 + 2 * i].ocupied = true;
-        block[56 + 2 * i].pieceId = b_checker[i];
-    }
-
-    for (var i = 5; i <= 8; i++) {
-        b_checker[i] = new checker(black_checker_class[i], "black", 40 + 2 * i - 1);
-        b_checker[i].setCoord(0, 0);
-        block[40 + 2 * i - 1].ocupied = true;
-        block[40 + 2 * i - 1].pieceId = b_checker[i];
-    }
-
-    for (var i = 9; i <= 12; i++) {
-        b_checker[i] = new checker(black_checker_class[i], "black", 24 + 2 * i);
-        b_checker[i].setCoord(0, 0);
-        block[24 + 2 * i].ocupied = true;
-        block[24 + 2 * i].pieceId = b_checker[i];
-    }
-}
-
-
-function makeMove(index){
-
-}
-
 function enterName(){
 
     user = $("#id_name_value").val();
@@ -247,6 +129,72 @@ function enter_game_room(){
     // }
 }
 
+
+
+
+
+
+
+
+
+
+
+//Code sync with f/e and b/e and some code will be sent to b/e for processing.
+
+//these will have to be changed for new game method
+var square_p = function(square,index){
+    //this.gameId = game_id; //identifies the game of which there can be many
+    this.id = square;
+    this.occupied = false;
+    this.pieceId = undefined;
+    this.id.onclick = function(){
+        // b/e process to send to check for moves
+        makeMove(index);
+
+    }
+};
+
+//these when implemented needs to be uniquely idenfitied for each game
+var checker = function(piece,color,square) {//unique idenfitification for each counter
+    this.id = piece;
+    this.color = color;
+    this.king = false;
+    this.ocupied_square = square;
+    this.alive = true;
+    this.attack = false;
+    if(square%8){
+        this.coordX= square%8;
+        this.coordY = Math.floor(square/8) + 1 ;
+    }
+    else{
+        this.coordX = 8;
+        this.coordY = square/8 ;
+    }
+    //clickable function
+    this.id.onclick = function  () {
+        showMoves(piece);
+    }
+};//identifies each checker
+
+checker.prototype.setCoord = function(X,Y){
+    var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+    var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+    this.id.style.top = y + 'px';
+    this.id.style.left = x + 'px';
+};
+
+checker.prototype.changeCoord = function(X,Y){
+    this.coordY += Y;
+    this.coordX += X;
+};
+
+
+
+
+
+
+
+
 class Player {
 
     constructor(name) {
@@ -277,19 +225,70 @@ class Game {
 
     /*initializeTheGame*/
     //!checkers can be loaded below.
-    initialize() {
+    initialize_game() {
 
-        this.snakes = [];
-        let canvas = document.getElementById('playground');
-        if (!canvas.getContext) {
-            Console.log('Error: 2d canvas is not supported on this browser.');
-            return;
+        /*===============initializingThePlayingFields =================================*/
+        for (var i = 1; i <= 64; i++)
+        {
+            block[i] = new square_p(square_class[i], i);
+            console.log("46")
         }
-        else{
-            this.connect();
+
+        /*================initializarea white black counters =================================*/
+        console.log("43")
+        // white Ladies
+        for (var i = 1; i <= 4; i++) {
+            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
+            w_checker[i].setCoord(0, 0);
+            block[2 * i - 1].ocupied = true;
+            block[2 * i - 1].pieceId = w_checker[i];
         }
+
+        for (var i = 5; i <= 8; i++) {
+            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i);
+            w_checker[i].setCoord(0, 0);
+            block[2 * i].ocupied = true;
+            block[2 * i].pieceId = w_checker[i];
+        }
+
+        for (var i = 9; i <= 12; i++) {
+            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
+            w_checker[i].setCoord(0, 0);
+            block[2 * i - 1].ocupied = true;
+            block[2 * i - 1].pieceId = w_checker[i];
+        }
+
+        //black Ladies
+        for (var i = 1; i <= 4; i++) {
+            b_checker[i] = new checker(black_checker_class[i], "black", 56 + 2 * i);
+            b_checker[i].setCoord(0, 0);
+            block[56 + 2 * i].ocupied = true;
+            block[56 + 2 * i].pieceId = b_checker[i];
+        }
+
+        for (var i = 5; i <= 8; i++) {
+            b_checker[i] = new checker(black_checker_class[i], "black", 40 + 2 * i - 1);
+            b_checker[i].setCoord(0, 0);
+            block[40 + 2 * i - 1].ocupied = true;
+            block[40 + 2 * i - 1].pieceId = b_checker[i];
+        }
+
+        for (var i = 9; i <= 12; i++) {
+            b_checker[i] = new checker(black_checker_class[i], "black", 24 + 2 * i);
+            b_checker[i].setCoord(0, 0);
+            block[24 + 2 * i].ocupied = true;
+            block[24 + 2 * i].pieceId = b_checker[i];
+        }
+    }
+
+    makeMove(index){
 
     }
+
+    showMoves(){
+
+    }
+
 
     /*initializeTheGame*/
     startGameLoop() {
