@@ -30,6 +30,9 @@ getters and setters to be @sync form without lombok
 @Getter @Setter
 public class Player {
 
+    public AtomicInteger playerId = new AtomicInteger(0);
+    public AtomicInteger roomId = new AtomicInteger(0);
+
     private final int id;
     private final String name;
     private ChatRoom room;
@@ -38,11 +41,14 @@ public class Player {
     private int score;
     private int bonus_moves;
 
-    public Player(int id, String name, WebSocketSession session){
-        this.id = id;
-        this.name = name;
-        this.session = session;
-    }
+
+
+
+//    public Player(int id, String name, WebSocketSession session){
+//        this.id = id;
+//        this.name = name;
+//        this.session = session;
+//    }
 
     private void resetState(){
         this.score = 0;

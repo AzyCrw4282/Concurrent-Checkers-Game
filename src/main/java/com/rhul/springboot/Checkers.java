@@ -6,15 +6,18 @@ import lombok.Setter;
 
 @Getter @Setter @NoArgsConstructor
 
-//handles the board related funcs
+//handles the board related funcs. individual object shall also handle
+//the  checking mechanisms and other too . may need to change should
+//rules or something needs to be adapted
 
 public class Checkers {
 
 
-    //keeps track of the board and counters
-    public Checkers(int square_piece, String colour, int square){
+    //keeps track of the board and counters. need this int game_id,
+    public Checkers(int square_piece, String colour, int square){//add , String game_type ltr vrsions
         this.id = square_piece;
         this.colour = colour;
+        this.game_type = game_type;
         this.king = false;
         this.occupiedSquare = square; //n number of occupied, ! eliminated
         this.alive = true;
@@ -49,6 +52,7 @@ public class Checkers {
 
     public void onClick(){
         showMoves(id);
+
     }
 //    this would only be needed in f/e since display not done here
 //    public void setXCoordinates(X,Y){
@@ -58,6 +62,11 @@ public class Checkers {
 //
 //    }
 
+
+    public void setCoordinates(int x ,int y){
+        this.coordX = X;
+        this.coordY = Y;
+    }
 
     public void changeCoordinates(int X, int Y){
         this.coordX = X;
@@ -74,4 +83,42 @@ public class Checkers {
             this.king = true;
         }
     }
+
+    public make_move(){
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

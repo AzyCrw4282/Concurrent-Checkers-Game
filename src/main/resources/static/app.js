@@ -115,26 +115,7 @@ function enter_game_room(){
         difficulty = 2;
     }
 
-    initialize_game();
-    console.log("232")
-    // /*game loop here*/
-    // if (!chat){
-    //     juego();
-    // }else{
-    //     let data = {"type": "delete", "name": user};
-    //     game.process_data(data);
-    //     $("#player-box").text("");
-    //     chat = false;
-    //     game.open();
-    // }
 }
-
-
-
-
-
-
-
 
 
 
@@ -279,6 +260,8 @@ class Game {
             block[24 + 2 * i].ocupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
+
+        this.initialize_game()
     }
 
     makeMove(index){
@@ -339,25 +322,22 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect() {
 
-        this.socket = new WebSocket("ws://127.0.0.1:8080/snake");
+        this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
 
         /*startTheConnection*/
         this.socket.onopen = () => {
 
             // Socket open.. start the game loop.
             Console.log('Info: WebSocket connection opened.');
-            Console.log('Info: Press an arrow key to begin.');
-
             // weSendTheUserToTheServer
             this.open();
         };
 
         /*closeTheConnection*/
         this.socket.onclose = () => {
-            let aux = {"type": "delete", "name": user};
-            game.process_data(aux);
+            let dic = {"type": "delete", "name": user};
+            game.process_data(dic);
             Console.log('Info: WebSocket closed.');
-
             this.stopGameLoop();
         };
 
@@ -383,123 +363,11 @@ class Game {
                 /*removeAPlayerFromTheRoom*/
                 case 'leave':
                     Console.log("SALA"+packet.nombre+'hasLeftTheGame');
-                    this.removeSnake(packet.id);
                     break;
-                /*indicatesThatTheSnakeHasDied*/
-                case 'dead':
-                    Console.log('roomYourSnakeIsDead');
-                    this.direction = 'none';
-                    break;
-                /*indicatesThatYouHaveTakenTheFood*/
-                case 'kill':
-                    Console.log('SALA:foodObtained!');
-                    break;
-                /*indicates if the room has been created successfully or if it already exists*/
-                case 'Okcrear':
-                    if(packet.data==='Ok'){
-                        Console.log('Info: Sala '+sala+" createdSuccessfully");
-                        document.getElementById('crearSala').style.display = "none";
-                    }else{
-                        Console.log('alertTheRoom '+sala+" itAlreadyExists");
-                    }
-                    break;
-                /*indicates if it could be added to the room or if it could not be added*/
-                case 'Okunir':
-                    document.getElementById('cancel').style.display = "none";
-                    if(packet.data==='Ok'){
+                case 'make_move':
+                    console.log("make the move")
+                    this.makeMove()
 
-                        document.getElementById('unirSala').style.display = "none";
-
-                    }else if (packet.data==='NotOk'){
-                        Console.log("alertWaitCanceledTimeOut");
-                        $("#unir").val("");
-                        document.getElementById('cancel').style.display = "none";
-                        document.getElementById('canvas').style.display = "none";
-                        document.getElementById('btnPrinc').style.display = "block";
-                    }else if (packet.data==='NoSalas') {
-                        Console.log("alertThereAreNoRoomsAvailable");
-                        document.getElementById('cancel').style.display = "none";
-                        document.getElementById('canvas').style.display = "none";
-                        document.getElementById('btnPrinc').style.display = "block";
-                    }else{
-                        Console.log("alertTheRoomDoesNotExist");
-                        $("#unir").val("");
-                        document.getElementById('cancel').style.display = "none";
-                        document.getElementById('canvas').style.display = "none";
-                        document.getElementById('btnPrinc').style.display = "block";
-                    }
-                    break;
-                /*write the received message*/
-                case "chat" :
-                    Console.log(packet.mensaje);
-                    break;
-                /*add a player to the players in the chat*/
-                case "player" :
-                    players.push(new Player(packet.name));
-                    updatePlayerBox();
-                    break;
-                /*update all the players that must be in the chat*/
-                case "players" :
-                    var aux = [];
-                    var aux2 = [];
-                    if (packet.list != ""){
-                        aux = packet.list.split(",");
-
-                        for (i = 0;i<aux.length-1 ; i++){
-                            aux2.push(new Player(aux[i]));
-                        }
-
-                        players = aux2;
-                    }else{
-                        players = [];
-                    }
-                    updatePlayerBox();
-                    break;
-                /*Waiting to enter a room is canceled*/
-                case "cancelar" :
-                    Console.log(packet.info);
-                    document.getElementById('cancel').style.display = "none";
-                    break;
-                /*It indicates that the room is full and shows the button to cancel the wait*/
-                case "espera":
-                    Console.log("alertFullRoomWaiting5Seconds");
-                    document.getElementById('cancel').style.display = "block";
-                    break;
-                /*Indicates to the creator of the room that there are already two players and gives him the possibility to start the game*/
-                case 'iniciar':
-                    Console.log("roomYouCanStart");
-                    document.getElementById('modal3').style.display = "block";
-                    break;
-                /*Add food to the game*/
-                case 'comida':
-                    this.añadirComida(packet.x,packet.y,'#FF0000');
-                    break;
-                /*end of game*/
-                case 'fin':
-                    Console.log("roomEndOfGame");
-                    document.getElementById('modal4').style.display = "block";
-                    break;
-
-                case 'empezar':
-                    document.getElementById('modal3').style.display = "none";
-                    break;
-
-                case 'partidasEnJuego':
-                    Console.log("Alert: thereAreGamesAtStakePleaseWait");
-                    document.getElementById('modal4').style.display = "none";
-                    document.getElementById('button6').style.display = "none";
-
-                /*showTheWallOfFame*/
-                case 'muro':
-                    Console.clean();
-                    Console.log("------------------------------");
-                    Console.log("wallOFFAME");
-                    Console.log("------------------------------");
-                    for (var m = 0; m < packet.data.length; m++) {
-                        Console.log("Nombre: "+packet.data[m].Nombre+"\nPuntuacion: "+packet.data[m].Puntuacion);
-                    }
-                    var aux = {"type":"finPartida"};
-                    game.enviar(aux);
 
 
 
@@ -507,14 +375,10 @@ class Game {
         }
     }
 
-
-
-
 }
 
 
 let game = new Game();
-
 
 function start_game(){
     game.initialize();
