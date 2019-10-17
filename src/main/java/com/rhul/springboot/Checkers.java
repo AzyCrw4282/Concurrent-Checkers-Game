@@ -21,6 +21,17 @@ public class Checkers {//for indivial counters
     private int coordX;
     private int coordy;
     private int occupiedSquare;
+    private int selected_piece;
+    Checkers the_checker[];
+
+    int reverse_tableLimit;
+    int tableLimit;
+    int tableLimitRight;
+    int tableLimitLeft;
+    int moveUpRight;
+    int moveUpLeft;
+    int moveDownRight;
+    int moveDownLeft;
 
     //keeps track of the board and counters. need this int game_id,
     public Checkers(int square_piece, String colour, int square){//add , String game_type ltr vrsions
@@ -102,73 +113,106 @@ public class Checkers {//for indivial counters
     public boolean show_moves(Checkers piece){//clciked piece shoudl be passed in here
         boolean match =false;
         boolean must_attack = false;
-        Checkers selected_piece;
+        boolean one_move;
 
-//need to check on this
-//        if(selected_piece == 1){
-//            apply_road_colour(selected_piece);//done on f/e
-//        }
+        if (the_checker == w_checkers){
+            the_checker = b_checkers;
+        }
+        else{
+            the_checker = w_checkers;
+        }
 
+        if(selected_piece > 0){ //refers to id
+            apply_road(selected_piece);//done on f/e
+        }else if (piece.id > 0){
+            selected_piece = piece.id;
+        }
 
-        //check the colour of the selected piece and udpate it
-
-        int i,j;
+        int i =0,j=0;
 
         for (j=1;j<=12;j++){
             if (Checkers.w_checkers[j].equals(piece)){
-                selected_piece = Checkers.w_checkers[j];
+                selected_piece = Checkers.w_checkers[j].id;
+                match = true; //game is on
+                i = j;
             }
             else if (Checkers.b_checkers[j].equals(piece)){
-                selected_piece = Checkers.b_checkers[j];
+                selected_piece = Checkers.b_checkers[j].id;
+                match = true;
             }
         }
 
-        if (!attack_move(selected_piece)){//not attack move then change turns based on colour
+        if (!attack_move(piece)){//not attack move then change turns based on colour
             change_turns(selected_piece);
+            one_move = false;
             return false;
         }
+        if (!match){
+            return (false);
+        }
 
+        if (piece.colour == "White"){
+            tableLimit = 8;
+            tableLimitRight = 1;
+            tableLimitLeft = 8;
+            moveUpRight = 7;
+            moveUpLeft = 9;
+            moveDownRight = - 9;
+            moveDownLeft = -7;
+        }
+        else{// if black
+            tableLimit = 1;
+            tableLimitRight = 8;
+            tableLimitLeft = 1;
+            moveUpRight = -7;
+            moveUpLeft = -9;
+            moveDownRight = 9;
+            moveDownLeft = 7;
+        }
 
+        attack_move(the_checker[i]);
 
+        int up_left=0;
+        int up_right=0;
+        int down_left=0;
+        int down_right=0;
 
-    }
-
-
-
-
-
-
-
-
-    public static void eliminate_check(int index){
-        if (index > 0 && index <65){
-            //need to set to false in the board so its not longer alive
-            int piece_id = CheckersSquare.block[index].getPieceId();
-            CheckersSquare.block[index].setAlive(false);
-            CheckersSquare.block[index].setOccupied(false);
-//            display then need to be set in the f/e
+        if (!must_attack){
+            down_left = check_move(the_checker[i],tableLimit , tableLimitRight , moveUpRight , down_left);
+            down_right = check_move( the_checker[i] , tableLimit , tableLimitLeft , moveUpLeft , down_right);
+            if (the_checker[i].isKing()){
+                up_left = check_move( the_checker[i] , reverse_tableLimit , tableLimitRight , moveDownRight , up_left);
+                up_right = check_move( the_checker[i], reverse_tableLimit , tableLimitLeft , moveDownLeft, up_right);
+            }
+        }
+        if (up_left != 0 || up_right != 0  || down_left != 0 || down_right != 0){//any possible moves
+            return true;
         }
         else{
-            System.out.println("Unable to eleimiate");
+            return false;
         }
+    }
+
+    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection){
+        if (piece.coordy != top_limit){
+            if (piece.coordX != LimitSide && !CheckersSquare.block[piece.occupiedSquare+ moveDirection].isOccupied()){
+                CheckersSquare.block[piece.occupiedSquare + moveDirection].getId();// send colour change to f/e
+                theDirection = piece.occupiedSquare + moveDirection;
+            }
+            else{
+                theDirection = 0;
+            }
+        }
+        else{
+            theDirection = 0
+        }
+        return (theDirection);
 
     }
 
-    public void make_move(int index){
-        boolean isMove = false;
-        if
 
 
 
-
-
-
-
-
-
-
-
-    }
 
     public boolean attack_move(Checkers piece){
         Checkers selected_piece = piece;
@@ -229,6 +273,55 @@ public class Checkers {//for indivial counters
 
 
     }
+
+
+    public void apply_road(){
+
+
+
+
+    }
+
+
+
+
+
+
+    public static void eliminate_check(int index){
+        if (index > 0 && index <65){
+            //need to set to false in the board so its not longer alive
+            int piece_id = CheckersSquare.block[index].getPieceId();
+            CheckersSquare.block[index].setAlive(false);
+            CheckersSquare.block[index].setOccupied(false);
+//            display then need to be set in the f/e
+        }
+        else{
+            System.out.println("Unable to eleimiate");
+        }
+
+    }
+
+
+    //passese in the index of the  square after initiating with tht counter
+    public void make_move(int index){
+        boolean isMove = false;
+        boolean must_attack = false;
+
+        if (selec)
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
 
     public static int check_attack(Checkers piece, int X, int Y, int negX, int negY,int squareMove, int direction ){
         boolean attack_possible = false;

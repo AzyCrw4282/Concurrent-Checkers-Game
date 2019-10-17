@@ -254,55 +254,13 @@ class Game {
         this.connect();
     }
 
+    //This method handles updatign pos on the board
     executeMove(index){
 
     }
 
-    /*initializeTheGame*/
-    startGameLoop() {
-        this.nextFrame = () => {
-            requestAnimationFrame(() => this.run());
-        }
 
-        this.nextFrame();
-    }
 
-    /*forTheGame*/
-    stopGameLoop() {
-        this.nextFrame = null;
-        if (this.interval != null) {
-            clearInterval(this.interval);
-        }
-    }
-
-    /*updateTheGame*/
-    run() {
-
-        while ((new Date).getTime() > this.nextGameTick) {
-            this.nextGameTick += this.skipTicks;
-        }
-        this.draw();
-        this.comida.draw(this.context);
-        if (this.nextFrame != null) {
-            this.nextFrame();
-        }
-
-    }
-
-    /*send the first message of each client to the server*/
-    open() {
-        var aux = {"type": "user", "user": user, "ComandoSala":menu_option,"Sala":room, "difficulty":difficulty};
-        var mens=JSON.stringify(aux);
-        this.socket.send(mens);
-
-        if (chat == false){
-            this.startGameLoop();
-
-            var aux = {"type": "ping"};
-            var mens=JSON.stringify(aux);
-            setInterval(() => this.socket.send(mens), 5000);
-        }
-    }
 
     /*connect to the server and define the socket methods*/
     connect() {
@@ -357,11 +315,60 @@ class Game {
         }
     }
 
+    /*send the first message of each client to the server*/
+    open() {
+        var aux = {"type": "user", "user": user, "ComandoSala":menu_option,"Sala":room, "difficulty":difficulty};
+        var mens=JSON.stringify(aux);
+        this.socket.send(mens);
+
+        if (chat == false){
+            this.startGameLoop();
+
+            var aux = {"type": "ping"};
+            var mens=JSON.stringify(aux);
+            setInterval(() => this.socket.send(mens), 5000);
+        }
+    }
+
+    /*initializeTheGame*/
+    startGameLoop() {
+        this.nextFrame = () => {
+            requestAnimationFrame(() => this.run());
+        }
+
+        this.nextFrame();
+    }
+
+    /*forTheGame*/
+    stopGameLoop() {
+        this.nextFrame = null;
+        if (this.interval != null) {
+            clearInterval(this.interval);
+        }
+    }
+
+
+
+    /*updateTheGame*/
+    run() {
+
+        while ((new Date).getTime() > this.nextGameTick) {
+            this.nextGameTick += this.skipTicks;
+        }
+        this.draw();
+        this.comida.draw(this.context);
+        if (this.nextFrame != null) {
+            this.nextFrame();
+        }
+
+    }
+
+
 }
 
 
 let game = new Game();
 
 function start_game(){
-    game.initialize();
+    game.initialize_game();
 }
