@@ -171,11 +171,6 @@ checker.prototype.changeCoord = function(X,Y){
 
 
 
-
-
-
-
-
 class Player {
 
     constructor(name) {
@@ -196,16 +191,12 @@ class Game {
     constructor(){
         this.socket = null;
         this.fps = 30;
-        this.nextFrame = null;
-        this.interval = null;
-        this.gridSize = 30;
 
         this.skipTicks = 1000 / this.fps;
         this.nextGameTick = (new Date).getTime();
     }
 
     /*initializeTheGame*/
-    //!checkers can be loaded below.
     initialize_game() {
 
         /*===============initializingThePlayingFields =================================*/
@@ -221,7 +212,7 @@ class Game {
         for (var i = 1; i <= 4; i++) {
             w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
             w_checker[i].setCoord(0, 0);
-            block[2 * i - 1].ocupied = true;
+            block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
@@ -260,18 +251,12 @@ class Game {
             block[24 + 2 * i].ocupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
-
-        this.initialize_game()
+        this.connect();
     }
 
-    makeMove(index){
+    executeMove(index){
 
     }
-
-    showMoves(){
-
-    }
-
 
     /*initializeTheGame*/
     startGameLoop() {
@@ -367,9 +352,6 @@ class Game {
                 case 'make_move':
                     console.log("make the move")
                     this.makeMove()
-
-
-
 
             }
         }
