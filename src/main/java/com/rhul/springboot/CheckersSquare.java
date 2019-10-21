@@ -8,7 +8,7 @@ public class CheckersSquare {
 
     private int id;
     private boolean occupied;
-    private int pieceId;
+    private int pieceId;//the id of the piece on the square
     private boolean alive;
 
     //creats 64 squares objects to identify each and all
@@ -35,7 +35,7 @@ public class CheckersSquare {
         return occupied;
     }
 
-    public void setPieceId(Checkers id){
+    public void setPieceId(int id){
         this.pieceId = id;
     }
 

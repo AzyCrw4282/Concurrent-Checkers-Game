@@ -118,8 +118,6 @@ function enter_game_room(){
 }
 
 
-
-
 //Code sync with f/e and b/e and some code will be sent to b/e for processing.
 
 //these will have to be changed for new game method
@@ -254,8 +252,18 @@ class Game {
         this.connect();
     }
 
-    //This method handles updatign pos on the board
-    executeMove(index){
+    //This method handles updatign pos on the board. May need to see game_id
+    executeMove(cur_player,counter_index,X,Y,nSquare,game_id){ // params: player, x and y pos to move,N_square move
+        if (cur_player == "white"){
+            //update the pos, and rest updated on back/end
+            w_checker[counter_index].changeCoord(X,Y);
+            w_checker[counter_index].setCoord(0,0);
+
+        }
+        else{
+            b_checker[counter_index].changeCoord(X,Y);
+            b_checker[counter_index].setCoord(0,0);
+        }
 
     }
 
@@ -371,4 +379,27 @@ let game = new Game();
 
 function start_game(){
     game.initialize_game();
+}
+document.getElementsByTagName("BODY")[0].onresize = function(){
+
+    getDimension();
+    var cpy_bigScreen = bigScreen ;
+
+    if(windowWidth < 650){
+        moveLength = 50;
+        moveDeviation = 6;
+        if(bigScreen == 1) bigScreen = -1;
+    }
+    if(windowWidth > 2550){
+        moveLength = 80;
+        moveDeviation = 10;
+        if(bigScreen == -1) bigScreen = 1;
+    }
+
+    if(bigScreen !=cpy_bigScreen){
+        for(var i = 1; i <= 12; i++){
+            b_checker[i].setCoord(0,0);
+            w_checker[i].setCoord(0,0);
+        }
+    }
 }
