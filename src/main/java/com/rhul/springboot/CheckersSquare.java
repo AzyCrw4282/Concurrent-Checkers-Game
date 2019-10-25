@@ -8,15 +8,13 @@ public class CheckersSquare {
 
     private int id;
     private boolean occupied;
-    private int pieceId;//the id of the piece on the square
-    private boolean alive;
+    private Checkers pieceId;//the id of the piece on the square
 
     //creats 64 squares objects to identify each and all
     public CheckersSquare(int square_id){
         this.id = square_id;
         this.occupied = false;
-        this.pieceId = 0;
-        this.alive = true;
+        this.pieceId = null;
 
 
     }
@@ -24,7 +22,7 @@ public class CheckersSquare {
     public void onClick(){
         //when square selected and valid, make a move
         Checkers checkers_obj = new Checkers();
-        checkers_obj.makeMove(index);
+        checkers_obj.make_move(1,"game+_1");
     }
 
     public void setOccupied(){
@@ -35,12 +33,12 @@ public class CheckersSquare {
         return occupied;
     }
 
-    public void setPieceId(int id){
-        this.pieceId = id;
+    public void setPieceId(Checkers piece){
+        this.pieceId = piece;
     }
 
 
-    public int getPieceId() {
+    public Checkers getPieceId() {
         return pieceId;
     }
 
@@ -49,13 +47,7 @@ public class CheckersSquare {
         this.occupied = occupied;
     }
 
-    public boolean isAlive() {
-        return alive;
-    }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
-    }
 
     public int getId() {
         return id;

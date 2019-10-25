@@ -45,7 +45,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
 //            Checkers[] w_checker = new Checkers[12];
 //            Checkers[] b_checker = new Checkers[12];
-
+            String type = json.getString("type");//this could be of any
             switch (type){
                 case "user"://all user ineractions listed in this case
                     String name = json.getString("name");
@@ -55,7 +55,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     checkers_obj = new CheckersGame(id,session,name);
 
-                    String type = json.getString("type");//this could be of any
+
                     //to initialize or any incoming msg from the backend
 
                     //request to create the game

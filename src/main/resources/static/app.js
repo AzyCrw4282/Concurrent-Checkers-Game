@@ -128,7 +128,7 @@ var square_p = function(square,index){
     this.pieceId = undefined;
     this.id.onclick = function(){
         // b/e process to send to check for moves
-        makeMove(index);
+        game.make_move(index);
 
     }
 };
@@ -151,7 +151,7 @@ var checker = function(piece,color,square) {//unique idenfitification for each c
     }
     //clickable function
     this.id.onclick = function  () {
-        showMoves(piece);
+        game.show_moves(piece);
     }
 };//identifies each checker
 
@@ -179,8 +179,7 @@ class Player {
 
 //A game class
 class Game {
-
-    process_data(data){
+    send_data(data){
         var data = JSON.stringify(data);
         this.socket.send(data)
     }
@@ -266,8 +265,51 @@ class Game {
         }
 
     }
+    //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
+    make_move(index){
 
 
+
+
+    }
+
+
+    show_moves(piece){
+
+
+
+
+
+    }
+
+
+    declare_winner(){
+        //called after gamelost state is passed in conditional statement
+        black_background.style.display = "inline";
+        score.style.display = "block";
+
+    }
+
+    remove_road(downRight,downLeft,upRight,upLeft){//to check this
+        if(downRight) block[downRight].id.style.background = "#ba0700";
+        if(downLeft) block[downLeft].id.style.background = "#ba0006";
+        if(upRight) block[upRight].id.style.background = "#ba0006";
+        if(upLeft) block[upLeft].id.style.background = "#ba0006";
+    }
+
+    eliminate_check(index){//index on the board; may need other data soon
+        if (index < 1 || index > 64){
+            return false
+        }
+        else{
+            var x = block[index].pieceId;//gets the piece id that was set on the board of checkers instance
+            x.alive = false;
+            block[index].occupied = false;
+            x.id.style.display = "none"; //hides the piece
+
+
+        }
+    }
 
 
     /*connect to the server and define the socket methods*/
@@ -355,31 +397,17 @@ class Game {
         }
     }
 
-
-
-    /*updateTheGame*/
-    run() {
-
-        while ((new Date).getTime() > this.nextGameTick) {
-            this.nextGameTick += this.skipTicks;
-        }
-        this.draw();
-        this.comida.draw(this.context);
-        if (this.nextFrame != null) {
-            this.nextFrame();
-        }
-
-    }
-
-
 }
 
 
-let game = new Game();
+let game = new Game();//may need multiple objects for multiple games
+
 
 function start_game(){
     game.initialize_game();
+
 }
+
 document.getElementsByTagName("BODY")[0].onresize = function(){
 
     getDimension();
