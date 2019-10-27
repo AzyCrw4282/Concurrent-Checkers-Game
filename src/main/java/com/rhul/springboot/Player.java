@@ -44,11 +44,11 @@ public class Player {
 
 
 
-//    public Player(int id, String name, WebSocketSession session){
-//        this.id = id;
-//        this.name = name;
-//        this.session = session;
-//    }
+    public Player(int id, String name, WebSocketSession session){
+        this.id = id;
+        this.name = name;
+        this.session = session;
+    }
 
     private void resetState(){
         this.score = 0;

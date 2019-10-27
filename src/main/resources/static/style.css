@@ -28,7 +28,7 @@
 
 }
 .btn-group button {
-    border: 1px solid green; /* Green border */
+    border: 1px solid #116280; /* Green border */
     color: white; /* White text */
     padding: 10px 24px; /* Some padding */
     cursor: pointer; /* Pointer/hand icon */

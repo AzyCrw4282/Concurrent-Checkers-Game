@@ -28,7 +28,8 @@ public class CheckersHandler extends TextWebSocketHandler {
     private static final String player_white = "White";
     private static final String player_black = "black";
     private ReentrantLock Lk = new ReentrantLock();
-    private Player player_obj = new Player();
+    private WebSocketSession s;
+    private Player player_obj = new Player(1,"player",s);
     Executor executor = Executors.newFixedThreadPool(10);
 
 

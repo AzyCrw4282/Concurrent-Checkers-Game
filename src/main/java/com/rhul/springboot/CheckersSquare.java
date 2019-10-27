@@ -1,6 +1,5 @@
 package com.rhul.springboot;
 
-import com.sun.tools.javac.comp.Check;
 
 public class CheckersSquare {
 

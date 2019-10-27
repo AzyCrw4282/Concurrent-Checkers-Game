@@ -36,27 +36,27 @@
 
         <!--theDifferentOptionsToPlayAreShown-->
         <div class="col-md-4 btn-group" id="div_id_menu">
-            <button class=".btn" id="create_room" onclick="create_room()">Create a Room  </button>
-            <button class=".btn" id="join_room" onclick="join_a_room()"> Join a Room </button>
-            <button class=".btn" id="matchmaking" onclick="action_matchmaking()"> Matchmaking </button>
-            <button class=".btn" id="chat" onclick="enter_chat()"> Chat </button>
+            <button class=".btn" id="create_room" style="margin-top: 15px" onclick="create_room()">Create a Room  </button>
+            <button class=".btn" id="join_room" style="margin-top: 15px" onclick="join_a_room()"> Join a Room </button>
+            <button class=".btn" id="matchmaking" style="margin-top: 15px" onclick="action_matchmaking()"> Matchmaking </button>
+            <button class=".btn" id="chat" style="margin-top: 15px" onclick="enter_chat()"> Chat </button>
         </div>
     </div>
 
     <!-- createRoom -->
-    <div class="col-md-4" id="div_id_create_room">
+    <div class="col-md-4 btn-group" id="div_id_create_room">
         <p id="titCrear">Enter the name of the room and the difficulty</p>
         <input id="room_id"></input>
 
         <label id="opc" class="radio-inline"><input type="radio" id="radio1" name="optradio" checked="checked">Easy</label>
         <label id="opc2" class="radio-inline"><input type="radio" id="radio2" name="optradio">Normal</label>
         <label id="opc3" class="radio-inline"><input type="radio" id="radio3" name="optradio">Hard</label>
-
-        <button class=".btn" id="button2" onclick="enter_game_room()">Create Room</button>
+        <br>
+        <button class=".btn" id="button2" style="margin-top: 15px" onclick="enter_game_room()">Create Room</button>
     </div>
 
     <!-- Chat -->
-    <div class="col-md-3" id="div_id_chat">
+    <div class="col-md-3" id="div_id_chat" style="display: none;">
         <div id="console">
 
         </div>
@@ -196,17 +196,18 @@
         </div>
 
 
+        <div class="game_options" style="display:none;">
+            <div id="modal3">
+                <button class=".btn" id="button5" onclick="actionIniciar()">Start</button>
+            </div>
 
-        <div id="modal3">
-            <button class=".btn" id="button5" onclick="actionIniciar()">Start</button>
-        </div>
+            <div id="cancel">
+                <button class=".btn" id="cancelar" onclick="actionCancelar()"> Cancel </button>
+            </div>
 
-        <div id="cancel">
-            <button class=".btn" id="cancelar" onclick="actionCancelar()"> Cancel </button>
-        </div>
-
-        <div id="modal4">
-            <button class=".btn" id="button6" onclick="actionMuro()">See wall of fame</button>
+            <div id="modal4">
+                <button class=".btn" id="button6" onclick="actionMuro()">See wall of fame</button>
+            </div>
         </div>
     </div>
 
