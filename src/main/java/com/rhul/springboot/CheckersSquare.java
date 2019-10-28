@@ -3,7 +3,7 @@ package com.rhul.springboot;
 
 public class CheckersSquare {
 
-    public static CheckersSquare[] block = new CheckersSquare[64];
+    public static CheckersSquare[] block = new CheckersSquare[65];
 
     private int id;
     private boolean occupied;
@@ -18,7 +18,7 @@ public class CheckersSquare {
 
     }
     //event handler will trigger this call
-    public void onClick(){
+    public void onClick() throws Exception{
         //when square selected and valid, make a move
         Checkers checkers_obj = new Checkers();
         checkers_obj.make_move(1,"game+_1");

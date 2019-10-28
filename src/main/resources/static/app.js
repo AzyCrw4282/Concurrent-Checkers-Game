@@ -34,10 +34,37 @@ var multiplier = 1; // 2 daca face saritura 1 in caz contrat
 
 var tableLimit,reverse_tableLimit ,  moveUpLeft, moveUpRight, moveDownLeft, moveDownRight , tableLimitLeft, tableLimitRight;
 
+$(document).ready(function(){
+
+    document.getElementsByTagName("BODY")[0].onresize = function(){
+
+        getDimension();
+        var cpy_bigScreen = bigScreen ;
+
+        if(windowWidth < 650){
+            moveLength = 50;
+            moveDeviation = 6;
+            if(bigScreen == 1) bigScreen = -1;
+        }
+        if(windowWidth > 2550){
+            moveLength = 80;
+            moveDeviation = 10;
+            if(bigScreen == -1) bigScreen = 1;
+        }
+
+        if(bigScreen !=cpy_bigScreen){
+            for(var i = 1; i <= 12; i++){
+                b_checker[i].setCoord(0,0);
+                w_checker[i].setCoord(0,0);
+            }
+        }
+    };
+});
+
 function enterName(){
 
     user = $("#id_name_value").val();
-    console.log(user);
+
     /*we show the buttons to create room, join room and chat*/
     document.getElementById('div_id_menu').style.display = "block";
     document.getElementById('div_id_name').style.display = "none";
@@ -62,6 +89,12 @@ function join_a_room(){
 
 }
 
+function getDimension (){
+    windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+}
+
+
 /*weJoinARandomRoom*/
 function action_matchmaking(){
     document.getElementById('btnPrinc').style.display = "none";
@@ -73,7 +106,7 @@ function action_matchmaking(){
 
     /*If we are in the chat we remove the user from the chat*/
     if (!chat){
-        juego();
+        start_game()
     }else{
         let aux = {"type": "delete", "name": user};
         game.enviar(aux);
@@ -101,7 +134,7 @@ function enter_chat(){
 
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
-    document.getElementById('canvas').style.display = "block";
+
     document.getElementById('div_id_create_room').style.display = "none";
     document.getElementById('table').style.display = "block";
     /*weGetTheValues​​toCreateTheRoom*/
@@ -114,7 +147,7 @@ function enter_game_room(){
     }else if ($('#radio3').prop('checked')){
         difficulty = 2;
     }
-
+    start_game();
 }
 
 
@@ -134,7 +167,7 @@ var square_p = function(square,index){
 };
 
 //these when implemented needs to be uniquely idenfitied for each game
-var checker = function(piece,color,square) {//unique idenfitification for each counter
+var checker = function(piece,color,square,index) {//unique idenfitification for each counter
     this.id = piece;
     this.color = color;
     this.king = false;
@@ -151,7 +184,7 @@ var checker = function(piece,color,square) {//unique idenfitification for each c
     }
     //clickable function
     this.id.onclick = function  () {
-        game.show_moves(piece);
+        game.show_moves(index,color);//index is nt unique as they can be same for black/white
     }
 };//identifies each checker
 
@@ -200,28 +233,27 @@ class Game {
         for (var i = 1; i <= 64; i++)
         {
             block[i] = new square_p(square_class[i], i);
-            console.log("46")
+
         }
 
         /*================initializarea white black counters =================================*/
-        console.log("43")
         // white Ladies
         for (var i = 1; i <= 4; i++) {
-            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
+            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1,i);
             w_checker[i].setCoord(0, 0);
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
-            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i);
+            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i,i);
             w_checker[i].setCoord(0, 0);
             block[2 * i].ocupied = true;
             block[2 * i].pieceId = w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
-            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1);
+            w_checker[i] = new checker(white_checker_class[i], "white", 2 * i - 1,i);
             w_checker[i].setCoord(0, 0);
             block[2 * i - 1].ocupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
@@ -229,25 +261,26 @@ class Game {
 
         //black Ladies
         for (var i = 1; i <= 4; i++) {
-            b_checker[i] = new checker(black_checker_class[i], "black", 56 + 2 * i);
+            b_checker[i] = new checker(black_checker_class[i], "black", 56 + 2 * i,i);
             b_checker[i].setCoord(0, 0);
             block[56 + 2 * i].ocupied = true;
             block[56 + 2 * i].pieceId = b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
-            b_checker[i] = new checker(black_checker_class[i], "black", 40 + 2 * i - 1);
+            b_checker[i] = new checker(black_checker_class[i], "black", 40 + 2 * i - 1,i);
             b_checker[i].setCoord(0, 0);
             block[40 + 2 * i - 1].ocupied = true;
             block[40 + 2 * i - 1].pieceId = b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
-            b_checker[i] = new checker(black_checker_class[i], "black", 24 + 2 * i);
+            b_checker[i] = new checker(black_checker_class[i], "black", 24 + 2 * i,i);
             b_checker[i].setCoord(0, 0);
             block[24 + 2 * i].ocupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
+
         this.connect();
     }
 
@@ -270,16 +303,15 @@ class Game {
 
 
 
-
     }
 
 
-    show_moves(piece){
-
-
-
-
-
+    show_moves(index,colour){
+        console.log("square selected index below");
+        console.log(index);
+        var str = {"type" : "move","index" : index ,"player_colour" : colour};
+        var json_str = JSON.stringify(str);
+        this.socket.send(json_str);
     }
 
 
@@ -296,6 +328,12 @@ class Game {
         if(upRight) block[upRight].id.style.background = "#ba0006";
         if(upLeft) block[upLeft].id.style.background = "#ba0006";
     }
+
+    apply_road(index){
+        console.log(index);
+        block[index].id.style.background = "#704923";
+    }
+
 
     eliminate_check(index){//index on the board; may need other data soon
         if (index < 1 || index > 64){
@@ -321,7 +359,7 @@ class Game {
         this.socket.onopen = () => {
 
             // Socket open.. start the game loop.
-            Console.log('Info: WebSocket connection opened.');
+            console.log('Info: WebSocket connection opened.');
             // weSendTheUserToTheServer
             this.open();
         };
@@ -338,6 +376,7 @@ class Game {
         this.socket.onmessage = (message) => {
 
             var packet = JSON.parse(message.data);
+
             //handles message received from b/e. need work on this
             switch (packet.type) {
                 /*updateTheGameSnakes*/
@@ -347,18 +386,22 @@ class Game {
                     }
                     break;
                 /*addANewPlayerToTheRoom*/
-                case 'join':
-                    Console.log("SALA: "+packet.data[0].nombre+" heHasEnteredTheRoom");
-                    for (var j = 0; j < packet.data.length; j++) {
-                        this.addSnake(packet.data[j].id, packet.data[j].color,packet.data[j].nombre);
-                    }
-                    break;
+
                 /*removeAPlayerFromTheRoom*/
-                case 'leave':
-                    Console.log("SALA"+packet.nombre+'hasLeftTheGame');
+                case 'result_move':
+                    if (packet.data === "possible"){
+                        console.log("move possible")
+                    }
+
+                    break;
+
+                case 'apply_road':
+                        console.log(packet.data);
+                        var parsed_val = parseInt(packet.data);
+                        game.apply_road(parsed_val);
                     break;
                 case 'make_move':
-                    console.log("make the move")
+                    console.log("make the move");
                     this.makeMove()
 
             }
@@ -367,17 +410,11 @@ class Game {
 
     /*send the first message of each client to the server*/
     open() {
-        var aux = {"type": "user", "user": user, "ComandoSala":menu_option,"Sala":room, "difficulty":difficulty};
+        var aux = {"type": "initialize_game", "user": user, "ComandoSala":"testing","Sala":room, "difficulty":difficulty};
         var mens=JSON.stringify(aux);
         this.socket.send(mens);
 
-        if (chat == false){
-            this.startGameLoop();
 
-            var aux = {"type": "ping"};
-            var mens=JSON.stringify(aux);
-            setInterval(() => this.socket.send(mens), 5000);
-        }
     }
 
     /*initializeTheGame*/
@@ -406,28 +443,4 @@ let game = new Game();//may need multiple objects for multiple games
 function start_game(){
     game.initialize_game();
 
-}
-
-document.getElementsByTagName("BODY")[0].onresize = function(){
-
-    getDimension();
-    var cpy_bigScreen = bigScreen ;
-
-    if(windowWidth < 650){
-        moveLength = 50;
-        moveDeviation = 6;
-        if(bigScreen == 1) bigScreen = -1;
-    }
-    if(windowWidth > 2550){
-        moveLength = 80;
-        moveDeviation = 10;
-        if(bigScreen == -1) bigScreen = 1;
-    }
-
-    if(bigScreen !=cpy_bigScreen){
-        for(var i = 1; i <= 12; i++){
-            b_checker[i].setCoord(0,0);
-            w_checker[i].setCoord(0,0);
-        }
-    }
 }

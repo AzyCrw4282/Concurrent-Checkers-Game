@@ -17,8 +17,9 @@ public class Checkers {//for individual counters
     private String game_type;
     private boolean king = false;
     private boolean game_started = false;
-    public static Checkers[] w_checkers;
-    public static Checkers[] b_checkers;
+    private boolean one_move = false;
+    public static Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
+    public static Checkers[] b_checkers = new Checkers[13];
     private int coordX;
     private int coordY;
     private boolean alive;
@@ -40,7 +41,7 @@ public class Checkers {//for individual counters
     boolean another_move;
 
     //keeps track of the board and counters. need this int game_id,
-    public Checkers(int square_piece, String colour, int square){//add , String game_type ltr vrsions
+    public Checkers(int square_piece, String colour, int square){//add  player, String game_type ltr vrsions
         this.id = square_piece;
         this.colour = colour;
         this.game_type = game_type;
@@ -103,14 +104,15 @@ public class Checkers {//for individual counters
 
 
     //starting with coutner selections first
-    public boolean show_moves(Checkers piece){//clciked piece shoudl be passed in here
+    public synchronized boolean show_moves(Checkers piece,Player plyr) throws Exception{//clciked piece shoudl be passed in here
         selected_piece = piece.id;
         boolean match =false;
         attack_possible = false;
 
+        System.out.println("111");
 
-        if (the_checker == w_checkers){
-            the_checker = b_checkers;
+        if (the_checker == b_checkers || the_checker == null){
+            the_checker = w_checkers;
         }
         else{
             the_checker = w_checkers;
@@ -122,7 +124,7 @@ public class Checkers {//for individual counters
 //            selected_piece = piece.id;
 //        }
 
-        int i =0,j=0;
+        int i =0,j = 0;
 
         for (j=1;j<=12;j++){
             if (Checkers.w_checkers[j].equals(piece)){
@@ -137,12 +139,12 @@ public class Checkers {//for individual counters
                 match = true;
             }
         }
-
-        if (!attack_move(piece)){//not attack move then change turns based on colour
+        System.out.println("all good ");
+        if ( one_move & !attack_move(piece)){//another move allowed after checking and its not attack->return false
             change_turns(the_checker);
             return false;
         }
-        if (!match){
+        if ( one_move & !match){
             return (false);
         }
 
@@ -171,27 +173,36 @@ public class Checkers {//for individual counters
         int up_right=0;
         int down_left=0;
         int down_right=0;
-
+        System.out.println("all good ");
         if (!attack_possible){//if attack not possible then make just a move
-            down_left = check_move(the_checker[i],tableLimit , tableLimitRight , moveUpRight , down_left);
-            down_right = check_move( the_checker[i] , tableLimit , tableLimitLeft , moveUpLeft , down_right);
+            down_left = check_move(the_checker[i],tableLimit , tableLimitRight , moveUpRight , down_left,plyr);
+            down_right = check_move( the_checker[i] , tableLimit , tableLimitLeft , moveUpLeft , down_right,plyr);
             if (the_checker[i].isKing()){
-                up_left = check_move( the_checker[i] , reverse_tableLimit , tableLimitRight , moveDownRight , up_left);
-                up_right = check_move( the_checker[i], reverse_tableLimit , tableLimitLeft , moveDownLeft, up_right);
+                up_left = check_move( the_checker[i] , reverse_tableLimit , tableLimitRight , moveDownRight , up_left,plyr);
+                up_right = check_move( the_checker[i], reverse_tableLimit , tableLimitLeft , moveDownLeft, up_right,plyr);
             }
         }
+        System.out.println("all good ");
         if (up_left != 0 || up_right != 0  || down_left != 0 || down_right != 0){//any possible moves
             return true;
         }
         else{
             return false;
         }
+
     }
 
-    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection){
+    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Player plyr) throws Exception{
         if (piece.coordY != top_limit){
             if (piece.coordX != LimitSide && !CheckersSquare.block[piece.occupiedSquare+ moveDirection].isOccupied()){
-                CheckersSquare.block[piece.occupiedSquare + moveDirection].getId();// send colour change to f/e
+                CheckersSquare.block[piece.occupiedSquare + moveDirection].getId();
+                int value = piece.occupiedSquare + moveDirection;
+                String str =  "" + value ;
+                // send colour change to f/e
+
+                String mesg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"}", str);
+                plyr.sendMessage(mesg);
+
                 theDirection = piece.occupiedSquare + moveDirection;
             }
             else{
@@ -266,7 +277,7 @@ public class Checkers {//for individual counters
 
 
     //passes in the index
-    public boolean make_move(int index, String move_type){
+    public boolean make_move(int index, String move_type) throws  Exception{
         boolean isMove = false;
         boolean must_attack = false;
 
@@ -348,7 +359,7 @@ public class Checkers {//for individual counters
                 another_move = attack_move(the_checker[selected_piece]);
             }
             if (another_move){
-                show_moves(the_checker[selected_piece]);
+                show_moves(the_checker[selected_piece],null);
             }
             else{
                 change_turns(the_checker);
@@ -417,6 +428,9 @@ public class Checkers {//for individual counters
         if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && CheckersSquare.block[piece.occupiedSquare + squareMove].isOccupied() && CheckersSquare.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !CheckersSquare.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
             attack_possible = true;
             direction = (piece.occupiedSquare + squareMove * 2);
+
+
+
             return direction;//when returned, goes through handler and colour val applied to new pos
         }
         else{

@@ -38,13 +38,15 @@ public class CheckersHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
+            String mesg;
             int id = player_obj.playerId.getAndIncrement();
             String payload = message.getPayload();
             JSONObject json = new JSONObject(payload);
+            Player plyr = new Player(0,"player",session);
             CheckersGame checkers_obj;
             CheckersSquare cSquare_obj;
 
-//            Checkers[] w_checker = new Checkers[12];
+//            Checkers w_checker = new Checkers;
 //            Checkers[] b_checker = new Checkers[12];
             String type = json.getString("type");//this could be of any
             switch (type){
@@ -53,25 +55,32 @@ public class CheckersHandler extends TextWebSocketHandler {
                     int difficulty = json.getInt("difficulty");
                     String game_type = json.getString("game_type");//to construct diff game type
 
-
                     checkers_obj = new CheckersGame(id,session,name);
 
+                case "move":
+                    System.out.println("1 ");
+                    String str_player_id = json.getString("index");
+                    int piece_index = Integer.parseInt(str_player_id);
+                    String playr_colour = json.getString("player_colour");
 
-                    //to initialize or any incoming msg from the backend
+                    //to check for possible moves for a given piece
+                    System.out.println("2 ");
+                    if (playr_colour.equals("white")){
 
-                    //request to create the game
-                        //if room does not exist
+                        if (Checkers.w_checkers[piece_index].show_moves(Checkers.w_checkers[piece_index],plyr)){//if an attack/move possible
 
+                            mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
+                            plyr.sendMessage(mesg);
 
-
-                        //if room exists
-
-
-
-
-                    //join intent
+                        }
+                    }
+                    else if(Checkers.b_checkers[piece_index].show_moves(Checkers.b_checkers[piece_index],plyr)){
+                            mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
+                            plyr.sendMessage(mesg);
+                    }
 
                 case "initialize_game":
+
                     //To fully initialize the game
                     //id and session field act as unique in this case
 
@@ -125,7 +134,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                         /*========================================================*/
 
-
+                    System.out.println("129 ");
 
                 case "join":
                     Runnable game_room = () -> {
@@ -157,11 +166,6 @@ public class CheckersHandler extends TextWebSocketHandler {
         }
 
     }
-
-
-
-
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
