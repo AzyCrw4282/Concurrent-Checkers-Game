@@ -38,7 +38,7 @@ $(document).ready(function(){
 
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
-        getDimension();
+        getDimension();//vars here will also need to eb updated on f/e
         var cpy_bigScreen = bigScreen ;
 
         if(windowWidth < 650){
@@ -58,6 +58,7 @@ $(document).ready(function(){
                 w_checker[i].setCoord(0,0);
             }
         }
+        game.adjust_screen_size(moveLength,moveDeviation);//only executed when triggered
     };
 });
 
@@ -301,16 +302,27 @@ class Game {
     }
     //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
     make_move(index){
-
+        console.log("sqaure clicked");
+        var str = {"type" : "make_move","index" : index};
+        var json_str = JSON.stringify(str);
+        this.socket.send(json_str);
 
 
     }
+    //send and readjust coords in the b/e as well
+    adjust_screen_size(move_length,move_dev){
+        var str = {"type" : "adjust_screen_size","move_length" : move_length ,"move_dev" : move_dev};
+        var json_str = JSON.stringify(str);
+        this.socket.send(json_str);
+
+    }
+
 
 
     show_moves(index,colour){
         console.log("square selected index below");
         console.log(index);
-        var str = {"type" : "move","index" : index ,"player_colour" : colour};
+        var str = {"type" : "show_moves","index" : index ,"player_colour" : colour};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -332,7 +344,7 @@ class Game {
     }
 
     apply_road(index){
-        block[index].id.style.background = "#704923";
+        if (index > 0) block[index].id.style.background = "#704923";
     }
 
 
@@ -367,10 +379,10 @@ class Game {
 
         /*closeTheConnection*/
         this.socket.onclose = () => {
-            let dic = {"type": "delete", "name": user};
-            // game.process_data(dic);
-            Console.log('Info: WebSocket closed.');
-            this.stopGameLoop();
+            // let dic = {"type": "delete", "name": user};
+            // // game.process_data(dic);
+            // console.log('Info: WebSocket closed.');
+            // this.stopGameLoop();
         };
 
         /*define the actions when receiving the different messages*/

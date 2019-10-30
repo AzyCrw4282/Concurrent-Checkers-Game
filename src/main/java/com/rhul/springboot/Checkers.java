@@ -30,6 +30,10 @@ public class Checkers {//for individual counters
     private  boolean attack_possible = false;
     private Checkers the_checker[];
 
+    //adjust screen sizes fix to coord x and y
+    public static int move_length = 80;
+    public static int move_deviation = 10;
+
     int reverse_tableLimit;
     int tableLimit;
     int tableLimitRight;
@@ -38,11 +42,11 @@ public class Checkers {//for individual counters
     int moveUpLeft;
     int moveDownRight;
     int moveDownLeft;
-    private int player_turn;
-    private int up_left=0;
-    private int up_right=0;
-    private int down_left=0;
-    private int down_right=0;
+    private  int player_turn;
+    private static int up_left =0;
+    private static int up_right=0;
+    private static int down_left=0;
+    private static int down_right=0;
 
     boolean another_move;
 
@@ -54,13 +58,13 @@ public class Checkers {//for individual counters
         this.king = false;
         this.occupiedSquare = square; //n number of occupied, ! eliminated
         this.alive = true;
-        this.coordX = getXcoordinates(square);
+        this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
 
     }
 
     public int getXcoordinates(int square){
-        if (square % 8 == 1){//if is square 9
+        if (square % 8 !=0){//if is square 9
             this.coordX = square % 8;
             return(coordX);
         }
@@ -82,10 +86,14 @@ public class Checkers {//for individual counters
         }
     }
 
-
+    // used for f/e updating and hence nt required here
     public void setCoordinates(int X ,int Y){
-        this.coordX = X;
-        this.coordY = Y;
+
+//        this.coordX = 0;
+//        this.coordY = 0;
+//        this.coordX = (this.coordX-1) * move_length + move_deviation;
+//        this.coordY = (this.coordY);
+
     }
 
     public void changeCoordinates(int X, int Y){
@@ -110,7 +118,8 @@ public class Checkers {//for individual counters
 
 
     //starting with coutner selections first
-    public  synchronized boolean show_moves(Checkers piece,Player plyr) throws Exception{//clciked piece shoudl be passed in here
+    //For now will havv method as static and synced so only one possible move at a time.
+    public synchronized boolean show_moves(Checkers piece,Player plyr) throws Exception{//clciked piece shoudl be passed in here
         System.out.println("prev selected piece: " + selected_piece);
         System.out.println(down_left);
         System.out.println(down_right);
@@ -132,6 +141,7 @@ public class Checkers {//for individual counters
             the_checker = w_checkers;
         }
         else{
+            System.out.println("136");
             the_checker = w_checkers;
         }
 
@@ -145,8 +155,10 @@ public class Checkers {//for individual counters
                 the_checker = w_checkers;
             }
             else if (Checkers.b_checkers[j].equals(piece)){
+                System.out.println("150");
                 selected_piece = Checkers.b_checkers[j].id;
                 the_checker = b_checkers;
+                i = j;
                 match = true;
             }
         }
@@ -165,10 +177,10 @@ public class Checkers {//for individual counters
             tableLimitLeft = 8;
             moveUpRight = 7;
             moveUpLeft = 9;
-            moveDownRight = - 9;
+            moveDownRight = -9;
             moveDownLeft = -7;
         }
-        else{// if black
+        else if (piece.colour.equals("black")){// if black
             tableLimit = 1;
             tableLimitRight = 8;
             tableLimitLeft = 1;
@@ -204,8 +216,8 @@ public class Checkers {//for individual counters
 
     public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Player plyr) throws Exception{
         if (piece.coordY != top_limit){
-            if (piece.coordX != LimitSide && !CheckersSquare.block[piece.occupiedSquare+ moveDirection].isOccupied()){
-                CheckersSquare.block[piece.occupiedSquare + moveDirection].getId();
+            System.out.println("221 " + piece.coordX + " " + LimitSide);
+            if (piece.coordX != LimitSide && !CheckersSquare.block[piece.occupiedSquare + moveDirection].isOccupied()){//isOccupied is the root
                 int value = piece.occupiedSquare + moveDirection;
                 java.lang.String sdfg = "";
                 // method call to apply ->send colour change to f/e
@@ -214,6 +226,7 @@ public class Checkers {//for individual counters
             }
             else{
                 theDirection = 0;
+
             }
         }
         else{

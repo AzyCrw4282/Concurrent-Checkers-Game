@@ -56,13 +56,13 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     checkers_obj = new CheckersGame(id,session,name);
                     break;
-                case "move":
+                case "show_moves":
 
                     String str_player_id = json.getString("index");
                     int piece_index = Integer.parseInt(str_player_id);
                     String playr_colour = json.getString("player_colour");
 
-                    //to check for possible moves for a given piece
+                    //To check for possible moves for a given piece
 
                     if (playr_colour.equals("white")){
 
@@ -77,6 +77,18 @@ public class CheckersHandler extends TextWebSocketHandler {
                             mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                             plyr.sendMessage(mesg);
                     }
+                    break;
+
+                case "make_move":
+
+
+                    int square_index = json.getInt("index");
+
+
+
+
+
+
                     break;
 
                 case "initialize_game":
@@ -151,6 +163,17 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
                 case "connection_incoming":
                     System.out.print("connection active");
+                    break;
+                case "adjust_screen_size":
+                    int move_length = json.getInt("move_length");
+                    int move_dev = json.getInt("move_dev");
+
+                    Checkers.move_length = move_length;
+                    Checkers.move_deviation = move_dev;
+
+                    System.out.println("screen size adjusted");
+
+
                     break;
 
                 case "sync_data":

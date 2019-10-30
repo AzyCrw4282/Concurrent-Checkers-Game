@@ -24,6 +24,8 @@ public class CheckersSquare {
         checkers_obj.make_move(1,"game+_1");
     }
 
+
+    //these can be removed if lombok is working
     public void setOccupied(){
         this.occupied = true;
     }
