@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.lang.reflect.Array;
+
 @Getter @Setter @NoArgsConstructor
 
 //handles the board related funcs. individual object shall also handle
@@ -36,7 +38,11 @@ public class Checkers {//for individual counters
     int moveUpLeft;
     int moveDownRight;
     int moveDownLeft;
-    int player_turn;
+    private int player_turn;
+    private int up_left=0;
+    private int up_right=0;
+    private int down_left=0;
+    private int down_right=0;
 
     boolean another_move;
 
@@ -104,12 +110,23 @@ public class Checkers {//for individual counters
 
 
     //starting with coutner selections first
-    public synchronized boolean show_moves(Checkers piece,Player plyr) throws Exception{//clciked piece shoudl be passed in here
-        selected_piece = piece.id;
+    public  synchronized boolean show_moves(Checkers piece,Player plyr) throws Exception{//clciked piece shoudl be passed in here
+        System.out.println("prev selected piece: " + selected_piece);
+        System.out.println(down_left);
+        System.out.println(down_right);
+
         boolean match =false;
         attack_possible = false;
 
-        System.out.println("111");
+
+        apply_front_changes(plyr,0,"remove_road");
+        //before setting selected piece remove roads
+
+        if(selected_piece > 0){ //refers to id
+            apply_front_changes(plyr,0,"remove_road");//0 value ignored, passed as its the primitive
+        }else if (piece.id > 0){
+            selected_piece = piece.id;
+        }
 
         if (the_checker == b_checkers || the_checker == null){
             the_checker = w_checkers;
@@ -117,12 +134,6 @@ public class Checkers {//for individual counters
         else{
             the_checker = w_checkers;
         }
-
-//        if(selected_piece > 0){ //refers to id
-//            remove_road(selected_piece);//done on f/e
-//        }else if (piece.id > 0){
-//            selected_piece = piece.id;
-//        }
 
         int i =0,j = 0;
 
@@ -139,7 +150,7 @@ public class Checkers {//for individual counters
                 match = true;
             }
         }
-        System.out.println("all good ");
+
         if ( one_move & !attack_move(piece)){//another move allowed after checking and its not attack->return false
             change_turns(the_checker);
             return false;
@@ -169,20 +180,19 @@ public class Checkers {//for individual counters
 
         attack_move(the_checker[i]);
 
-        int up_left=0;
-        int up_right=0;
-        int down_left=0;
-        int down_right=0;
-        System.out.println("all good ");
         if (!attack_possible){//if attack not possible then make just a move
+
             down_left = check_move(the_checker[i],tableLimit , tableLimitRight , moveUpRight , down_left,plyr);
             down_right = check_move( the_checker[i] , tableLimit , tableLimitLeft , moveUpLeft , down_right,plyr);
+
+            System.out.println("dl " +down_left);
+            System.out.println(down_right);
             if (the_checker[i].isKing()){
                 up_left = check_move( the_checker[i] , reverse_tableLimit , tableLimitRight , moveDownRight , up_left,plyr);
                 up_right = check_move( the_checker[i], reverse_tableLimit , tableLimitLeft , moveDownLeft, up_right,plyr);
             }
         }
-        System.out.println("all good ");
+
         if (up_left != 0 || up_right != 0  || down_left != 0 || down_right != 0){//any possible moves
             return true;
         }
@@ -197,12 +207,9 @@ public class Checkers {//for individual counters
             if (piece.coordX != LimitSide && !CheckersSquare.block[piece.occupiedSquare+ moveDirection].isOccupied()){
                 CheckersSquare.block[piece.occupiedSquare + moveDirection].getId();
                 int value = piece.occupiedSquare + moveDirection;
-                String str =  "" + value ;
-                // send colour change to f/e
-
-                String mesg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"}", str);
-                plyr.sendMessage(mesg);
-
+                java.lang.String sdfg = "";
+                // method call to apply ->send colour change to f/e
+                apply_front_changes(plyr,value,"apply_road");
                 theDirection = piece.occupiedSquare + moveDirection;
             }
             else{
@@ -215,6 +222,24 @@ public class Checkers {//for individual counters
         return (theDirection);
 
     }
+
+    public void apply_front_changes(Player plyr,int square, String type) throws Exception{
+        java.lang.String msg = "";
+        switch (type) {
+            case "apply_road":
+                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"}", square);
+                plyr.sendMessage(msg);
+                break;
+            case "remove_road":
+                msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"}", up_left,up_right,down_left,down_right);
+                plyr.sendMessage(msg);
+                break;
+
+        }
+    }
+
+
+
 
 
     public boolean attack_move(Checkers piece){
@@ -382,7 +407,7 @@ public class Checkers {//for individual counters
 //            display then need to be set in the f/e
         }
         else{
-            System.out.println("Unable to eleimiate");
+
         }
 
     }

@@ -44,7 +44,6 @@ public class CheckersHandler extends TextWebSocketHandler {
             JSONObject json = new JSONObject(payload);
             Player plyr = new Player(0,"player",session);
             CheckersGame checkers_obj;
-            CheckersSquare cSquare_obj;
 
 //            Checkers w_checker = new Checkers;
 //            Checkers[] b_checker = new Checkers[12];
@@ -56,15 +55,15 @@ public class CheckersHandler extends TextWebSocketHandler {
                     String game_type = json.getString("game_type");//to construct diff game type
 
                     checkers_obj = new CheckersGame(id,session,name);
-
+                    break;
                 case "move":
-                    System.out.println("1 ");
+
                     String str_player_id = json.getString("index");
                     int piece_index = Integer.parseInt(str_player_id);
                     String playr_colour = json.getString("player_colour");
 
                     //to check for possible moves for a given piece
-                    System.out.println("2 ");
+
                     if (playr_colour.equals("white")){
 
                         if (Checkers.w_checkers[piece_index].show_moves(Checkers.w_checkers[piece_index],plyr)){//if an attack/move possible
@@ -78,11 +77,14 @@ public class CheckersHandler extends TextWebSocketHandler {
                             mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                             plyr.sendMessage(mesg);
                     }
+                    break;
 
                 case "initialize_game":
-
+                    System.out.println("game initializer");
                     //To fully initialize the game
                     //id and session field act as unique in this case
+
+
 
                     for (int i = 1; i <=64; i++){
                         CheckersSquare.block[i] = new CheckersSquare(i);//64 objects of squares

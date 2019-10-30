@@ -64,10 +64,12 @@ $(document).ready(function(){
 function enterName(){
 
     user = $("#id_name_value").val();
-
+    start_game();
     /*we show the buttons to create room, join room and chat*/
-    document.getElementById('div_id_menu').style.display = "block";
+    // document.getElementById('div_id_menu').style.display = "block";
+    document.getElementById('table').style.display = "block";
     document.getElementById('div_id_name').style.display = "none";
+
 }
 
 /*When pressing create room we are asked to enter room name and room type*/
@@ -120,7 +122,6 @@ function action_matchmaking(){
 function enter_chat(){
     document.getElementById('divChat').style.display = "block";
     document.getElementById('chat').style.display = "none";
-
     document.getElementById('console').style.height = "400px";
 
     /*thePlayerIsAddedToTheChat*/
@@ -323,14 +324,14 @@ class Game {
     }
 
     remove_road(downRight,downLeft,upRight,upLeft){//to check this
-        if(downRight) block[downRight].id.style.background = "#ba0700";
-        if(downLeft) block[downLeft].id.style.background = "#ba0006";
-        if(upRight) block[upRight].id.style.background = "#ba0006";
-        if(upLeft) block[upLeft].id.style.background = "#ba0006";
+        console.log(downRight,downLeft,upRight,upLeft );
+        if(downRight >0 ) block[downRight].id.style.background = "#BA7A3A";
+        if(downLeft >0) block[downLeft].id.style.background = "#BA7A3A";
+        if(upRight >0) block[upRight].id.style.background = "#BA7A3A";
+        if(upLeft >0) block[upLeft].id.style.background = "#BA7A3A";
     }
 
     apply_road(index){
-        console.log(index);
         block[index].id.style.background = "#704923";
     }
 
@@ -367,7 +368,7 @@ class Game {
         /*closeTheConnection*/
         this.socket.onclose = () => {
             let dic = {"type": "delete", "name": user};
-            game.process_data(dic);
+            // game.process_data(dic);
             Console.log('Info: WebSocket closed.');
             this.stopGameLoop();
         };
@@ -400,6 +401,14 @@ class Game {
                         var parsed_val = parseInt(packet.data);
                         game.apply_road(parsed_val);
                     break;
+
+                case 'remove_road':
+                        var up_left = packet.up_left;
+                        var up_right = packet.up_right;
+                        var down_left = packet.down_left;
+                        var down_right = packet.down_right;
+                        game.remove_road(up_left,up_right,down_left,down_right)
+                        break;
                 case 'make_move':
                     console.log("make the move");
                     this.makeMove()
