@@ -197,6 +197,12 @@ checker.prototype.setCoord = function(X,Y){
     this.id.style.left = x + 'px';
 };
 
+checker.prototype.move_coord = function(X,Y){
+    console.log("==============================sdsfd==",X,Y);
+    this.id.style.top = Y + 'px';
+    this.id.style.left = X + 'px';
+};
+
 checker.prototype.changeCoord = function(X,Y){
     this.coordY += Y;
     this.coordX += X;
@@ -282,7 +288,7 @@ class Game {
             block[24 + 2 * i].ocupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
-
+        the_checker = w_checker;
         this.connect();
     }
 
@@ -347,6 +353,15 @@ class Game {
         if (index > 0) block[index].id.style.background = "#704923";
     }
 
+    move_attack(index){
+        if (index > 0) block[index].id.style.background = "#007010";
+    }
+    non_attack_move(id,x,y){
+        console.log("-----",x,y,id);
+        this.id.style.top = y + 'px';
+        id.style.left = x + 'px';
+    }
+
 
     eliminate_check(index){//index on the board; may need other data soon
         if (index < 1 || index > 64){
@@ -405,25 +420,42 @@ class Game {
                     if (packet.data === "possible"){
                         console.log("move possible")
                     }
-
                     break;
 
                 case 'apply_road':
-                        console.log(packet.data);
-                        var parsed_val = parseInt(packet.data);
-                        game.apply_road(parsed_val);
+                    console.log(packet.data);
+                    var parsed_val = parseInt(packet.data);
+                    game.apply_road(parsed_val);
                     break;
 
                 case 'remove_road':
-                        var up_left = packet.up_left;
-                        var up_right = packet.up_right;
-                        var down_left = packet.down_left;
-                        var down_right = packet.down_right;
-                        game.remove_road(up_left,up_right,down_left,down_right)
-                        break;
-                case 'make_move':
+                    var up_left = packet.up_left;
+                    var up_right = packet.up_right;
+                    var down_left = packet.down_left;
+                    var down_right = packet.down_right;
+                    game.remove_road(up_left,up_right,down_left,down_right);
+                    break;
+                case 'move_atttack':
                     console.log("make the move");
-                    this.makeMove()
+                    var index = packet.data;
+                    game.move_attack(index);
+                    break;
+                case 'eliminate_piece':
+                    console.log("Piece elimination");
+                    var piece_index = packet.data;
+                    piece_index = false;
+                    block[piece_index].occupied(false);
+                    piece_index.id.style.display = "none";
+                    break;
+                case 'non_attack_move':
+                    console.log("non-attack move");
+                    var piece_id = packet.id;
+                    var x_coord = packet.X;
+                    var y_coord = packet.Y;
+
+                    the_checker[piece_id].move_coord(x_coord,y_coord);
+                    // game.non_attack_move(piece_id,x_coord,y_coord);
+                    break;
 
             }
         }

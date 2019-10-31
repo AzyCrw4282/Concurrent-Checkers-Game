@@ -21,7 +21,7 @@ public class CheckersSquare {
     public void onClick() throws Exception{
         //when square selected and valid, make a move
         Checkers checkers_obj = new Checkers();
-        checkers_obj.make_move(1,"game+_1");
+//        checkers_obj.make_move(1,"game+_1");
     }
 
 
