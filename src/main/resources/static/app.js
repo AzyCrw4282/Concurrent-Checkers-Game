@@ -474,7 +474,7 @@ class Game {
     startGameLoop() {
         this.nextFrame = () => {
             requestAnimationFrame(() => this.run());
-        }
+        };
 
         this.nextFrame();
     }

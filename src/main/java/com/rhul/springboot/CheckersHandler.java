@@ -59,8 +59,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     checkers_obj = new CheckersGame(id,session,name);
                     break;
                 case "show_moves":
-
-
                     String str_player_id = json.getString("index");
                     piece_index = Integer.parseInt(str_player_id);//all vals used for this case and move cases
                     String playr_colour = json.getString("player_colour");
@@ -89,7 +87,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     if (cur_plyr.equals("white")){
                         if (Checkers.w_checkers[piece_index].make_move(square_index,cur_plyr,plyr)){//if an attack/move possible
-
                             mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                             plyr.sendMessage(mesg);
 
@@ -100,9 +97,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                         mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                         plyr.sendMessage(mesg);
                     }
-
-
-
 
                     break;
 

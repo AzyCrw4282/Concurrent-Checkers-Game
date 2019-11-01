@@ -31,8 +31,8 @@ public class Checkers {//for individual counters
     private Checkers the_checker[];
 
     //adjust screen sizes fix to coord x and y
-    public static int move_length = 50;
-    public static int move_deviation = 6;
+    public static int move_length = 80;
+    public static int move_deviation = 10;
 
     int reverse_tableLimit;
     int tableLimit;
@@ -60,6 +60,7 @@ public class Checkers {//for individual counters
         this.alive = true;
         this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
+        System.out.println("X: "+ this.coordX +" Y: "+ this.coordY); //-works fine
 
     }
 
@@ -77,26 +78,28 @@ public class Checkers {//for individual counters
 
     public int getYcoordinates(int square){
         if (square % 8 == 1){//if is square 9
+
             this.coordY = (int) Math.floor(square/8) + 1;
             return(coordY);
         }
         else{
-            this.coordY = square/8 ;
+            System.out.println("81  " + square/8 );
+            this.coordY = (square/8) + 1 ;
             return(coordY);
         }
     }
 
-    // used for f/e updating and hence nt required here
+    // used for f/e updating and hence nt required here :)
     public void setCoordinates(int X ,int Y){
 
-        this.coordX = (this.coordX-1) * move_length + move_deviation;
-        this.coordY = (this.coordY-1) * move_length + move_deviation;
+        X = (this.coordX-1) * move_length + move_deviation;
+        Y = (this.coordY-1) * move_length + move_deviation;
 
     }
 
     public void changeCoordinates(int X, int Y){
-        this.coordX = X;
-        this.coordY = Y;
+        this.coordX += X;
+        this.coordY += Y;
     }
 
 
@@ -222,6 +225,7 @@ public class Checkers {//for individual counters
 
     //passes in the index
     public boolean make_move(int index,String colour,Player plyr) throws  Exception{
+//        System.out.println(the_checker[selected_piece].id +" "+ the_checker[selected_piece].getCoordX());gives correct val here
         boolean isMove = false;
         boolean must_attack = false;
 
@@ -434,8 +438,8 @@ public class Checkers {//for individual counters
     public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Player plyr,Checkers piece) throws Exception{//index is the board pos and nt counter id
         if (cur_player.equals("white")){
             w_checkers[selected_piece].changeCoordinates(X,Y);
+            apply_front_changes(plyr,0,"non_attack_move",w_checkers[selected_piece]);
             w_checkers[selected_piece].setCoordinates(0,0);
-            apply_front_changes(plyr,0,"non_attack_move",piece);
             CheckersSquare.block[w_checkers[selected_piece].occupiedSquare].setOccupied(false);
             CheckersSquare.block[w_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);// id and piece id in sqaure class different. piece id are assigned in the initialization and set it to the value of it
             CheckersSquare.block[w_checkers[selected_piece].occupiedSquare+nSquare].setPieceId(CheckersSquare.block[w_checkers[selected_piece].occupiedSquare].getPieceId());
@@ -444,6 +448,7 @@ public class Checkers {//for individual counters
         }
         else if (cur_player.equals("black")){
             b_checkers[selected_piece].changeCoordinates(X,Y);
+            apply_front_changes(plyr,0,"non_attack_move",b_checkers[selected_piece]);
             b_checkers[selected_piece].setCoordinates(0,0);
             CheckersSquare.block[b_checkers[selected_piece].occupiedSquare].setOccupied(false);
             CheckersSquare.block[b_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);// id and piece id in sqaure class different. piece id are assigned in the initialization and set it to the value of it
@@ -515,8 +520,7 @@ public class Checkers {//for individual counters
                 plyr.sendMessage(msg);
                 break;
             case "non_attack_move":
-                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"}",piece.getId(), (piece.getCoordY()-1 )* move_length + move_deviation,(piece.getCoordY()-1)* move_length + move_deviation);
-                System.out.println("fgsdfdsfsdfdfg" +msg);
+                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"}",piece.getId(), (piece.getCoordX()-1 )* move_length + move_deviation,(piece.getCoordY()-1)* move_length + move_deviation);
                 plyr.sendMessage(msg);
                 break;
         }
