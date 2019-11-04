@@ -28,11 +28,11 @@ public class Checkers {//for individual counters
     private int occupiedSquare;
     private int selected_piece;
     private  boolean attack_possible = false;
-    private Checkers the_checker[];
+    private static Checkers the_checker[];
 
     //adjust screen sizes fix to coord x and y
-    public static int move_length = 80;
-    public static int move_deviation = 10;
+    public static int move_length = 50;
+    public static int move_deviation = 6;
 
     int reverse_tableLimit;
     int tableLimit;
@@ -42,7 +42,7 @@ public class Checkers {//for individual counters
     int moveUpLeft;
     int moveDownRight;
     int moveDownLeft;
-    private  int player_turn;
+    private  int move_factor;
     private static int up_left =0;
     private static int up_right=0;
     private static int down_left=0;
@@ -60,12 +60,11 @@ public class Checkers {//for individual counters
         this.alive = true;
         this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
-        System.out.println("X: "+ this.coordX +" Y: "+ this.coordY); //-works fine
 
     }
 
     public int getXcoordinates(int square){
-        if (square % 8 !=0){//if is square 9
+        if (square % 8 != 0){//if is square 9
             this.coordX = square % 8;
             return(coordX);
         }
@@ -77,14 +76,12 @@ public class Checkers {//for individual counters
     }
 
     public int getYcoordinates(int square){
-        if (square % 8 == 1){//if is square 9
-
+        if (square % 8 != 0){//if is square 9
             this.coordY = (int) Math.floor(square/8) + 1;
             return(coordY);
         }
         else{
-            System.out.println("81  " + square/8 );
-            this.coordY = (square/8) + 1 ;
+            this.coordY = (square/8);
             return(coordY);
         }
     }
@@ -130,15 +127,13 @@ public class Checkers {//for individual counters
     //For now will havv method as static and synced so only one possible move at a time.
     public synchronized boolean show_moves(Checkers piece,Player plyr) throws Exception{//clciked piece shoudl be passed in here
         System.out.println("prev selected piece: " + selected_piece);
-        System.out.println(down_left);
-        System.out.println(down_right);
+        System.out.println(the_checker);
 
         boolean match =false;
         attack_possible = false;
 
-
         apply_front_changes(plyr,0,"remove_road",null);//nt primitive type so can pass in null
-        //before setting selected piece remove roads
+        //Before setting selected piece remove roads
 
         if(selected_piece > 0){ //refers to id
             apply_front_changes(plyr,0,"remove_road",null);//0 value ignored, passed as its the primitive
@@ -146,13 +141,13 @@ public class Checkers {//for individual counters
             selected_piece = piece.id;
         }
 
-        if (the_checker == b_checkers || the_checker == null){
-            the_checker = w_checkers;
-        }
-        else{
-            System.out.println("136");
-            the_checker = w_checkers;
-        }
+//        if (the_checker == b_checkers || the_checker == null){
+//            the_checker = w_checkers;
+//        }
+//        else{
+//            System.out.println("136");
+//            the_checker = b_checkers;
+//        }
 
         int i =0,j = 0;
 
@@ -206,15 +201,14 @@ public class Checkers {//for individual counters
             down_left = check_move(the_checker[i], tableLimit , tableLimitRight , moveUpRight , down_left,plyr);
             down_right = check_move( the_checker[i] , tableLimit , tableLimitLeft , moveUpLeft , down_right,plyr);
 
-            System.out.println("dl " +down_left);
-            System.out.println(down_right);
+
             if (the_checker[i].isKing()){
                 up_left = check_move( the_checker[i] , reverse_tableLimit , tableLimitRight , moveDownRight , up_left,plyr);
                 up_right = check_move( the_checker[i], reverse_tableLimit , tableLimitLeft , moveDownLeft, up_right,plyr);
             }
         }
 
-        if (up_left != 0 || up_right != 0  || down_left != 0 || down_right != 0){//any possible moves
+        if (up_left != 0 || up_right != 0  || down_left != 0 || down_right != 0){//any possible moves, 0's are default
             return true;
         }
         else{
@@ -225,7 +219,7 @@ public class Checkers {//for individual counters
 
     //passes in the index
     public boolean make_move(int index,String colour,Player plyr) throws  Exception{
-//        System.out.println(the_checker[selected_piece].id +" "+ the_checker[selected_piece].getCoordX());gives correct val here
+
         boolean isMove = false;
         boolean must_attack = false;
 
@@ -233,13 +227,8 @@ public class Checkers {//for individual counters
             return false; //if no counter selected but a square was selected
         }else if (up_left != index && up_right != index && down_left != index && down_right != index){//1 means move possible else no
             apply_front_changes(plyr,0,"remove_road",null);//0 value ignored, passed as its the primitive//in any case removed highlighted roads even if no move possible
-            return false; // no move possible
+            return false; // no move possible ..may need to reapply value moves for differnet users since they are different
         }
-
-
-        /*
-        ..may need to reapply value moves for differnet users since they are different
-         */
 
 
         if (colour.equals("white")){
@@ -259,33 +248,33 @@ public class Checkers {//for individual counters
 
 
         if (attack_possible){
-            player_turn = 2;//used to multiply the right values to set the counter
-
+            move_factor = 2;//used to multiply to move the counter
         }
         else{
-            player_turn =  1;
-
+            move_factor =  1; //black player
+        }
         if (moveUpRight == index){
             isMove = true;
             if (the_checker == w_checkers){
-                execute_move("white",index,player_turn * 1, player_turn * 1, player_turn * 9,plyr,the_checker[selected_piece]);
-                if (attack_possible){eliminate_check(index,plyr);}
+                execute_move("white",index,move_factor * 1, move_factor * 1, move_factor * 9,plyr,the_checker[selected_piece]);
+
+                if (attack_possible){eliminate_check(index-9,plyr);}
             }
             else{
-                execute_move("black",index,player_turn * 1, player_turn - 1, player_turn * -7,plyr,the_checker[selected_piece]);
-                if (attack_possible){eliminate_check(index,plyr);}
+                execute_move("black",index,move_factor * 1, move_factor * - 1, move_factor * -7,plyr,the_checker[selected_piece]);
+                if (attack_possible){eliminate_check(index+7,plyr);}
             }
 
         }
         if (moveUpLeft == index){
             isMove = true;
             if (the_checker == w_checkers){
-                execute_move("white",index,player_turn * -1, player_turn * 1, player_turn * 7,plyr,the_checker[selected_piece]);
-                if (attack_possible){eliminate_check(index,plyr);}
+                execute_move("white",index,move_factor * -1, move_factor * 1, move_factor * 7,plyr,the_checker[selected_piece]);
+                if (attack_possible){eliminate_check(index-7,plyr);}
             }
             else{
-                execute_move("black",index,player_turn * -1, player_turn - 1, player_turn * -9,plyr,the_checker[selected_piece]);
-                if (attack_possible){eliminate_check(index,plyr);}
+                execute_move("black",index,move_factor * -1, move_factor * - 1, move_factor * -9,plyr,the_checker[selected_piece]);
+                if (attack_possible){eliminate_check(index+9,plyr);}
             }
         }
 
@@ -293,29 +282,28 @@ public class Checkers {//for individual counters
             if (moveDownRight == index){
                 isMove = true;
                 if (the_checker == w_checkers){
-                    execute_move("white",index,player_turn * 1, player_turn * -1, player_turn * -9,plyr,the_checker[selected_piece]);
-                    if (attack_possible){eliminate_check(index,plyr);}
+                    execute_move("white",index,move_factor * 1, move_factor * -1, move_factor * -9,plyr,the_checker[selected_piece]);
+                    if (attack_possible){eliminate_check(index+7,plyr);}
                 }
                 else{
-                    execute_move("black",index,player_turn * 1, player_turn * 1, player_turn * 9,plyr,the_checker[selected_piece]);
-                    if (attack_possible){eliminate_check(index,plyr);}
+                    execute_move("black",index,move_factor * 1, move_factor * 1, move_factor * 9,plyr,the_checker[selected_piece]);
+                    if (attack_possible){eliminate_check(index-9,plyr);}
                 }
             }
             if (moveDownLeft == index){
                 isMove = true;
                 if (the_checker == w_checkers){
-                    execute_move("white",index,player_turn * -1, player_turn * -1, player_turn * -9,plyr,the_checker[selected_piece]);
-                    if (attack_possible){eliminate_check(index,plyr);}
+                    execute_move("white",index,move_factor * -1, move_factor * -1, move_factor * -9,plyr,the_checker[selected_piece]);
+                    if (attack_possible){eliminate_check(index+9,plyr);}
                 }
                 else{
-                    execute_move("black",index,player_turn * -1, player_turn * 1, player_turn * 7,plyr,the_checker[selected_piece]);
-                    if (attack_possible){eliminate_check(index,plyr);}
+                    execute_move("black",index,move_factor * -1, move_factor * 1, move_factor * 7,plyr,the_checker[selected_piece]);
+                    if (attack_possible){eliminate_check(index-7,plyr);}
                 }
 
             }
         }
-        }
-
+        apply_front_changes(plyr,0,"remove_road",null);
         the_checker[selected_piece].checkIfKing();//to apply f/e colour for kings
 
         if (isMove){
@@ -351,7 +339,6 @@ public class Checkers {//for individual counters
             }
             else{
                 theDirection = 0;
-
             }
         }
         else{
@@ -379,17 +366,16 @@ public class Checkers {//for individual counters
 
     public boolean attack_move(Checkers piece, Player plyr) throws  Exception{
 
-
         //types of moves possible
-        int up_left=0;
-        int up_right=0;
-        int down_left=0;
-        int down_right=0;
+        up_left=0;
+        up_right=0;
+        down_left=0;
+        down_right=0;
 
         if (piece.king){//all pos moves
             if (piece.colour.equals("white")){
                 up_right = check_attack(piece, 6,3,-1,-1,-1,up_right,plyr);
-                up_left = check_attack(piece,3,3,-1,-1,-9,up_left,plyr);
+                up_left = check_attack(piece,3,3,1,-1,-9,up_left,plyr);
             }
             else{//checked for black king
                 down_left = check_attack(piece,3,6,1,1,7,down_left,plyr);
@@ -399,6 +385,7 @@ public class Checkers {//for individual counters
         if(piece.colour.equals("white")){
             down_left = check_attack( piece , 3, 6, 1 , 1 , 7 , down_left,plyr );
             down_right = check_attack( piece , 6 , 6 , -1, 1 ,9 , down_right,plyr );
+            System.out.println(down_left + " 393 code");
         }
         else{//normal black check
             up_right = check_attack( piece , 6, 3 , -1 , -1 , -7, up_right,plyr );
@@ -447,6 +434,7 @@ public class Checkers {//for individual counters
             w_checkers[selected_piece].occupiedSquare += nSquare;//so this index has moves this many places on the board
         }
         else if (cur_player.equals("black")){
+            System.out.println("sdfsd "+ X + " "+ Y);
             b_checkers[selected_piece].changeCoordinates(X,Y);
             apply_front_changes(plyr,0,"non_attack_move",b_checkers[selected_piece]);
             b_checkers[selected_piece].setCoordinates(0,0);
@@ -462,17 +450,15 @@ public class Checkers {//for individual counters
 
 
     public  void eliminate_check(int index,Player plyr) throws  Exception{
-        if (index < 0 && index > 65){
-            Checkers piece_id = CheckersSquare.block[index].getPieceId();
-            System.out.println("eleiminate id" + piece_id);
-            piece_id.setAlive(false);//that piece sets it self to false
+        if (index > 0 && index < 65){
+            Checkers piece = CheckersSquare.block[index].getPieceId();
+            System.out.println("Eliminate Id " + piece + " index: " +index);
+            piece.setAlive(false);//that piece sets it self to false
             CheckersSquare.block[index].setOccupied(false);
 //            display then need to be set in the f/e
-            apply_front_changes(plyr,index,"eliminate_piece",null);
+            apply_front_changes(plyr,piece.getId(),"eliminate_piece",null);
 
         }
-
-
     }
 
     public void change_turns(Checkers[] player){
@@ -520,7 +506,8 @@ public class Checkers {//for individual counters
                 plyr.sendMessage(msg);
                 break;
             case "non_attack_move":
-                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"}",piece.getId(), (piece.getCoordX()-1 )* move_length + move_deviation,(piece.getCoordY()-1)* move_length + move_deviation);
+                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"}",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
+                System.out.println(msg + " " + piece.getCoordX() + " " + piece.getCoordY());
                 plyr.sendMessage(msg);
                 break;
         }

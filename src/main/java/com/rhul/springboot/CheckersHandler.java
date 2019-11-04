@@ -59,7 +59,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     checkers_obj = new CheckersGame(id,session,name);
                     break;
                 case "show_moves":
-                    String str_player_id = json.getString("index");
+                    String str_player_id = json.getString("index");//index or id val of the piece
                     piece_index = Integer.parseInt(str_player_id);//all vals used for this case and move cases
                     String playr_colour = json.getString("player_colour");
 
@@ -75,6 +75,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                         }
                     }
                     else if(Checkers.b_checkers[piece_index].show_moves(Checkers.b_checkers[piece_index],plyr)){
+                            System.out.println("black pl;ayer");
                             cur_plyr = "black";
                             mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                             plyr.sendMessage(mesg);
@@ -89,7 +90,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                         if (Checkers.w_checkers[piece_index].make_move(square_index,cur_plyr,plyr)){//if an attack/move possible
                             mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                             plyr.sendMessage(mesg);
-
                         }
                     }
                     else if(Checkers.b_checkers[piece_index].make_move(square_index,cur_plyr,plyr)){
@@ -104,8 +104,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     System.out.println("game initializer");
                     //To fully initialize the game
                     //id and session field act as unique in this case
-
-
 
                     for (int i = 1; i <=64; i++){
                         CheckersSquare.block[i] = new CheckersSquare(i);//64 objects of squares
@@ -155,9 +153,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                         CheckersSquare.block[24 + 2*i ].setPieceId(Checkers.b_checkers[i]);
                     }
 
-                        /*========================================================*/
 
-                    System.out.println("129 ");
+
 
                 case "join":
                     Runnable game_room = () -> {
@@ -176,12 +173,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "adjust_screen_size":
                     int move_length = json.getInt("move_length");
                     int move_dev = json.getInt("move_dev");
-
+                    //static changes made since >1 game will be of same size.
                     Checkers.move_length = move_length;
                     Checkers.move_deviation = move_dev;
-
                     System.out.println("screen size adjusted");
-
 
                     break;
 

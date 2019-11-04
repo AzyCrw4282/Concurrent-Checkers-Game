@@ -15,13 +15,13 @@ var moveSound = document.getElementById("moveSound");
 var winSound = document.getElementById("winSound");
 var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 var windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-var moveLength = 80 ;
-var moveDeviation = 10;
+var moveLength = 50 ;
+var moveDeviation = 6;
 var Dimension = 1;
 var selectedPiece,selectedPieceindex;
 var upRight,upLeft,downLeft,downRight;  // toate variantele posibile de mers pt o  dama
 var contor = 0 , gameOver = 0;
-var bigScreen = 1;
+var cur_big_screen = 1;//takes in the curr pos of the screen
 
 var block = [];
 var w_checker = [];
@@ -39,26 +39,31 @@ $(document).ready(function(){
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
         getDimension();//vars here will also need to eb updated on f/e
-        var cpy_bigScreen = bigScreen ;
+        var screen_check = cur_big_screen ;
 
-        if(windowWidth < 650){
+        if(windowWidth < 2550){
             moveLength = 50;
             moveDeviation = 6;
-            if(bigScreen == 1) bigScreen = -1;
+            if(cur_big_screen === 1){
+                cur_big_screen = -1;
+            }
         }
         if(windowWidth > 2550){
             moveLength = 80;
             moveDeviation = 10;
-            if(bigScreen == -1) bigScreen = 1;
+            if(cur_big_screen === -1) {
+                cur_big_screen = 1;
+            }
         }
 
-        if(bigScreen !=cpy_bigScreen){
+        if(cur_big_screen !== screen_check){
             for(var i = 1; i <= 12; i++){
                 b_checker[i].setCoord(0,0);
                 w_checker[i].setCoord(0,0);
             }
+            game.adjust_screen_size(moveLength,moveDeviation);
         }
-        game.adjust_screen_size(moveLength,moveDeviation);//only executed when triggered
+
     };
 });
 
@@ -70,6 +75,8 @@ function enterName(){
     // document.getElementById('div_id_menu').style.display = "block";
     document.getElementById('table').style.display = "block";
     document.getElementById('div_id_name').style.display = "none";
+    document.getElementById('game_status').style.display = "block";
+    // document.getElementById('cur_player_id').innerHTML = "White";
 
 }
 
@@ -139,6 +146,7 @@ function enter_game_room(){
 
     document.getElementById('div_id_create_room').style.display = "none";
     document.getElementById('table').style.display = "block";
+
     /*weGetTheValues​​toCreateTheRoom*/
     room = $("#room_id").val();
     comandoSala="Crear";
@@ -172,6 +180,7 @@ var square_p = function(square,index){
 var checker = function(piece,color,square,index) {//unique idenfitification for each counter
     this.id = piece;
     this.color = color;
+    this.index = index;
     this.king = false;
     this.ocupied_square = square;
     this.alive = true;
@@ -288,7 +297,7 @@ class Game {
             block[24 + 2 * i].ocupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
-        the_checker = w_checker;
+
         this.connect();
     }
 
@@ -306,6 +315,7 @@ class Game {
         }
 
     }
+
     //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
     make_move(index){
         console.log("sqaure clicked");
@@ -315,17 +325,51 @@ class Game {
 
 
     }
-    //send and readjust coords in the b/e as well
+
+    //No corrds changes in b/e only display changes in f/e
     adjust_screen_size(move_length,move_dev){
         var str = {"type" : "adjust_screen_size","move_length" : move_length ,"move_dev" : move_dev};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
+        //once notifified, f/e changes applied
+
 
     }
 
 
+    change_turns(){
+        if (the_checker === w_checker){
+            the_checker = b_checker;
+            document.getElementById("cur_player_img_id").src = "black_checker.jpg"
+        }
+        else if (the_checker ===  b_checker){
+            the_checker = w_checker;
+            document.getElementById("cur_player_img_id").src = "white_checker.png"
+        }
+        else{
+            the_checker = w_checker
+        }
+    }
 
-    show_moves(index,colour){
+
+    show_moves(index,colour)
+    {
+        //Allows for user click validations
+        if (the_checker === b_checker && colour === "white") {
+            alert("It's the black player's turn");
+            return false;
+        } else if (the_checker === w_checker && colour === "black") {
+            alert("It's the white player's turn");
+            return false;
+        }
+
+        //set colour here.
+        if (colour === "white"){
+            the_checker = w_checker;
+        }
+        else if (colour === "black"){
+            the_checker = b_checker;
+        }
         console.log("square selected index below");
         console.log(index);
         var str = {"type" : "show_moves","index" : index ,"player_colour" : colour};
@@ -341,7 +385,7 @@ class Game {
 
     }
 
-    remove_road(downRight,downLeft,upRight,upLeft){//to check this
+    remove_road(upLeft,upRight,downLeft,downRight){ //to check this
         console.log(downRight,downLeft,upRight,upLeft );
         if(downRight >0 ) block[downRight].id.style.background = "#BA7A3A";
         if(downLeft >0) block[downLeft].id.style.background = "#BA7A3A";
@@ -356,6 +400,7 @@ class Game {
     move_attack(index){
         if (index > 0) block[index].id.style.background = "#007010";
     }
+
     non_attack_move(id,x,y){
         console.log("-----",x,y,id);
         this.id.style.top = y + 'px';
@@ -435,26 +480,27 @@ class Game {
                     var down_right = packet.down_right;
                     game.remove_road(up_left,up_right,down_left,down_right);
                     break;
-                case 'move_atttack':
+                case 'move_attack':
                     console.log("make the move");
                     var index = packet.data;
                     game.move_attack(index);
+                    //once move made, set the other players turn
+                    game.change_turns();
                     break;
                 case 'eliminate_piece':
                     console.log("Piece elimination");
-                    var piece_index = packet.data;
-                    piece_index = false;
-                    block[piece_index].occupied(false);
-                    piece_index.id.style.display = "none";
+                    let elim_piece_id = packet.data;
+                    console.log(elim_piece_id);
+                    the_checker[elim_piece_id].id.style.display = "none";
                     break;
                 case 'non_attack_move':
                     console.log("non-attack move");
                     var piece_id = packet.id;
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
-
                     the_checker[piece_id].move_coord(x_coord,y_coord);
                     // game.non_attack_move(piece_id,x_coord,y_coord);
+                    game.change_turns();
                     break;
 
             }
