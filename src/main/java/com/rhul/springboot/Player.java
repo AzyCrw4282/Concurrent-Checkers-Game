@@ -1,3 +1,7 @@
+/*
+    This class is for the active players of the game
+
+ */
 package com.rhul.springboot;
 import lombok.Getter;
 import lombok.Setter;
@@ -5,44 +9,22 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-/*
-class includes following vars:
-player id
-player name
-player room
-thread var(known why)
-WSS
 
-
-methods:
-
-
-constr
-restores all moves and values, whem game state is end
-scores for each move captured
-msg sending
-checkMade
-points
-getters and setters to be @sync form without lombok
-
-
- */
 @Getter @Setter
 public class Player {
 
     public AtomicInteger playerId = new AtomicInteger(0);
     public AtomicInteger roomId = new AtomicInteger(0);
 
+
+    //lombok used here
     private final int id;
     private final String name;
     private ChatRoom room;
-    private Thread thread;
+    private Thread cur_thread;
     private final WebSocketSession session;
     private int score;
     private int bonus_moves;
-
-
-
 
     public Player(int id, String name, WebSocketSession session){
         this.id = id;
@@ -69,11 +51,7 @@ public class Player {
 
 
 
-    //getters and setters achieved through lombok
-    //lombok not working!!!
-     public int getId(){
-        return id;
-     }
+
 
 
 

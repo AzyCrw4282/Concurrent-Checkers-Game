@@ -20,15 +20,15 @@ public class Checkers {//for individual counters
     private boolean king = false;
     private boolean game_started = false;
     private boolean one_move = false;
-    public static Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
-    public static Checkers[] b_checkers = new Checkers[13];
+    public  Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
+    public  Checkers[] b_checkers = new Checkers[13];
     private int coordX;
     private int coordY;
     private boolean alive;
     private int occupiedSquare;
     private int selected_piece;
     private  boolean attack_possible = false;
-    private static Checkers the_checker[];
+    private  Checkers the_checker[];
 
     //adjust screen sizes fix to coord x and y
     public static int move_length = 50;
@@ -42,11 +42,11 @@ public class Checkers {//for individual counters
     int moveUpLeft;
     int moveDownRight;
     int moveDownLeft;
-    private  int move_factor;
-    private static int up_left =0;
-    private static int up_right=0;
-    private static int down_left=0;
-    private static int down_right=0;
+    private int move_factor;
+    private int up_left =0;
+    private int up_right=0;
+    private int down_left=0;
+    private int down_right=0;
 
     boolean another_move;
 
@@ -152,15 +152,15 @@ public class Checkers {//for individual counters
         int i =0,j = 0;
 
         for (j=1;j<=12;j++){
-            if (Checkers.w_checkers[j].equals(piece)){
-                selected_piece = Checkers.w_checkers[j].id;
+            if (w_checkers[j].equals(piece)){
+                selected_piece = w_checkers[j].id;
                 match = true; //game is on
                 i = j;
                 the_checker = w_checkers;
             }
-            else if (Checkers.b_checkers[j].equals(piece)){
+            else if (b_checkers[j].equals(piece)){
                 System.out.println("150");
-                selected_piece = Checkers.b_checkers[j].id;
+                selected_piece = b_checkers[j].id;
                 the_checker = b_checkers;
                 i = j;
                 match = true;

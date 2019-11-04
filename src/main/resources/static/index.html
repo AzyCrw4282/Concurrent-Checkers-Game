@@ -1,3 +1,8 @@
+<!--
+Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
+
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -69,7 +74,7 @@
 
     <!-- The canvas will be hidden at the beginning first the user name will be requested-->
     <div class="col-md-7" id="canvas">
-<!--        <canvas id="playground" width="640" height="480"></canvas>-->
+
 
         <!-- astea 2 sunt puse ca indexarea claselor sa inceapa de la 1 -->
         <div class="checker white_checker" style="display:none"> </div>
@@ -77,7 +82,7 @@
 
 
 
-        <!--        canvas will not be used, instead a div style method to be used. First one defined below-->
+        <!-- 1st game       canvas will not be used, instead a div style method to be used. First one defined below-->
         <div class="square" style="display: none" id ="ht"> </div>
         <div class="black_background" id="black_background"> </div>
 
@@ -194,6 +199,151 @@
             <div class="clear_float"> </div>
 
         </div>
+
+        <div class="game_status" id = "game_status" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none">
+
+            <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
+            <hr>
+
+            <div class="prev_state">
+                <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+
+            </div>
+
+            <!--alternate text on player 1/2-->
+            <div class="cur_player" style="margin-left: 175px" >
+                <img class="cur_player" id="cur_player_img_id" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+            </div>
+
+            <!--            <div class="next_state">-->
+            <!--                <i class="large material-icons" style="font-size: 50px;float: right;">navigate_next</i>-->
+            <!--            </div>-->
+
+        </div>
+
+
+
+<!-- code for the second game -->
+        <div class="square2" style="display: none" id ="ht2"> </div>
+        <div class="black_background2" id="black_background2"> </div>
+
+        <div class="score2" id="score2">
+            <br>
+        </div>
+        <div class="table2" style = "display: none" id="table2">
+
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+            <div class="checker white_checker2"> </div>
+
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+            <div class="checker black_checker2"> </div>
+
+
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="clear_float"> </div>
+
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="square white_square2"> </div>
+            <div class="square black_square2"> </div>
+            <div class="clear_float"> </div>
+
+        </div>
+
+
+
+
 
         <div class="game_status" id = "game_status" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none">
 
