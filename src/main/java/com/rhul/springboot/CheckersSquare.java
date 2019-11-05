@@ -3,13 +3,17 @@ package com.rhul.springboot;
 
 public class CheckersSquare {
 
-    public static CheckersSquare[] block = new CheckersSquare[65];
+    public  CheckersSquare[] block = new CheckersSquare[65];
 
     private int id;
     private boolean occupied;
     private Checkers pieceId;//the id of the piece on the square
 
     //creats 64 squares objects to identify each and all
+    public CheckersSquare(){
+
+    }
+
     public CheckersSquare(int square_id){
         this.id = square_id;
         this.occupied = false;
@@ -17,6 +21,7 @@ public class CheckersSquare {
 
 
     }
+
     //event handler will trigger this call
     public void onClick() throws Exception{
         //when square selected and valid, make a move

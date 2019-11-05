@@ -274,8 +274,7 @@ class Game {
     constructor(){
         this.socket = null;
         this.fps = 30;
-        this.skipTicks = 1000 / this.fps;
-        this.nextGameTick = (new Date).getTime();
+
     }
 
     /*initializeTheGame*/
@@ -335,21 +334,6 @@ class Game {
         this.connect();
     }
 
-    //This method handles updatign pos on the board. May need to see game_id
-    executeMove(cur_player,counter_index,X,Y,nSquare,game_id){ // params: player, x and y pos to move,N_square move
-        if (cur_player == "white"){
-            //update the pos, and rest updated on back/end
-            w_checker[counter_index].changeCoord(X,Y);
-            w_checker[counter_index].setCoord(0,0);
-
-        }
-        else{
-            b_checker[counter_index].changeCoord(X,Y);
-            b_checker[counter_index].setCoord(0,0);
-        }
-
-    }
-
     //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
     make_move(index){
         console.log("sqaure clicked");
@@ -361,7 +345,7 @@ class Game {
     }
 
     //No corrds changes in b/e only display changes in f/e
-    adjust_screen_size(move_length,move_dev){
+    static adjust_screen_size(move_length,move_dev){
         var str = {"type" : "adjust_screen_size","move_length" : move_length ,"move_dev" : move_dev};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
@@ -405,7 +389,8 @@ class Game {
         }
         console.log("square selected index below");
         console.log(index);
-        var str = {"type" : "show_moves","index" : index ,"player_colour" : colour};
+        user_action = "show_moves";
+        var str = {"type" : "user","user_action" : "show_moves","index" : index ,"player_colour" : colour};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }

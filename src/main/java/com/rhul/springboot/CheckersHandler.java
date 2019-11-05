@@ -27,6 +27,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     private static final String player_black = "black";
     private ReentrantLock Lk = new ReentrantLock();
     private WebSocketSession s;
+    private Checkers checks_obj;
 
     CheckersGame game = new CheckersGame();
     Executor executor = Executors.newFixedThreadPool(10);//
@@ -39,13 +40,9 @@ public class CheckersHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
 
-
-
             int player_ids = game.player_ids.getAndIncrement();
             String payload = message.getPayload();
             JSONObject json = new JSONObject(payload);
-
-
 
             String type = json.getString("type");//this could be of any
             switch (type){
@@ -67,55 +64,60 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                               if (json.getString("user_action").equals("initialize")){
                                   System.out.println("game initializer");
+                                  //used as parent/main objects
+                                  CheckersSquare checks_sqr = new CheckersSquare();
+                                  checks_obj = new Checkers(player,checks_sqr);
+
+
                                   //To fully initialize the game
                                   //id and session field act as unique in this case
 
                                   for (int i = 1; i <=64; i++){
-                                      CheckersSquare.block[i] = new CheckersSquare(i);//64 objects of squares
-                                  }
+                                      checks_sqr.block[i] = new CheckersSquare(i);//64 objects of squares
 
+                                  }
                                   // white counters
                                   for (int i = 1; i <= 4; i++){
-                                      Checkers.w_checkers[i] = new Checkers(i, "white", 2*i -1 );
-                                      Checkers.w_checkers[i].setCoordinates(0,0);
-                                      CheckersSquare.block[2*i - 1].setOccupied();
-                                      CheckersSquare.block[2*i - 1].setPieceId(Checkers.w_checkers[i]);
+                                      checks_obj.w_checkers[i] = new Checkers(i, "white", 2*i -1 );
+                                      checks_obj.w_checkers[i].setCoordinates(0,0);
+                                      checks_sqr.block[2*i - 1].setOccupied();
+                                      checks_sqr.block[2*i - 1].setPieceId(checks_obj.w_checkers[i]);
                                   }
 
                                   for (int i = 5; i <= 8; i++){
-                                      Checkers.w_checkers[i] = new Checkers(i, "white", 2*i );
-                                      Checkers.w_checkers[i].setCoordinates(0,0);
-                                      CheckersSquare.block[2*i].setOccupied();
-                                      CheckersSquare.block[2*i].setPieceId(Checkers.w_checkers[i]);
+                                      checks_obj.w_checkers[i] = new Checkers(i, "white", 2*i );
+                                      checks_obj.w_checkers[i].setCoordinates(0,0);
+                                      checks_sqr.block[2*i].setOccupied();
+                                      checks_sqr.block[2*i].setPieceId(checks_obj.w_checkers[i]);
                                   }
 
                                   for (int i = 9; i <= 12; i++){
-                                      Checkers.w_checkers[i] = new Checkers(i, "white", 2*i - 1 );
-                                      Checkers.w_checkers[i].setCoordinates(0,0);
-                                      CheckersSquare.block[2*i - 1].setOccupied();
-                                      CheckersSquare.block[2*i - 1].setPieceId(Checkers.w_checkers[i]);
+                                      checks_obj.w_checkers[i] = new Checkers(i, "white", 2*i - 1 );
+                                      checks_obj.w_checkers[i].setCoordinates(0,0);
+                                      checks_sqr.block[2*i - 1].setOccupied();
+                                      checks_sqr.block[2*i - 1].setPieceId(checks_obj.w_checkers[i]);
                                   }
 
 
                                   for (int i = 1; i <= 4; i++){
-                                      Checkers.b_checkers[i] = new Checkers(i, "black", 56 + 2*i  );
-                                      Checkers.b_checkers[i].setCoordinates(0,0);
-                                      CheckersSquare.block[56 +  2*i ].setOccupied();
-                                      CheckersSquare.block[56+  2*i ].setPieceId(Checkers.b_checkers[i]);
+                                      checks_obj.b_checkers[i] = new Checkers(i, "black", 56 + 2*i  );
+                                      checks_obj.b_checkers[i].setCoordinates(0,0);
+                                      checks_sqr.block[56 +  2*i ].setOccupied();
+                                      checks_sqr.block[56 +  2*i ].setPieceId(checks_obj.b_checkers[i]);
                                   }
 
                                   for (int i = 5; i <= 8; i++){
-                                      Checkers.b_checkers[i] = new Checkers(i, "black", 40 +  2*i - 1 );
-                                      Checkers.b_checkers[i].setCoordinates(0,0);
-                                      CheckersSquare.block[ 40 + 2*i - 1].setOccupied();
-                                      CheckersSquare.block[ 40 + 2*i - 1].setPieceId(Checkers.b_checkers[i]);
+                                      checks_obj.b_checkers[i] = new Checkers(i, "black", 40 +  2*i - 1 );
+                                      checks_obj.b_checkers[i].setCoordinates(0,0);
+                                      checks_sqr.block[ 40 + 2*i - 1].setOccupied();
+                                      checks_sqr.block[ 40 + 2*i - 1].setPieceId(checks_obj.b_checkers[i]);
                                   }
 
                                   for (int i = 9; i <= 12; i++){
-                                      Checkers.b_checkers[i] = new Checkers(i, "black", 24 + 2*i  );
-                                      Checkers.b_checkers[i].setCoordinates(0,0);
-                                      CheckersSquare.block[24 + 2*i ].setOccupied();
-                                      CheckersSquare.block[24 + 2*i ].setPieceId(Checkers.b_checkers[i]);
+                                      checks_obj.b_checkers[i] = new Checkers(i, "black", 24 + 2*i  );
+                                      checks_obj.b_checkers[i].setCoordinates(0,0);
+                                      checks_sqr.block[24 + 2*i ].setOccupied();
+                                      checks_sqr.block[24 + 2*i ].setPieceId(checks_obj.b_checkers[i]);
                                   }
 
                               }
@@ -124,18 +126,18 @@ public class CheckersHandler extends TextWebSocketHandler {
                                   String str_player_id = json.getString("index");//index or id val of the piece
                                   piece_index = Integer.parseInt(str_player_id);//all vals used for this case and move cases
                                   String playr_colour = json.getString("player_colour");
-
+                                  System.out.println("129");
                                   //To check for possible moves for a given piece
 
                                   if (playr_colour.equals("white")){
                                       cur_plyr = "white";
-                                      if (Checkers.w_checkers[piece_index].show_moves(Checkers.w_checkers[piece_index],player)){//if an attack/move possible
+                                      if (checks_obj.w_checkers[piece_index].show_moves(checks_obj.w_checkers[piece_index],player)){//if an attack/move possible
                                           mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                                           player.sendMessage(mesg);
 
                                       }
                                   }
-                                  else if(Checkers.b_checkers[piece_index].show_moves(Checkers.b_checkers[piece_index],player)){
+                                  else if(checks_obj.b_checkers[piece_index].show_moves(checks_obj.b_checkers[piece_index],player)){
                                       System.out.println("black pl;ayer");
                                       cur_plyr = "black";
                                       mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
@@ -149,12 +151,12 @@ public class CheckersHandler extends TextWebSocketHandler {
                                   int square_index = json.getInt("index");
 
                                   if (cur_plyr.equals("white")){
-                                      if (Checkers.w_checkers[piece_index].make_move(square_index,cur_plyr,player)){//if an attack/move possible
+                                      if (checks_obj.w_checkers[piece_index].make_move(square_index,cur_plyr,player)){//if an attack/move possible
                                           mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                                           player.sendMessage(mesg);
                                       }
                                   }
-                                  else if(Checkers.b_checkers[piece_index].make_move(square_index,cur_plyr,player)){
+                                  else if(checks_obj.b_checkers[piece_index].make_move(square_index,cur_plyr,player)){
                                       cur_plyr = "black";
                                       mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                                       player.sendMessage(mesg);
@@ -176,9 +178,9 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     };
                   executor.execute(threads_area);
-
+                  break;
                 case "initialize_game":
-
+                    break;
 
                 case "connection_incoming":
                     System.out.print("connection active");
@@ -195,7 +197,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "sync_data":
                     //To sync f/e and b/e
-
+                    break;
 
                 //other cases for chat, room handling to be written
 

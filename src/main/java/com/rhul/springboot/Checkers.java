@@ -29,6 +29,8 @@ public class Checkers {//for individual counters
     private int selected_piece;
     private  boolean attack_possible = false;
     private  Checkers the_checker[];
+    private Player plyr;
+    private CheckersSquare cs;
 
     //adjust screen sizes fix to coord x and y
     public static int move_length = 50;
@@ -50,6 +52,12 @@ public class Checkers {//for individual counters
 
     boolean another_move;
 
+    public Checkers(Player plyr,CheckersSquare cS){
+        this.plyr = plyr;
+        this.cs = cS;
+    }
+
+
     //keeps track of the board and counters. need this int game_id,
     public Checkers(int square_piece, String colour, int square){//add  player, String game_type ltr vrsions
         this.id = square_piece;
@@ -60,6 +68,7 @@ public class Checkers {//for individual counters
         this.alive = true;
         this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
+
 
     }
 
@@ -330,7 +339,7 @@ public class Checkers {//for individual counters
     public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Player plyr) throws Exception{
         if (piece.coordY != top_limit){
             System.out.println("221 " + piece.coordX + " " + LimitSide);
-            if (piece.coordX != LimitSide && !CheckersSquare.block[piece.occupiedSquare + moveDirection].isOccupied()){//isOccupied is the root
+            if (piece.coordX != LimitSide && !cs.block[piece.occupiedSquare + moveDirection].isOccupied()){//isOccupied is the root
                 int value = piece.occupiedSquare + moveDirection;
                 java.lang.String sdfg = "";
                 // method call to apply ->send colour change to f/e
@@ -350,7 +359,7 @@ public class Checkers {//for individual counters
 
     public int check_attack(Checkers piece, int X, int Y, int negX, int negY,int squareMove, int direction,Player plyr ) throws Exception{
 
-        if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && CheckersSquare.block[piece.occupiedSquare + squareMove].isOccupied() && CheckersSquare.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !CheckersSquare.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
+        if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && cs.block[piece.occupiedSquare + squareMove].isOccupied() && cs.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !cs.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
             attack_possible = true;
             direction = (piece.occupiedSquare + squareMove * 2);
             apply_front_changes(plyr,direction,"move_attack",null);
@@ -427,10 +436,10 @@ public class Checkers {//for individual counters
             w_checkers[selected_piece].changeCoordinates(X,Y);
             apply_front_changes(plyr,0,"non_attack_move",w_checkers[selected_piece]);
             w_checkers[selected_piece].setCoordinates(0,0);
-            CheckersSquare.block[w_checkers[selected_piece].occupiedSquare].setOccupied(false);
-            CheckersSquare.block[w_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);// id and piece id in sqaure class different. piece id are assigned in the initialization and set it to the value of it
-            CheckersSquare.block[w_checkers[selected_piece].occupiedSquare+nSquare].setPieceId(CheckersSquare.block[w_checkers[selected_piece].occupiedSquare].getPieceId());
-            CheckersSquare.block[w_checkers[selected_piece].occupiedSquare].setPieceId(null);
+            cs.block[w_checkers[selected_piece].occupiedSquare].setOccupied(false);
+            cs.block[w_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);// id and piece id in sqaure class different. piece id are assigned in the initialization and set it to the value of it
+            cs.block[w_checkers[selected_piece].occupiedSquare+nSquare].setPieceId(cs.block[w_checkers[selected_piece].occupiedSquare].getPieceId());
+            cs.block[w_checkers[selected_piece].occupiedSquare].setPieceId(null);
             w_checkers[selected_piece].occupiedSquare += nSquare;//so this index has moves this many places on the board
         }
         else if (cur_player.equals("black")){
@@ -438,10 +447,10 @@ public class Checkers {//for individual counters
             b_checkers[selected_piece].changeCoordinates(X,Y);
             apply_front_changes(plyr,0,"non_attack_move",b_checkers[selected_piece]);
             b_checkers[selected_piece].setCoordinates(0,0);
-            CheckersSquare.block[b_checkers[selected_piece].occupiedSquare].setOccupied(false);
-            CheckersSquare.block[b_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);// id and piece id in sqaure class different. piece id are assigned in the initialization and set it to the value of it
-            CheckersSquare.block[b_checkers[selected_piece].occupiedSquare+nSquare].setPieceId(CheckersSquare.block[b_checkers[selected_piece].occupiedSquare].getPieceId());
-            CheckersSquare.block[b_checkers[selected_piece].occupiedSquare].setPieceId(null);
+            cs.block[b_checkers[selected_piece].occupiedSquare].setOccupied(false);
+            cs.block[b_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);// id and piece id in sqaure class different. piece id are assigned in the initialization and set it to the value of it
+            cs.block[b_checkers[selected_piece].occupiedSquare+nSquare].setPieceId(cs.block[b_checkers[selected_piece].occupiedSquare].getPieceId());
+            cs.block[b_checkers[selected_piece].occupiedSquare].setPieceId(null);
             b_checkers[selected_piece].occupiedSquare += nSquare;//so this index has moves this many places on the board
 
         }
@@ -451,10 +460,10 @@ public class Checkers {//for individual counters
 
     public  void eliminate_check(int index,Player plyr) throws  Exception{
         if (index > 0 && index < 65){
-            Checkers piece = CheckersSquare.block[index].getPieceId();
+            Checkers piece = cs.block[index].getPieceId();
             System.out.println("Eliminate Id " + piece + " index: " +index);
             piece.setAlive(false);//that piece sets it self to false
-            CheckersSquare.block[index].setOccupied(false);
+            cs.block[index].setOccupied(false);
 //            display then need to be set in the f/e
             apply_front_changes(plyr,piece.getId(),"eliminate_piece",null);
 
