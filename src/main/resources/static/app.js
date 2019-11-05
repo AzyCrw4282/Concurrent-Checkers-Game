@@ -80,11 +80,12 @@ $(document).ready(function(){
 function enterName(){
 
     user = $("#id_name_value").val();
+    room = $("rm_nm_value").val();
     start_game();
     /*we show the buttons to create room, join room and chat*/
     // document.getElementById('div_id_menu').style.display = "block";
-    document.getElementById('table').style.display = "block";
     document.getElementById('div_id_name').style.display = "none";
+    document.getElementById('table').style.display = "block";
     document.getElementById('game_status').style.display = "block";
     // document.getElementById('cur_player_id').innerHTML = "White";
 

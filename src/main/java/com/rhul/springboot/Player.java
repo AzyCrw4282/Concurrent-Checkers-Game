@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
-import java.util.concurrent.ConcurrentHashMap;
+
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter @Setter
@@ -20,7 +20,7 @@ public class Player {
     //lombok used here
     private final int id;
     private final String name;
-    private ChatRoom room;
+    private Room room;
     private Thread cur_thread;
     private final WebSocketSession session;
     private int score;
@@ -35,6 +35,7 @@ public class Player {
     private void resetState(){
         this.score = 0;
         this.bonus_moves = 0;
+
 
     }
 
