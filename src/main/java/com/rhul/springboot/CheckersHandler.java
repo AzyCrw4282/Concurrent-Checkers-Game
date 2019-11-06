@@ -65,9 +65,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                               session.getAttributes().put(game_att,plyr);//session can manage the right object and can retrieve it
                               String user_action = json.getString("user_action");
                               Room rm;//to  be initized
-                              String rm_val = json.getString("room_value");;
-
-
+                              String rm_val = json.getString("room_action");
 
                              switch (user_action){
                                  case "create_room":
@@ -95,7 +93,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          return;
 
                                      }
-
+                                     break;
                                  case "join_room":
                                      if (game.check_room_exists(rm_val)){
                                          //rm exists
@@ -135,7 +133,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          plyr.sendMessage(msg);
                                      }
 
-
+                                     break;
                                  case "initialize":
                                      System.out.println("game initializer");
                                      //used as parent/main objects
@@ -193,6 +191,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          checks_sqr.block[24 + 2*i ].setOccupied();
                                          checks_sqr.block[24 + 2*i ].setPieceId(checks_obj.b_checkers[i]);
                                      }
+
+                                     //set the game started process here
+
+                                     break;
                                  case "show_moves":
                                      String str_player_id = json.getString("index");//index or id val of the piece
                                      piece_index = Integer.parseInt(str_player_id);//all vals used for this case and move cases
@@ -215,6 +217,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          plyr.sendMessage(mesg);
                                      }
                                      Lk.unlock();
+                                     break;
                                  case "make_move":
 
                                      int square_index = json.getInt("index");
@@ -232,24 +235,27 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      }
 
                                      Lk.unlock();
+                                     break;
                                  case "chat":
-
-
-
+                                     break;
                              }
 
                           }
                           catch (Exception e){
                               e.printStackTrace();
+                              System.out.println("error in handling user_action from f/e");
                               //error reporting feature can be used here maybe..........
                           }
-
                     };
 
                   executor.execute(threads_area);
                   break;
-                case "initialize_game":
+                case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
+                    System.out.println("game start process underway");
+                    Player plyr = (Player) session.getAttributes().get(game_att);
+                    plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     break;
+
 
                 case "connection_incoming":
                     System.out.print("connection active");

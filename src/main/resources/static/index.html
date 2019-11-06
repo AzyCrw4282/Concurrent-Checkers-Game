@@ -40,9 +40,13 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
             <div class="col-md-4" style="margin-left: 185px">
                 <p id="rm_name">Enter your room name</p>
-                <input id="rm_nm_value"></input>
+                <input id="rm_nm_value">
             </div>
             <button class=".btn" id="button1" onclick="enterName()">Enter</button>
+
+            <input id="id_rm_value">
+            <button class=".btn" id="join_room_btn" onclick="join_a_room()">Join room</button>
+
         </div>
 
 
@@ -58,7 +62,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
     <!-- createRoom -->
     <div class="col-md-4 btn-group" id="div_id_create_room">
         <p id="titCrear">Enter the name of the room and the difficulty</p>
-        <input id="room_id"></input>
+        <input id="room_id">
 
         <label id="opc" class="radio-inline"><input type="radio" id="radio1" name="optradio" checked="checked">Easy</label>
         <label id="opc2" class="radio-inline"><input type="radio" id="radio2" name="optradio">Normal</label>
@@ -376,17 +380,17 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
 
         <div class="game_options" style="display:none;">
-            <div id="modal3">
-                <button class=".btn" id="button5" onclick="actionIniciar()">Start</button>
+            <div id="start_div">
+                <button class=".btn" id="button5" onclick="start_game_btn()">Start</button>
             </div>
 
-            <div id="cancel">
+            <div id="cancel_div">
                 <button class=".btn" id="cancelar" onclick="actionCancelar()"> Cancel </button>
             </div>
 
-            <div id="modal4">
-                <button class=".btn" id="button6" onclick="actionMuro()">See wall of fame</button>
-            </div>
+<!--            <div id="modal4">-->
+<!--                <button class=".btn" id="button6" onclick="actionMuro()">See wall of fame</button>-->
+<!--            </div>-->
         </div>
     </div>
 

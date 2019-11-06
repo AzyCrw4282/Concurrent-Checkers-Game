@@ -1,9 +1,10 @@
 
 /*
-Adapted from here https://codepen.io/calincojo/pen/wBQqYm, though most of them are changed.
+I have use this as reference. https://codepen.io/calincojo/pen/wBQqYm, though most of the code are changed.
  */
 var user;
 var room;
+var room_action;
 var difficulty;
 var players= [];
 var chat = false;
@@ -80,7 +81,8 @@ $(document).ready(function(){
 function enterName(){
 
     user = $("#id_name_value").val();
-    room = $("rm_nm_value").val();
+    room = $("#rm_name").val();
+    room_action = "create_room";
     start_game();
     /*we show the buttons to create room, join room and chat*/
     // document.getElementById('div_id_menu').style.display = "block";
@@ -103,10 +105,22 @@ function create_room(){
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
-    document.getElementById('btnPrinc').style.display = "none";
-    document.getElementById('div_id_create_room').style.display = "block";
-    document.getElementById('divChat').style.display = "none";
-    document.getElementById('console').style.height = "90%";
+    // document.getElementById('btnPrinc').style.display = "none";
+    // // document.getElementById('div_id_create_room').style.display = "block";
+    // document.getElementById('divChat').style.display = "none";
+    // document.getElementById('console').style.height = "90%";
+
+    //to use the above for the real design
+    room = $("#id_rm_value").val();
+    room_action = "join_room";
+    start_game();
+    /*we show the buttons to create room, join room and chat*/
+    // document.getElementById('div_id_menu').style.display = "block";
+    document.getElementById('div_id_name').style.display = "none";
+    document.getElementById('table').style.display = "block";
+    document.getElementById('game_status').style.display = "block";
+
+
 
 }
 
@@ -145,7 +159,7 @@ function enter_chat(){
 
     /*thePlayerIsAddedToTheChat*/
     sala = "-1";
-    comandoSala="Chat";
+
     players.push(new Player(user));
     updatePlayerBox();
     chat =  true;
@@ -159,8 +173,8 @@ function enter_game_room(){
     document.getElementById('table').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
-    room = $("#room_id").val();
-    comandoSala="Crear";
+    room = $("#rm_name").val();
+
     difficulty = 0;
 
     if ($('#radio2').prop('checked')){
@@ -170,6 +184,14 @@ function enter_game_room(){
     }
     start_game();
 }
+//displayed when 2 users exists for nw
+function start_game_btn(){
+    console.log("game has been started");
+    var msg = {"type" : "start_game"};
+    document.getElementById('start_div').style.display = "none";
+    game.send_data(msg);
+}
+
 
 class checkers_squares {
     constructor(square, index) {
@@ -391,7 +413,7 @@ class Game {
         console.log("square selected index below");
         console.log(index);
         user_action = "show_moves";
-        var str = {"type" : "user","user_action" : "show_moves","index" : index ,"player_colour" : colour};
+        var str = {"type" : "user","user_action" : user_action,"index" : index ,"player_colour" : colour};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -504,13 +526,22 @@ class Game {
                     // game.non_attack_move(piece_id,x_coord,y_coord);
                     game.change_turns();
                     break;
+                case "join_room_resp":
+                    if (packet.data === "rdy_to_join"){
+                        document.getElementById("start_div").style.display = "block";
+                    }
+                    else{
+                        console.log(packet.data);
+                    }
+                    break;
+
             }
         }
     }
 
-    /*send the first message of each client to the server*/
+    /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
     open() { // tba -> "Sala":room, "difficulty":difficulty "user": user,
-        var msg = {"type": "user", "user_action":user_action};
+        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
         this.socket.send(json_str);
 
