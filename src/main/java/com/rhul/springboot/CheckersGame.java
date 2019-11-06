@@ -33,7 +33,8 @@ public class CheckersGame {
 
     public boolean check_room_exists(String rm){
         for (Room room : rooms_hm.values()){
-            if (room.equals(rm)){
+            System.out.println(room.getRoom_name());
+            if (room.getRoom_name().equals(rm)){
                 return true;
             }
         }

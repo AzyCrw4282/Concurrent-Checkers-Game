@@ -3,7 +3,7 @@
 I have use this as reference. https://codepen.io/calincojo/pen/wBQqYm, though most of the code are changed.
  */
 var user;
-var room;
+var room_value;;
 var room_action;
 var difficulty;
 var players= [];
@@ -17,8 +17,6 @@ var table = document.getElementById("table");
 var score = document.getElementById("score");
 
 //second game
-
-
 
 
 var moveSound = document.getElementById("moveSound");
@@ -69,8 +67,8 @@ $(document).ready(function(){
 
         if(cur_big_screen !== screen_check){
             for(var i = 1; i <= 12; i++){
-                b_checker[i].setCoord(0,0);
-                w_checker[i].setCoord(0,0);
+                b_checker[i].set_coords(0,0);
+                w_checker[i].set_coords(0,0);
             }
             game.adjust_screen_size(moveLength,moveDeviation);
         }
@@ -81,7 +79,7 @@ $(document).ready(function(){
 function enterName(){
 
     user = $("#id_name_value").val();
-    room = $("#rm_name").val();
+    room_value = $("#rm_nm_value").val();
     room_action = "create_room";
     start_game();
     /*we show the buttons to create room, join room and chat*/
@@ -111,16 +109,14 @@ function join_a_room(){
     // document.getElementById('console').style.height = "90%";
 
     //to use the above for the real design
-    room = $("#id_rm_value").val();
+    room_value = $("#rm_nm_value").val();
     room_action = "join_room";
-    start_game();
     /*we show the buttons to create room, join room and chat*/
     // document.getElementById('div_id_menu').style.display = "block";
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('table').style.display = "block";
     document.getElementById('game_status').style.display = "block";
-
-
+    start_game();
 
 }
 
@@ -147,7 +143,7 @@ function action_matchmaking(){
         game.enviar(aux);
         $("#player-box").text("");
         chat = false;
-        game.open();
+        // game.open(); fault here
     }
 }
 
@@ -173,7 +169,7 @@ function enter_game_room(){
     document.getElementById('table').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
-    room = $("#rm_name").val();
+    room_value = $("#rm_name").val();
 
     difficulty = 0;
 
@@ -368,7 +364,7 @@ class Game {
     }
 
     //No corrds changes in b/e only display changes in f/e
-    static adjust_screen_size(move_length,move_dev){
+    adjust_screen_size(move_length,move_dev){
         var str = {"type" : "adjust_screen_size","move_length" : move_length ,"move_dev" : move_dev};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
@@ -413,7 +409,7 @@ class Game {
         console.log("square selected index below");
         console.log(index);
         user_action = "show_moves";
-        var str = {"type" : "user","user_action" : user_action,"index" : index ,"player_colour" : colour};
+        var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -541,7 +537,7 @@ class Game {
 
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
     open() { // tba -> "Sala":room, "difficulty":difficulty "user": user,
-        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room, "difficulty_lvl" : difficulty};
+        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
         this.socket.send(json_str);
 
