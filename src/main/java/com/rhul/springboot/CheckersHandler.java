@@ -29,7 +29,6 @@ public class CheckersHandler extends TextWebSocketHandler {
     private ReentrantLock Lk = new ReentrantLock();
     private WebSocketSession s;
     private Checkers checks_obj;
-    private static int i=1;
 
     CheckersGame game = new CheckersGame();
     Executor executor = Executors.newFixedThreadPool(10);//
@@ -54,7 +53,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "user"://all user related calls will be passed here. other cases would include rooms, chat, user handling etc.
 
                     Runnable threads_area = () -> {
-                        System.out.println("multi threads running n: "+ i++);//shows b/e threads running
+                        System.out.println("multi threads running n: " + Thread.currentThread().getId());//shows b/e threads running
                           try{
 
                               String msg;
@@ -89,10 +88,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      msg = "{\"type\": \"create_room_resp\",\"data\":\"already_exists\"}";
                                      plyr.sendMessage(msg);
                                      // snakeGame.unlock();
-                                     Lk.unlock();
                                      return;
 
                                  }
+                                 Lk.unlock();
                              }
 
                              else if ((json.getString("room_action").equals("join_room"))) {
@@ -137,7 +136,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                                  //used as parent/main objects
                                  CheckersSquare checks_sqr = new CheckersSquare();
                                  checks_obj = new Checkers(plyr, checks_sqr);
-
                                  //To fully initialize the game
                                  //id and session field act as unique in this case
 
@@ -189,7 +187,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                  }
 
                                  //set the game started process here
-
+//                                 Lk.unlock(); Does nt require unlock since it will be handled in another if block
                              }
 
                              else if (json.getString("user_action").equals("show_moves")) {
@@ -201,12 +199,12 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                                  if (playr_colour.equals("white")) {
                                      cur_plyr = "white";
-                                     if (checks_obj.w_checkers[piece_index].show_moves(checks_obj.w_checkers[piece_index], plyr)) {//if an attack/move possible
+                                     if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], plyr)) {//if an attack/move possible
                                          mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                                          plyr.sendMessage(mesg);
 
                                      }
-                                 } else if (checks_obj.b_checkers[piece_index].show_moves(checks_obj.b_checkers[piece_index], plyr)) {
+                                 } else if (checks_obj.show_moves(checks_obj.b_checkers[piece_index], plyr)) {
                                      System.out.println("black pl;ayer");
                                      cur_plyr = "black";
                                      mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
@@ -217,13 +215,14 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                              else if (json.getString("user_action").equals("make_move")) {
                                  int square_index = json.getInt("index");
+                                 System.out.println("make_move_b;e  call");
 
                                  if (cur_plyr.equals("white")) {
-                                     if (checks_obj.w_checkers[piece_index].make_move(square_index, cur_plyr, plyr)) {//if an attack/move possible
+                                     if (checks_obj.make_move(square_index, cur_plyr, plyr)) {//if an attack/move possible
                                          mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                                          plyr.sendMessage(mesg);
                                      }
-                                 } else if (checks_obj.b_checkers[piece_index].make_move(square_index, cur_plyr, plyr)) {
+                                 } else if (checks_obj.make_move(square_index, cur_plyr, plyr)) {
                                      cur_plyr = "black";
                                      mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                                      plyr.sendMessage(mesg);
@@ -231,11 +230,13 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                                  Lk.unlock();
                              }
-                              Lk.unlock();
+
 
                           } catch (Exception ex) {
-                              Lk.unlock();
                               ex.printStackTrace();
+                          }
+                          finally {
+                              Lk.unlock();
                           }
 
                     };

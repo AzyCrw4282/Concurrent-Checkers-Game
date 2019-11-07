@@ -150,13 +150,6 @@ public class Checkers {//for individual counters
             selected_piece = piece.id;
         }
 
-//        if (the_checker == b_checkers || the_checker == null){
-//            the_checker = w_checkers;
-//        }
-//        else{
-//            System.out.println("136");
-//            the_checker = b_checkers;
-//        }
 
         int i =0,j = 0;
 
@@ -227,7 +220,7 @@ public class Checkers {//for individual counters
     }
 
     //passes in the index
-    public boolean make_move(int index,String colour,Player plyr) throws  Exception{
+    public synchronized boolean make_move(int index,String colour,Player plyr) throws  Exception{
 
         boolean isMove = false;
         boolean must_attack = false;

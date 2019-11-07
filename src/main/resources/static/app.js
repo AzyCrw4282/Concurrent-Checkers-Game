@@ -226,10 +226,11 @@ class checkers{
             this.id.style.left = x + 'px';
         }
         move_coords(X,Y){
-            var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-            var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            this.id.style.top = y + 'px';
-            this.id.style.left = x + 'px';
+            // var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+            // var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+            // console.log("Here we go", X,Y,x,y,this.id);
+            this.id.style.top = Y + 'px';
+            this.id.style.left = X + 'px';
 
         }
 
@@ -352,15 +353,15 @@ class Game {
         user_action = "initialize";
         this.connect();
     }
-
+    //var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
     //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
     make_move(index){
         console.log("sqaure clicked");
-        var str = {"type" : "make_move","index" : index};
+        // var str = {"type" : "make_move","index" : index};
+        user_action = "make_move";
+        var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
-
-
     }
 
     //No corrds changes in b/e only display changes in f/e
@@ -518,7 +519,8 @@ class Game {
                     var piece_id = packet.id;
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
-                    the_checker[piece_id].move_coord(x_coord,y_coord);
+                    the_checker[piece_id].move_coords(x_coord,y_coord);
+                    console.log("Move_made");
                     // game.non_attack_move(piece_id,x_coord,y_coord);
                     game.change_turns();
                     break;
