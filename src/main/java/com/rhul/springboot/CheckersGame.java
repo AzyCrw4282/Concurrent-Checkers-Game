@@ -54,10 +54,6 @@ public class CheckersGame {
     }
 
 
-
-
-
-
     public void add_rooms(Room rm){
         rooms_hm.put(rm.getRoom_id(),rm);
         room_ids.getAndIncrement();

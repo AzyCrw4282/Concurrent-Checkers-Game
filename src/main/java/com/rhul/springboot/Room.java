@@ -19,7 +19,7 @@ public class Room {
     private Semaphore smphore;
     private String room_name;
     private int room_id;
-    private Player player_obj;
+    private Player rm_owner;
     private boolean game_started;
 
     AtomicInteger counter;
@@ -28,7 +28,7 @@ public class Room {
     public Room(int id, String room_nm, Player plyr ){
         this.room_id = id;
         this.room_name = room_nm;
-        this.player_obj = plyr;
+        this.rm_owner = plyr;
         this.smphore = new Semaphore(4,true);//max allowed & first in first out also set
 
     }
@@ -55,7 +55,7 @@ public class Room {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
                     for (Player p : players_hm.values()) {
-                        System.out.println(p);
+                        System.out.println("players in room :" + p.getId());
                     }
                     return true;
 
@@ -69,6 +69,23 @@ public class Room {
         }
 
     }
+    //this method is responsible for applying moves to f/e for all users in a room
+    public synchronized void apply_to_room_users(String msg,Room rm){
 
+            if (msg.length() >0){
+
+                for (Player plyr : rm.getPlayers_hm().values()){
+                    System.out.println("plyer id: "+plyr.getId());
+                    try{
+                        plyr.sendMessage(msg);
+
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                    }
+                }
+            }
+
+    }
 
 }

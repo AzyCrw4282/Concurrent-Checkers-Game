@@ -40,7 +40,7 @@ public class Player {
     }
 
 
-    public synchronized void sendMessage(String msg) throws Exception{
+    public synchronized void sendMessage(String msg){
         try{
             if(this.session.isOpen())
                 this.session.sendMessage(new TextMessage(msg));

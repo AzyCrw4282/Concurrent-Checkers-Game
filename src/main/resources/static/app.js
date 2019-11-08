@@ -8,6 +8,7 @@ var room_action;
 var difficulty;
 var players= [];
 var chat = false;
+var game_started = false;
 
 //first game
 var square_class = document.getElementsByClassName("square");
@@ -140,7 +141,7 @@ function action_matchmaking(){
         start_game()
     }else{
         let aux = {"type": "delete", "name": user};
-        game.enviar(aux);
+
         $("#player-box").text("");
         chat = false;
         // game.open(); fault here
@@ -154,12 +155,12 @@ function enter_chat(){
     document.getElementById('console').style.height = "400px";
 
     /*thePlayerIsAddedToTheChat*/
-    sala = "-1";
+
 
     players.push(new Player(user));
     updatePlayerBox();
     chat =  true;
-    juego();
+
 }
 
 function enter_game_room(){
@@ -183,7 +184,8 @@ function enter_game_room(){
 //displayed when 2 users exists for nw
 function start_game_btn(){
     console.log("game has been started");
-    var msg = {"type" : "start_game"};
+    var msg = {"type" : "start_game", "room_value": room_value};//main user triggers this btn
+    game_started = true;
     document.getElementById('start_div').style.display = "none";
     game.send_data(msg);
 }
@@ -195,7 +197,13 @@ class checkers_squares {
         this.occupied = false;
         this.piece_id = undefined;
         this.id.onclick = function () {
-            game.make_move(index);
+            if (game_started) {
+                game.make_move(index);
+            }
+            else{
+                alert("Game not started. Please wait for the other user to join.")
+            }
+
         }
     }
 }
@@ -204,8 +212,7 @@ class checkers{
             this.id = piece;
             this.color = colour;
             this.index = index;
-            this.king = false;
-            this.ocupied_square = square;
+
             if(square%8){
                 this.coordX= square%8;
                 this.coordY = Math.floor(square/8) + 1 ;
@@ -215,7 +222,12 @@ class checkers{
                 this.coordY = square/8 ;
             }
             this.id.onclick = function () {
-                game.show_moves(index,colour);
+                if (game_started) {
+                    game.show_moves(index, colour);
+                }
+                else{
+                    alert("Game not started. Please wait for the other user to join.")
+                }
             }
 
         }
@@ -359,7 +371,7 @@ class Game {
         console.log("sqaure clicked");
         // var str = {"type" : "make_move","index" : index};
         user_action = "make_move";
-        var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index};
+        var str = {"type" : "make_move","room_action" : "N/A","room_value" : room_value,"index" : index};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -410,7 +422,7 @@ class Game {
         console.log("square selected index below");
         console.log(index);
         user_action = "show_moves";
-        var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
+        var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -514,24 +526,34 @@ class Game {
                     console.log(elim_piece_id);
                     the_checker[elim_piece_id].id.style.display = "none";
                     break;
-                case 'non_attack_move':
+                case 'non_attack_move':// p - the_checker enabled one f/e and nt the other and hence undefined
                     console.log("non-attack move");
                     var piece_id = packet.id;
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
+
                     the_checker[piece_id].move_coords(x_coord,y_coord);
                     console.log("Move_made");
                     // game.non_attack_move(piece_id,x_coord,y_coord);
                     game.change_turns();
                     break;
-                case "join_room_resp":
+                case "join_room_resp"://start btn dispalyed for owner of the game
                     if (packet.data === "rdy_to_join"){
                         document.getElementById("start_div").style.display = "block";
+                        console.log("530");
                     }
                     else{
                         console.log(packet.data);
                     }
                     break;
+                case "start_game":
+                    if (packet.data === "rdy"){
+                        game_started = true;
+                        console.log("Game is rdy to start");
+                        document.getElementById("start_div").style.display = "none";
+                        the_checker = w_checker;//to begin with
+
+                    }
 
             }
         }
