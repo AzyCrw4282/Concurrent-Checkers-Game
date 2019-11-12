@@ -21,17 +21,18 @@ public class Checkers {//for individual counters
     private boolean game_started = false;
     private boolean one_move = false;
     private Room rm;
-    public  Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
-    public  Checkers[] b_checkers = new Checkers[13];
+    public Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
+    public Checkers[] b_checkers = new Checkers[13];
     private int coordX;
     private int coordY;
     private boolean alive;
     private int occupiedSquare;
     private int selected_piece;
-    private  boolean attack_possible = false;
-    private  Checkers the_checker[];
+    private boolean attack_possible = false;
+    private Checkers the_checker[];
     private Player plyr;
     private CheckersSquare cs;
+    public Checkers checks_obj;
 
     //adjust screen sizes fix to coord x and y
     public static int move_length = 50;
@@ -58,7 +59,6 @@ public class Checkers {//for individual counters
         this.cs = cS;
     }
 
-
     //keeps track of the board and counters. need this int game_id,
     public Checkers(int square_piece, String colour, int square){//add  player, String game_type ltr vrsions
         this.id = square_piece;
@@ -70,7 +70,66 @@ public class Checkers {//for individual counters
         this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
 
+    }
 
+    public Checkers initialize(Player plyr){
+
+        //so if joining then  give this object reference to other player
+
+        System.out.println("game initializer");
+        //used as parent/main objects
+        CheckersSquare checks_sqr = new CheckersSquare();
+        checks_obj = new Checkers(plyr, checks_sqr);
+        //To fully initialize the game
+        //id and session field act as unique in this case
+
+        for (int i = 1; i <= 64; i++) {
+            checks_sqr.block[i] = new CheckersSquare(i);//64 objects of squares
+        }
+        // white counters
+        for (int i = 1; i <= 4; i++) {
+            checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
+            checks_obj.w_checkers[i].setCoordinates(0, 0);
+            checks_sqr.block[2 * i - 1].setOccupied();
+            checks_sqr.block[2 * i - 1].setPieceId(checks_obj.w_checkers[i]);
+        }
+
+        for (int i = 5; i <= 8; i++) {
+            checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i);
+            checks_obj.w_checkers[i].setCoordinates(0, 0);
+            checks_sqr.block[2 * i].setOccupied();
+            checks_sqr.block[2 * i].setPieceId(checks_obj.w_checkers[i]);
+        }
+
+        for (int i = 9; i <= 12; i++) {
+            checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
+            checks_obj.w_checkers[i].setCoordinates(0, 0);
+            checks_sqr.block[2 * i - 1].setOccupied();
+            checks_sqr.block[2 * i - 1].setPieceId(checks_obj.w_checkers[i]);
+        }
+
+        for (int i = 1; i <= 4; i++) {
+            checks_obj.b_checkers[i] = new Checkers(i, "black", 56 + 2 * i);
+            checks_obj.b_checkers[i].setCoordinates(0, 0);
+            checks_sqr.block[56 + 2 * i].setOccupied();
+            checks_sqr.block[56 + 2 * i].setPieceId(checks_obj.b_checkers[i]);
+        }
+
+        for (int i = 5; i <= 8; i++) {
+            checks_obj.b_checkers[i] = new Checkers(i, "black", 40 + 2 * i - 1);
+            checks_obj.b_checkers[i].setCoordinates(0, 0);
+            checks_sqr.block[40 + 2 * i - 1].setOccupied();
+            checks_sqr.block[40 + 2 * i - 1].setPieceId(checks_obj.b_checkers[i]);
+        }
+
+        for (int i = 9; i <= 12; i++) {
+            checks_obj.b_checkers[i] = new Checkers(i, "black", 24 + 2 * i);
+            checks_obj.b_checkers[i].setCoordinates(0, 0);
+            checks_sqr.block[24 + 2 * i].setOccupied();
+            checks_sqr.block[24 + 2 * i].setPieceId(checks_obj.b_checkers[i]);
+
+        }
+        return (checks_obj);
     }
 
     public int getXcoordinates(int square){

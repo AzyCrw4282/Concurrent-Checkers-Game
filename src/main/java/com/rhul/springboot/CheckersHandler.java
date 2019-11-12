@@ -34,6 +34,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     Executor executor = Executors.newFixedThreadPool(10);//
     String cur_plyr = null;
     int piece_index = 0;
+    private Player plyr;
 
 
 
@@ -60,9 +61,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                               String mesg;
                               Lk.lock();//sets a lock. specify to unlock at any necessary position
 //                            int difficulty = json.getInt("difficulty");
-                              Player plyr = new Player(player_id,"player",session);
+                              plyr = new Player(player_id,"player",session);
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);//session can manage the right object and can retrieve it
+                              System.out.println("Sesssion atts set for the player");
                               String user_action = json.getString("user_action");
                               Room rm;//to  be initized
                               String rm_val = json.getString("room_value");
@@ -75,11 +77,18 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      rm.add_player_to_room(plyr);
                                      plyr.setRoom(rm);
 
+                                     if (rm.getSmphore().availablePermits()+1==4){//permits held by user
+                                         plyr
+                                         plyr.start_game_thread();
+                                     }
+
+
                                      game.add_rooms(rm);
                                      game.add_player(plyr);
-
+                                     int room_permits = rm.getSmphore().availablePermits();
                                      msg = "{\"type\": \"create_room_resp\",\"data\":\"Ok\"}";
                                      plyr.sendMessage(msg);
+
 
                                  } else {
                                      //already exist wrong request
@@ -105,6 +114,12 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      game.add_player(plyr);
 
                                      int semaphore_permits = rm.getSmphore().availablePermits();
+
+
+                                     if (semaphore_permits + 1 == 3){
+                                         //it can then be initialized.
+                                     }
+
 
                                      if (semaphore_permits == 0) {
                                          msg = "{\"type\": \"join_room_resp\",\"data\":\"game_full\"}";
@@ -133,61 +148,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                  }
 
                              if (json.getString("user_action").equals("initialize") & !joining) {
-                                 //so if joining then  give this object reference to other player
 
-                                 System.out.println("game initializer");
-                                 //used as parent/main objects
-                                 CheckersSquare checks_sqr = new CheckersSquare();
-                                 checks_obj = new Checkers(plyr, checks_sqr);
-                                 //To fully initialize the game
-                                 //id and session field act as unique in this case
-
-                                 for (int i = 1; i <= 64; i++) {
-                                     checks_sqr.block[i] = new CheckersSquare(i);//64 objects of squares
-                                 }
-                                 // white counters
-                                 for (int i = 1; i <= 4; i++) {
-                                     checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
-                                     checks_obj.w_checkers[i].setCoordinates(0, 0);
-                                     checks_sqr.block[2 * i - 1].setOccupied();
-                                     checks_sqr.block[2 * i - 1].setPieceId(checks_obj.w_checkers[i]);
-                                 }
-
-                                 for (int i = 5; i <= 8; i++) {
-                                     checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i);
-                                     checks_obj.w_checkers[i].setCoordinates(0, 0);
-                                     checks_sqr.block[2 * i].setOccupied();
-                                     checks_sqr.block[2 * i].setPieceId(checks_obj.w_checkers[i]);
-                                 }
-
-                                 for (int i = 9; i <= 12; i++) {
-                                     checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
-                                     checks_obj.w_checkers[i].setCoordinates(0, 0);
-                                     checks_sqr.block[2 * i - 1].setOccupied();
-                                     checks_sqr.block[2 * i - 1].setPieceId(checks_obj.w_checkers[i]);
-                                 }
-
-                                 for (int i = 1; i <= 4; i++) {
-                                     checks_obj.b_checkers[i] = new Checkers(i, "black", 56 + 2 * i);
-                                     checks_obj.b_checkers[i].setCoordinates(0, 0);
-                                     checks_sqr.block[56 + 2 * i].setOccupied();
-                                     checks_sqr.block[56 + 2 * i].setPieceId(checks_obj.b_checkers[i]);
-                                 }
-
-                                 for (int i = 5; i <= 8; i++) {
-                                     checks_obj.b_checkers[i] = new Checkers(i, "black", 40 + 2 * i - 1);
-                                     checks_obj.b_checkers[i].setCoordinates(0, 0);
-                                     checks_sqr.block[40 + 2 * i - 1].setOccupied();
-                                     checks_sqr.block[40 + 2 * i - 1].setPieceId(checks_obj.b_checkers[i]);
-                                 }
-
-                                 for (int i = 9; i <= 12; i++) {
-                                     checks_obj.b_checkers[i] = new Checkers(i, "black", 24 + 2 * i);
-                                     checks_obj.b_checkers[i].setCoordinates(0, 0);
-                                     checks_sqr.block[24 + 2 * i].setOccupied();
-                                     checks_sqr.block[24 + 2 * i].setPieceId(checks_obj.b_checkers[i]);
-
-                                 }
 
                                  //set the game started process here
 //                                 Lk.unlock(); Does nt require unlock since it will be handled in another if block
@@ -201,66 +162,75 @@ public class CheckersHandler extends TextWebSocketHandler {
                   executor.execute(threads_area);
                   break;
 
-
                 case "show_moves":
 
                     //At this point, 2 players in
-                    Room rm = game.get_room(json.getString("room_value"));
-                    String str_player_id = json.getString("index");//index or id val of the piece
-                    piece_index = Integer.parseInt(str_player_id);//all vals used for this case and move cases
-                    String playr_colour = json.getString("player_colour");
-                    System.out.println("129");
-                    Player plyr = (Player) session.getAttributes().get(game_attribute);
-                    //To check for possible moves for a given piece
+//                    Room rm = game.get_room(json.getString("room_value"));
+//                    String str_player_id = json.getString("index");//index or id val of the piece
+//                    piece_index = Integer.parseInt(str_player_id);//all vals used for this case and move cases
+//                    String playr_colour = json.getString("player_colour");
+//                    System.out.println("129");
+//                    Player plyr = (Player) session.getAttributes().get(game_attribute);
+//                    //To check for possible moves for a given piece
+//
+//                    if (playr_colour.equals("white")) {
+//                        cur_plyr = "white";
+//                        if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], rm)) {//if an attack/move possible
+//                            String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
+//                            plyr.sendMessage(mesg);
+//
+//                        }
+//                    } else if (checks_obj.show_moves(checks_obj.b_checkers[piece_index], rm)) {
+//                        System.out.println("black player");
+//                        cur_plyr = "black";
+//                        String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
+//                        plyr.sendMessage(mesg);
+//                    }
+//                    break;
 
-                    if (playr_colour.equals("white")) {
-                        cur_plyr = "white";
-                        if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], rm)) {//if an attack/move possible
-                            String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
-                            plyr.sendMessage(mesg);
-
-                        }
-                    } else if (checks_obj.show_moves(checks_obj.b_checkers[piece_index], rm)) {
-                        System.out.println("black player");
-                        cur_plyr = "black";
-                        String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
-                        plyr.sendMessage(mesg);
-                    }
-
-                    break;
                 case "make_move":
 
-                    rm = game.get_room(json.getString("room_value"));
-                    int square_index = json.getInt("index");
-                    System.out.println("make_move_b/e  call");
-                    plyr = (Player) session.getAttributes().get(game_attribute);
+//                    rm = game.get_room(json.getString("room_value"));
+//                    int square_index = json.getInt("index");
+//                    System.out.println("make_move_b/e  call");
+//                    plyr = (Player) session.getAttributes().get(game_attribute);
+//
+//                    if (cur_plyr.equals("white")) {
+//                        if (checks_obj.make_move(square_index, cur_plyr, rm)) {//if an attack/move possible
+//                            String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
+//                            plyr.sendMessage(mesg);
+//                        }
+//                    } else if (checks_obj.make_move(square_index, cur_plyr, rm)) {
+//                        cur_plyr = "black";
+//                        String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
+//                        plyr.sendMessage(mesg);
+//                    }
+//                    break;
 
-                    if (cur_plyr.equals("white")) {
-                        if (checks_obj.make_move(square_index, cur_plyr, rm)) {//if an attack/move possible
-                            String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
-                            plyr.sendMessage(mesg);
-                        }
-                    } else if (checks_obj.make_move(square_index, cur_plyr, rm)) {
-                        cur_plyr = "black";
-                        String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
-                        plyr.sendMessage(mesg);
-                    }
-                    break;
                 case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
                     //f/e update for anyone in rm that game is rdy
                     plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
-                    rm = game.get_room(json.getString("room_value"));
+                    Room rm = game.get_room(json.getString("room_value"));
                     String msg = "{\"type\": \"start_game\",\"data\": \"rdy\"}";
                     //the checker value to begin with on all ends.
-                    rm.apply_to_room_users(msg,rm);
+                    rm.apply_to_room_users(msg,rm);//should not be for all
+                    break;
 
+                case "get_room_permits":
+                    Player p = (Player) session.getAttributes().get(game_attribute);
+                    System.out.println("plasdf " + p + "asd " + plyr);
+                    Room rom = game.get_room(json.getString("room_value"));
+                    int room_permits = rom.getSmphore().availablePermits() +1;//permit held by the user
+                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\"}", room_permits);
+                    plyr.sendMessage(mesg);
                     break;
 
                 case "connection_incoming":
                     System.out.print("connection active");
                     break;
+
                 case "adjust_screen_size":
                     int move_length = json.getInt("move_length");
                     int move_dev = json.getInt("move_dev");
@@ -268,7 +238,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Checkers.move_length = move_length;
                     Checkers.move_deviation = move_dev;
                     System.out.println("screen size adjusted");
-
                     break;
 
                 case "sync_data":
@@ -279,9 +248,8 @@ public class CheckersHandler extends TextWebSocketHandler {
 
             }
 
-
         } catch (Exception e){
-            System.err.println("Exception processing message " + message.getPayload());
+            System.err.println("Exception processing message: " + message.getPayload());
             e.printStackTrace(System.err);
         }
 
@@ -290,13 +258,11 @@ public class CheckersHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 
+
+
+
+
     }
-
-
-
-
-
-
 
 
 }

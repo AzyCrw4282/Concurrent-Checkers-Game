@@ -9,13 +9,17 @@ var difficulty;
 var players= [];
 var chat = false;
 var game_started = false;
+var user_permit_val = 0;//add 1 to get the value held by the user
+var player_game;//1/2
+var permit_obtained = false;
 
 //first game
 var square_class = document.getElementsByClassName("square");
+var square_class2 = document.getElementsByClassName("square2");
 var white_checker_class = document.getElementsByClassName("white_checker");
 var black_checker_class = document.getElementsByClassName("black_checker");
-var table = document.getElementById("table");
-var score = document.getElementById("score");
+var white_checker_class2 = document.getElementsByClassName("white_checker2");
+var black_checker_class2 = document.getElementsByClassName("black_checker2");
 
 //second game
 
@@ -26,23 +30,23 @@ var windowHeight = window.innerHeight || document.documentElement.clientHeight |
 var windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 var moveLength = 50 ;
 var moveDeviation = 6;
-var Dimension = 1;
-var selectedPiece,selectedPieceindex;
-var upRight,upLeft,downLeft,downRight;  // toate variantele posibile de mers pt o  dama
-var contor = 0 , gameOver = 0;
+var moveLength2 = 150 ;
+var moveDeviation2 = 7;
+
 var cur_big_screen = 1;//takes in the curr pos of the screen
 
+//appended 2 represents the 2nd game, whilst without it is tfor the first game
 var block = [];
 var w_checker = [];
 var b_checker = [];
+var block2 = [];
+var w_checker2 = [];
+var b_checker2 = [];
 var the_checker ;
-var oneMove;
-var anotherMove;
-var mustAttack = false;
-var multiplier = 1; // 2 daca face saritura 1 in caz contrat
+var the_checker2 ;
 var user_action;
+var user_action2;
 
-var tableLimit,reverse_tableLimit ,  moveUpLeft, moveUpRight, moveDownLeft, moveDownRight , tableLimitLeft, tableLimitRight;
 
 $(document).ready(function(){
 
@@ -77,20 +81,7 @@ $(document).ready(function(){
     };
 });
 
-function enterName(){
 
-    user = $("#id_name_value").val();
-    room_value = $("#rm_nm_value").val();
-    room_action = "create_room";
-    start_game();
-    /*we show the buttons to create room, join room and chat*/
-    // document.getElementById('div_id_menu').style.display = "block";
-    document.getElementById('div_id_name').style.display = "none";
-    document.getElementById('table').style.display = "block";
-    document.getElementById('game_status').style.display = "block";
-    // document.getElementById('cur_player_id').innerHTML = "White";
-
-}
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
@@ -101,13 +92,26 @@ function create_room(){
     document.getElementById('console').style.height = "90%";
 
 }
+function enterName(){
+
+    user = $("#id_name_value").val();
+    room_value = $("#rm_nm_value").val();
+    room_action = "create_room";
+
+    start_game();
+    /*we show the buttons to create room, join room and chat*/
+    // document.getElementById('div_id_menu').style.display = "block";
+    document.getElementById('div_id_name').style.display = "none";
+    document.getElementById('table').style.display = "block";
+    document.getElementById('table2').style.display = "block";
+    document.getElementById('game_status').style.display = "block";
+    document.getElementById('game_status2').style.display = "block";
+    // document.getElementById('cur_player_id').innerHTML = "White";
+
+}
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
-    // document.getElementById('btnPrinc').style.display = "none";
-    // // document.getElementById('div_id_create_room').style.display = "block";
-    // document.getElementById('divChat').style.display = "none";
-    // document.getElementById('console').style.height = "90%";
 
     //to use the above for the real design
     room_value = $("#rm_nm_value").val();
@@ -118,7 +122,8 @@ function join_a_room(){
     document.getElementById('table').style.display = "block";
     document.getElementById('game_status').style.display = "block";
     start_game();
-
+    // game_2.initialize_snd_game();
+``
 }
 
 function getDimension (){
@@ -197,8 +202,11 @@ class checkers_squares {
         this.occupied = false;
         this.piece_id = undefined;
         this.id.onclick = function () {
-            if (game_started) {
+            if (game_started & player_game == 1) {
                 game.make_move(index);
+            }
+            else if (game_started & player_game ===2){
+                game2.make_move(index);
             }
             else{
                 alert("Game not started. Please wait for the other user to join.")
@@ -207,6 +215,7 @@ class checkers_squares {
         }
     }
 }
+
 class checkers{
         constructor (piece,colour,square,index){
             this.id = piece;
@@ -222,8 +231,11 @@ class checkers{
                 this.coordY = square/8 ;
             }
             this.id.onclick = function () {
-                if (game_started) {
+                if (game_started && player_game == 1) {
                     game.show_moves(index, colour);
+                }
+                else if(game_started && player_game == 2){
+                    game2.show_moves(index, colour);
                 }
                 else{
                     alert("Game not started. Please wait for the other user to join.")
@@ -234,72 +246,54 @@ class checkers{
         set_coords(X,Y){
             var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+            console.log(x,y);
             this.id.style.top = y + 'px';
             this.id.style.left = x + 'px';
         }
+        set_second_game_coords(X,Y){
+            var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+            var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+            console.log(x,y);
+            this.id.style.top = y + 'px';
+            this.id.style.left = x+17 + 'px';
+         }
         move_coords(X,Y){
             // var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             // var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
             // console.log("Here we go", X,Y,x,y,this.id);
-            this.id.style.top = Y + 'px';
-            this.id.style.left = X + 'px';
+            if (player_game == 1){
+                this.id.style.top = Y + 'px';
+                this.id.style.left = X + 'px';
+            }
+            else{
+                this.id.style.top = Y + 'px';
+                this.id.style.left = X + 17 + 'px';
+            }
+
 
         }
 
-        change_coords(X,Y){
-            this.coordY += Y;
-            this.coordX += X;
-        }
 
 }
-
-//these will have to be changed for new game method
-// var square_p = function(square,index){
-//     //this.gameId = game_id; //identifies the game of which there can be many
-//     this.id = square;
-//     this.occupied = false;
-//     this.pieceId = undefined;
-//     this.id.onclick = function(){
-//         // b/e process to send to check for moves
-//         game.make_move(index);
-//
-//     }
-// };
-//
-// //these when implemented needs to be uniquely idenfitied for each game
-// var checker = function(piece,color,square,index) {//unique idenfitification for each counter
-//     this.id = piece;
-//     this.color = color;
-//     this.index = index;
-//     this.king = false;
-//     this.ocupied_square = square;
-//     this.alive = true;
-//     this.attack = false;
-//     if(square%8){
-//         this.coordX= square%8;
-//         this.coordY = Math.floor(square/8) + 1 ;
-//     }
-//     else{
-//         this.coordX = 8;
-//         this.coordY = square/8 ;
-//     }
-//     //clickable function
-//     this.id.onclick = function  () {
-//         game.show_moves(index,color);//index is nt unique as they can be same for black/white
-//     }
-// };//identifies each checker
-
+//used to check the player of the game to use the right game obj.
 class Player {
 
     constructor(name) {
         this.name = name;
     }
+
+    get_plyr_name(){
+        return this.name;
+
+    }
+
 }
 
 //A game class
 class Game {
     send_data(data){
         var data = JSON.stringify(data);
+        console.log(data);
         this.socket.send(data)
     }
 
@@ -321,6 +315,7 @@ class Game {
         /*================initializarea white black counters =================================*/
         // white Ladies
         for (var i = 1; i <= 4; i++) {
+
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
             w_checker[i].set_coords(0, 0);
             block[2 * i - 1].occupied = true;
@@ -365,6 +360,65 @@ class Game {
         user_action = "initialize";
         this.connect();
     }
+
+    initialize_secnd_game(){
+
+        /*===============initializingThePlayingFields =================================*/
+        for (var i = 1; i <= 64; i++)
+        {
+            block2[i] = new checkers_squares(square_class2[i], i);
+
+        }
+        /*================initializarea white black counters =================================*/
+        // white Ladies
+        for (var i = 1; i <= 4; i++) {
+            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
+            w_checker2[i].set_second_game_coords(0, 0);
+            block2[2 * i - 1].occupied = true;
+            block2[2 * i - 1].pieceId = w_checker2[i];
+        }
+
+        for (var i = 5; i <= 8; i++) {
+            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i,i);
+            w_checker2[i].set_second_game_coords(0, 0);
+            block2[2 * i].occupied = true;
+            block2[2 * i].pieceId = w_checker2[i];
+        }
+
+        for (var i = 9; i <= 12; i++) {
+            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
+            w_checker2[i].set_second_game_coords(0, 0);
+            block2[2 * i - 1].occupied = true;
+            block2[2 * i - 1].pieceId = w_checker2[i];
+        }
+
+        //black Ladies
+        for (var i = 1; i <= 4; i++) {
+            b_checker2[i] = new checkers(black_checker_class2[i], "black", 56 + 2 * i,i);
+            b_checker2[i].set_second_game_coords(0, 0);
+            block2[56 + 2 * i].occupied = true;
+            block2[56 + 2 * i].pieceId = b_checker2[i];
+        }
+
+        for (var i = 5; i <= 8; i++) {
+            b_checker2[i] = new checkers(black_checker_class2[i], "black", 40 + 2 * i - 1,i);
+            b_checker2[i].set_second_game_coords(0, 0);
+            block2[40 + 2 * i - 1].occupied = true;
+            block2[40 + 2 * i - 1].pieceId = b_checker2[i];
+        }
+
+        for (var i = 9; i <= 12; i++) {
+            b_checker2[i] = new checkers(black_checker_class2[i], "black", 24 + 2 * i,i);
+            b_checker2[i].set_second_game_coords(0, 0);
+            block2[24 + 2 * i].occupied = true;
+            block2[24 + 2 * i].pieceId = b_checker2[i];
+        }
+        user_action2 = "initialize";
+        this.connect();
+
+    }
+
+
     //var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
     //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
     make_move(index){
@@ -428,13 +482,6 @@ class Game {
     }
 
 
-    declare_winner(){
-        //called after gamelost state is passed in conditional statement
-        black_background.style.display = "inline";
-        score.style.display = "block";
-
-    }
-
     remove_road(upLeft,upRight,downLeft,downRight){ //to check this
         console.log(downRight,downLeft,upRight,upLeft );
         if(downRight >0 ) block[downRight].id.style.background = "#BA7A3A";
@@ -457,21 +504,10 @@ class Game {
         id.style.left = x + 'px';
     }
 
-    eliminate_check(index){//index on the board; may need other data soon
-        if (index < 1 || index > 64){
-            return false
-        }
-        else{
-            var x = block[index].pieceId;//gets the piece id that was set on the board of checkers instance
-            x.alive = false;
-            block[index].occupied = false;
-            x.id.style.display = "none"; //hides the piece
-
-        }
-    }
 
     /*connect to the server and define the socket methods*/
     connect() {
+        user_action = "initialize";
         this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
         /*startTheConnection*/
         this.socket.onopen = () => {
@@ -554,24 +590,88 @@ class Game {
                         the_checker = w_checker;//to begin with
 
                     }
-
+                    break;
+                case "room_permits"://iniz here?
+                    user_permit_val  = packet.data;
+                    // console.log(user_permit_val == 4);
+                    if (user_permit_val == 4 || user_permit_val == 3 ){
+                        //will play the first game
+                        console.log("user for first game");
+                        permit_obtained = true;
+                        game.initialize_game();
+                        game2.initialize_secnd_game();
+                        player_game = 1;
+                    }
+                    else if (user_permit_val === 2 || user_permit_val === 1){
+                        console.log("user for second game");
+                        game2.initialize_secnd_game();
+                        player_game = 2;
+                    }
+                    //after this then i can perform the initialization, whether game obj, game2 obj
+                    break;
             }
         }
     }
 
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
-    open() { // tba -> "Sala":room, "difficulty":difficulty "user": user,
+    open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
         this.socket.send(json_str);
+
+        setTimeout(function () {
+            if (!permit_obtained){
+                var check_permits = {"type": "get_room_permits", "room_value":room_value};
+                game.send_data(check_permits);
+                console.log("483");
+            }
+        },2000);
 
     }
 }
 
 
-let game = new Game();//may need multiple objects for multiple games
+let game = new Game();// multiple objects for multiple games
+let game2 = new Game();
 
 function start_game(){
-    game.initialize_game();
+    game.connect();
 
 }
+
+
+//these will have to be changed for new game method
+// var square_p = function(square,index){
+//     //this.gameId = game_id; //identifies the game of which there can be many
+//     this.id = square;
+//     this.occupied = false;
+//     this.pieceId = undefined;
+//     this.id.onclick = function(){
+//         // b/e process to send to check for moves
+//         game.make_move(index);
+//
+//     }
+// };
+//
+// //these when implemented needs to be uniquely idenfitied for each game
+// var checker = function(piece,color,square,index) {//unique idenfitification for each counter
+//     this.id = piece;
+//     this.color = color;
+//     this.index = index;
+//     this.king = false;
+//     this.ocupied_square = square;
+//     this.alive = true;
+//     this.attack = false;
+//     if(square%8){
+//         this.coordX= square%8;
+//         this.coordY = Math.floor(square/8) + 1 ;
+//     }
+//     else{
+//         this.coordX = 8;
+//         this.coordY = square/8 ;
+//     }
+//     //clickable function
+//     this.id.onclick = function  () {
+//         game.show_moves(index,color);//index is nt unique as they can be same for black/white
+//     }
+// };//identifies each checker

@@ -24,7 +24,6 @@ public class Room {
 
     AtomicInteger counter;
 
-
     public Room(int id, String room_nm, Player plyr ){
         this.room_id = id;
         this.room_name = room_nm;
@@ -33,14 +32,12 @@ public class Room {
 
     }
 
-
     public void remove_player_from_room(Player playr){
         players_hm.remove(playr.getId());
         smphore.release();
 
 
     }
-
 
     public boolean add_player_to_room(Player playr) throws Exception {
         try {
