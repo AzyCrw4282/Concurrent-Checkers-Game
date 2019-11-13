@@ -9,10 +9,11 @@ var difficulty;
 var players= [];
 var chat = false;
 var game_started = false;
+var game_started2 = false;
 var user_permit_val = 0;//add 1 to get the value held by the user
 var player_game;//1/2
 var permit_obtained = false;
-
+var already_opened = false;
 //first game
 var square_class = document.getElementsByClassName("square");
 var square_class2 = document.getElementsByClassName("square2");
@@ -118,10 +119,13 @@ function join_a_room(){
     room_action = "join_room";
     /*we show the buttons to create room, join room and chat*/
     // document.getElementById('div_id_menu').style.display = "block";
+    start_game();
+
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('table').style.display = "block";
+    document.getElementById('table2').style.display = "block";
     document.getElementById('game_status').style.display = "block";
-    start_game();
+    document.getElementById('game_status2').style.display = "block";
     // game_2.initialize_snd_game();
 ``
 }
@@ -246,14 +250,12 @@ class checkers{
         set_coords(X,Y){
             var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            console.log(x,y);
             this.id.style.top = y + 'px';
             this.id.style.left = x + 'px';
         }
         set_second_game_coords(X,Y){
             var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            console.log(x,y);
             this.id.style.top = y + 'px';
             this.id.style.left = x+17 + 'px';
          }
@@ -293,7 +295,7 @@ class Player {
 class Game {
     send_data(data){
         var data = JSON.stringify(data);
-        console.log(data);
+        console.log("send packet ",data);
         this.socket.send(data)
     }
 
@@ -361,7 +363,7 @@ class Game {
         this.connect();
     }
 
-    initialize_secnd_game(){
+    initialize_second_game(){
 
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
@@ -511,9 +513,12 @@ class Game {
         this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
         /*startTheConnection*/
         this.socket.onopen = () => {
-            console.log('Info: WebSocket connection opened.');
-            // weSendTheUserToTheServer
-            this.open();
+            if (!already_opened) {
+                console.log('Info: WebSocket connection opened.');
+                // weSendTheUserToTheServer
+                already_opened = true;
+                this.open();
+            }
         };
 
         /*closeTheConnection*/
@@ -527,6 +532,7 @@ class Game {
         /*define the actions when receiving the different messages*/
         this.socket.onmessage = (message) => {
             var packet = JSON.parse(message.data);
+            console.log("packet received :", packet);
             //handles message received from b/e. need work on this
             switch (packet.type) {
                 /*removeAPlayerFromTheRoom*/
@@ -573,8 +579,8 @@ class Game {
                     // game.non_attack_move(piece_id,x_coord,y_coord);
                     game.change_turns();
                     break;
-                case "join_room_resp"://start btn dispalyed for owner of the game
-                    if (packet.data === "rdy_to_join"){
+                case "player_joined"://start btn dispalyed for owner of the game
+                    if (packet.data === "successful"){
                         document.getElementById("start_div").style.display = "block";
                         console.log("530");
                     }
@@ -582,7 +588,7 @@ class Game {
                         console.log(packet.data);
                     }
                     break;
-                case "start_game":
+                case "start_game_1":
                     if (packet.data === "rdy"){
                         game_started = true;
                         console.log("Game is rdy to start");
@@ -591,7 +597,16 @@ class Game {
 
                     }
                     break;
-                case "room_permits"://iniz here?
+                case "start_game_2":
+                    if (packet.data === "rdy_2"){
+                        game_started2 = true;
+                        console.log("Game is rdy to start");
+                        document.getElementById("start_div").style.display = "none";
+                        the_checker2 = w_checker2;//to begin with
+
+                    }
+                    break;
+                case "room_permits":// Iniz here?
                     user_permit_val  = packet.data;
                     // console.log(user_permit_val == 4);
                     if (user_permit_val == 4 || user_permit_val == 3 ){
@@ -599,12 +614,12 @@ class Game {
                         console.log("user for first game");
                         permit_obtained = true;
                         game.initialize_game();
-                        game2.initialize_secnd_game();
+                        game2.initialize_second_game();//used for testing only
                         player_game = 1;
                     }
                     else if (user_permit_val === 2 || user_permit_val === 1){
                         console.log("user for second game");
-                        game2.initialize_secnd_game();
+                        game2.initialize_second_game();
                         player_game = 2;
                     }
                     //after this then i can perform the initialization, whether game obj, game2 obj
@@ -617,21 +632,21 @@ class Game {
     open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
+        console.log(632);
         this.socket.send(json_str);
 
         setTimeout(function () {
             if (!permit_obtained){
-                var check_permits = {"type": "get_room_permits", "room_value":room_value};
+                var check_permits = {"type": "get_room_permits", "room_value" : room_value};
                 game.send_data(check_permits);
-                console.log("483");
             }
-        },2000);
+        },3000);
 
     }
 }
 
-
-let game = new Game();// multiple objects for multiple games
+// multiple objects for multiple games
+let game = new Game();
 let game2 = new Game();
 
 function start_game(){

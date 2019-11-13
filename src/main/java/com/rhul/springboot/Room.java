@@ -15,6 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Room {
 
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
+    //each rm can have 2 games
+    private ConcurrentHashMap<Integer,Player> players_hm_game_1 = new ConcurrentHashMap<Integer, Player>();
+    private ConcurrentHashMap<Integer,Player> players_hm_game_2 = new ConcurrentHashMap<Integer, Player>();
     public AtomicInteger players_count = new AtomicInteger(0);
     private Semaphore smphore;
     private String room_name;
@@ -35,7 +38,6 @@ public class Room {
     public void remove_player_from_room(Player playr){
         players_hm.remove(playr.getId());
         smphore.release();
-
 
     }
 
@@ -67,18 +69,30 @@ public class Room {
 
     }
     //this method is responsible for applying moves to f/e for all users in a room
-    public synchronized void apply_to_room_users(String msg,Room rm){
+    public synchronized void apply_to_room_users(String msg,Room rm, Player player){
 
             if (msg.length() >0){
+                //needs to be applied only on the subset of the rm users
 
+//                0 and 1 player id for game 1 or 2 and 3 for game 2
                 for (Player plyr : rm.getPlayers_hm().values()){
-                    System.out.println("plyer id: "+plyr.getId());
-                    try{
-                        plyr.sendMessage(msg);
+                    if (this.getRm_owner().getId()== plyr.getId() || this.getRm_owner().getId()+1 == plyr.getId()) {//if game 1
+                        System.out.println("plyer id: " + plyr.getId());
+                        try {
+                            plyr.sendMessage(msg);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                        }
+                    }
+                    else{//2nd game, with player id's of 2,3
+                        try {
+                            plyr.sendMessage(msg);
 
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                        }
                     }
                 }
             }

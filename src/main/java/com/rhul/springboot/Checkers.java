@@ -32,7 +32,6 @@ public class Checkers {//for individual counters
     private Checkers the_checker[];
     private Player plyr;
     private CheckersSquare cs;
-    public Checkers checks_obj;
 
     //adjust screen sizes fix to coord x and y
     public static int move_length = 50;
@@ -69,67 +68,6 @@ public class Checkers {//for individual counters
         this.alive = true;
         this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
-
-    }
-
-    public Checkers initialize(Player plyr){
-
-        //so if joining then  give this object reference to other player
-
-        System.out.println("game initializer");
-        //used as parent/main objects
-        CheckersSquare checks_sqr = new CheckersSquare();
-        checks_obj = new Checkers(plyr, checks_sqr);
-        //To fully initialize the game
-        //id and session field act as unique in this case
-
-        for (int i = 1; i <= 64; i++) {
-            checks_sqr.block[i] = new CheckersSquare(i);//64 objects of squares
-        }
-        // white counters
-        for (int i = 1; i <= 4; i++) {
-            checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
-            checks_obj.w_checkers[i].setCoordinates(0, 0);
-            checks_sqr.block[2 * i - 1].setOccupied();
-            checks_sqr.block[2 * i - 1].setPieceId(checks_obj.w_checkers[i]);
-        }
-
-        for (int i = 5; i <= 8; i++) {
-            checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i);
-            checks_obj.w_checkers[i].setCoordinates(0, 0);
-            checks_sqr.block[2 * i].setOccupied();
-            checks_sqr.block[2 * i].setPieceId(checks_obj.w_checkers[i]);
-        }
-
-        for (int i = 9; i <= 12; i++) {
-            checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
-            checks_obj.w_checkers[i].setCoordinates(0, 0);
-            checks_sqr.block[2 * i - 1].setOccupied();
-            checks_sqr.block[2 * i - 1].setPieceId(checks_obj.w_checkers[i]);
-        }
-
-        for (int i = 1; i <= 4; i++) {
-            checks_obj.b_checkers[i] = new Checkers(i, "black", 56 + 2 * i);
-            checks_obj.b_checkers[i].setCoordinates(0, 0);
-            checks_sqr.block[56 + 2 * i].setOccupied();
-            checks_sqr.block[56 + 2 * i].setPieceId(checks_obj.b_checkers[i]);
-        }
-
-        for (int i = 5; i <= 8; i++) {
-            checks_obj.b_checkers[i] = new Checkers(i, "black", 40 + 2 * i - 1);
-            checks_obj.b_checkers[i].setCoordinates(0, 0);
-            checks_sqr.block[40 + 2 * i - 1].setOccupied();
-            checks_sqr.block[40 + 2 * i - 1].setPieceId(checks_obj.b_checkers[i]);
-        }
-
-        for (int i = 9; i <= 12; i++) {
-            checks_obj.b_checkers[i] = new Checkers(i, "black", 24 + 2 * i);
-            checks_obj.b_checkers[i].setCoordinates(0, 0);
-            checks_sqr.block[24 + 2 * i].setOccupied();
-            checks_sqr.block[24 + 2 * i].setPieceId(checks_obj.b_checkers[i]);
-
-        }
-        return (checks_obj);
     }
 
     public int getXcoordinates(int square){
@@ -194,14 +132,15 @@ public class Checkers {//for individual counters
 
     //starting with coutner selections first
     //For now will havv method as static and synced so only one possible move at a time.
-    public synchronized boolean show_moves(Checkers piece,Room rm) throws Exception{//clciked piece shoudl be passed in here
+    public synchronized boolean show_moves(Checkers piece,Room rm){//clciked piece shoudl be passed in here
         System.out.println("prev selected piece: " + selected_piece);
         System.out.println(the_checker);
 
         boolean match =false;
         attack_possible = false;
 
-        apply_front_changes(rm,0,"remove_road",null);//nt primitive type so can pass in null
+
+//        apply_front_changes(rm,0,"remove_road",null);//nt primitive type so can pass in null
         //Before setting selected piece remove roads
 
         if(selected_piece > 0){ //refers to id
@@ -280,7 +219,7 @@ public class Checkers {//for individual counters
     }
 
     //passes in the index
-    public synchronized boolean make_move(int index,String colour,Room rm) throws  Exception{
+    public synchronized boolean make_move(int index,String colour,Room rm){
 
         boolean isMove = false;
         boolean must_attack = false;
@@ -389,7 +328,7 @@ public class Checkers {//for individual counters
     }
 
 
-    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm) throws Exception{
+    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm){
         if (piece.coordY != top_limit){
             System.out.println("221 " + piece.coordX + " " + LimitSide);
             if (piece.coordX != LimitSide && !cs.block[piece.occupiedSquare + moveDirection].isOccupied()){//isOccupied is the root
@@ -410,7 +349,7 @@ public class Checkers {//for individual counters
 
     }
 
-    public int check_attack(Checkers piece, int X, int Y, int negX, int negY,int squareMove, int direction,Room rm ) throws Exception{
+    public int check_attack(Checkers piece, int X, int Y, int negX, int negY,int squareMove, int direction,Room rm ) {
 
         if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && cs.block[piece.occupiedSquare + squareMove].isOccupied() && cs.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !cs.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
             attack_possible = true;
@@ -426,7 +365,7 @@ public class Checkers {//for individual counters
     }
 
 
-    public boolean attack_move(Checkers piece, Room rm) throws  Exception{
+    public boolean attack_move(Checkers piece, Room rm){
 
         //types of moves possible
         up_left=0;
@@ -484,7 +423,7 @@ public class Checkers {//for individual counters
         }
     }
 
-    public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Room rm,Checkers piece) throws Exception{//index is the board pos and nt counter id
+    public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Room rm,Checkers piece){//index is the board pos and nt counter id
         if (cur_player.equals("white")){
             w_checkers[selected_piece].changeCoordinates(X,Y);
             apply_front_changes(rm,0,"non_attack_move",w_checkers[selected_piece]);
@@ -511,7 +450,7 @@ public class Checkers {//for individual counters
     }
 
 
-    public  void eliminate_check(int index,Room rm) throws  Exception{
+    public  void eliminate_check(int index,Room rm) {
         if (index > 0 && index < 65){
             Checkers piece = cs.block[index].getPieceId();
             System.out.println("Eliminate Id " + piece + " index: " +index);
@@ -548,7 +487,7 @@ public class Checkers {//for individual counters
 //        msg to f/e that game has been won.
     }
     //Needs to be modifed to show moves to all users.
-    public void apply_front_changes(Room rm,int square, String type,Checkers piece) throws Exception{
+    public void apply_front_changes(Room rm,int square, String type,Checkers piece) {
         System.out.println("f/e change requested");
         String msg = "";
         switch (type) {
@@ -573,7 +512,7 @@ public class Checkers {//for individual counters
                 System.out.println(msg + " " + piece.getCoordX() + " " + piece.getCoordY());
                 break;
         }
-        rm.apply_to_room_users(msg,rm);
+        rm.apply_to_room_users(msg,rm,plyr);
     }
 
 
