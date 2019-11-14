@@ -200,6 +200,13 @@ function start_game_btn(){
     game.send_data(msg);
 }
 
+function start_game_btn2(){
+    console.log(" 2 game has been started");
+    var msg = {"type" : "start_game2", "room_value": room_value,"player_id" : player_id};//main user triggers this btn
+    game_started = true;
+    document.getElementById('start_div2').style.display = "none";
+    game.send_data(msg);
+}
 
 class checkers_squares {
     constructor(square, index) {
@@ -589,11 +596,21 @@ class Game {
                     }
                     break;
 
-                case "player_joined"://start btn dispalyed for owner of the game
+                case "player_joined"://start btn displayed for owner of the game. x-> shown joined player
                     if (packet.data === "successful"){
                         player_id = packet.player_id;
                         document.getElementById("start_div").style.display = "block";
                         console.log("530");
+                    }
+                    else{
+                        console.log(packet.data);
+                    }
+                    break;
+                case "player_joined2"://start btn displayed for owner of the game. x-> shown joined player
+                    if (packet.data === "successful"){
+                        player_id = packet.player_id;
+                        document.getElementById("start_div2").style.display = "block";
+                        console.log("613");
                     }
                     else{
                         console.log(packet.data);
@@ -628,8 +645,9 @@ class Game {
                         game2.initialize_second_game();//used for testing only
                         player_game = 1;
                     }
-                    else if (user_permit_val === 2 || user_permit_val === 1){
+                    else if (user_permit_val == 2 || user_permit_val == 1){
                         console.log("user for second game");
+                        game.initialize_game();//to see game 1
                         game2.initialize_second_game();
                         player_game = 2;
                     }
@@ -651,7 +669,7 @@ class Game {
                 var check_permits = {"type": "get_room_permits", "room_value" : room_value};
                 game.send_data(check_permits);
             }
-        },3000);
+        },5000);
 
     }
 }
@@ -664,6 +682,11 @@ function start_game(){
     game.connect();
 
 }
+
+// setInterval(()=> {
+//     var msg = {"type" : "ping"};
+//     game.send_data(msg);
+// },15000);
 
 
 //these will have to be changed for new game method

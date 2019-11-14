@@ -120,7 +120,7 @@ public class Player {
         return checks_obj;
     }
 
-    //Each player will have a scheduled thread
+    //Each player will have a 1 thread and 1 scheduled thread  for each game
     public void start_game_thread(){
         scheduler = Executors.newScheduledThreadPool(1);//1 scheduled pool for each user
         scheduler.scheduleAtFixedRate(()-> update_game(),1000,1000, TimeUnit.MILLISECONDS);

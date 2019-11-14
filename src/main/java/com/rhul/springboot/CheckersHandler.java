@@ -57,7 +57,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                           try{
 
                               String msg;
+                              System.out.println("waiting for lock");
                               Lk.lock();//sets a lock. specify to unlock at any necessary position
+                              System.out.println("I am in");
 //                            int difficulty = json.getInt("difficulty");
                               System.out.println("Player_id_to_be_Set");
                               int player_id = game.player_ids.getAndIncrement();
@@ -98,12 +100,15 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      return;
                                  }
                                  Lk.unlock();
+
                              }
 
                              else if ((json.getString("room_action").equals("join_room"))) {
+
+                                 System.out.println("104");
                                  if (game.check_room_exists(rm_val)) {
                                      // rm exists , set the room and get it from game class, add the player,
-
+                                     System.out.println("106");
                                      rm = game.get_room(rm_val);
                                      boolean player_added = rm.add_player_to_room(plyr);
                                      joining = true;
@@ -119,7 +124,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          plyr.setColour("white");
                                          plyr.setRoom_value(rm_val);
                                          plyr.start_game_thread();
-                                         System.out.println("game oppponent ready 120");
+                                         System.out.println(" game 1/2 opponent ready 120");
                                      }
                                      else if(semaphore_permits + 1 == 2){
                                          plyr.setRoom_value(rm_val);
@@ -140,11 +145,18 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          System.out.println("136 joining player rdy");
                                      }
                                      //player handling
-                                     if (player_added) {
+                                     if (player_added && player_id < 3) {
                                          msg = String.format("{\"type\": \"player_joined\",\"data\":\"successful\",\"player_id\":\"%d\"}",player_id);
                                          plyr.setRoom(rm);
                                          plyr.sendMessage(msg);
-                                     } else {
+                                     }
+                                     else  if (player_added && player_id > 2){//2nd game last player
+                                         System.out.println("last player added 149");
+                                         msg = String.format("{\"type\": \"player_joined2\",\"data\":\"successful\",\"player_id\":\"%d\"}",player_id);
+                                         plyr.setRoom(rm);
+                                         plyr.sendMessage(msg);
+                                     }
+                                     else {
                                          msg = "{\"type\": \"player_joined\",\"data\":\"not_successful\"}";
                                          plyr.sendMessage(msg);
                                      }
@@ -153,7 +165,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      msg = "{\"type\": \"join_room_resp\",\"data\":\"not_successful\"}";
                                      plyr.sendMessage(msg);
                                     }
+                                 Lk.unlock();
+                                 System.out.println("join room lk relaesed");
                                  }
+
 
                              if (json.getString("user_action").equals("initialize") & !joining) {
 
@@ -198,7 +213,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                 //need another case for game 2
                 case "start_game2"://so before the 4 threshold is reached/ the user has pressed the btn
                     //f/e update for anyone in rm that game is rdy
-                    plyr = (Player) session.getAttributes().get(game_attribute);
+//                    plyr = (Player) session.getAttributes().get(game_attribute);
+                    plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
                     rm = game.get_room(json.getString("room_value"));
@@ -228,6 +244,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Checkers.move_length = move_length;
                     Checkers.move_deviation = move_dev;
                     break;
+                case "ping":
+//                    System.out.println();//keeps conenction alive
                 //other cases for chat, room handling to be written
 
             }
