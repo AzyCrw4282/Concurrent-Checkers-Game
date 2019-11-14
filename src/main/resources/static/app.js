@@ -14,6 +14,7 @@ var user_permit_val = 0;//add 1 to get the value held by the user
 var player_game;//1/2
 var permit_obtained = false;
 var already_opened = false;
+var player_id =0;
 //first game
 var square_class = document.getElementsByClassName("square");
 var square_class2 = document.getElementsByClassName("square2");
@@ -50,7 +51,7 @@ var user_action2;
 
 
 $(document).ready(function(){
-
+    //error with this function. may need to remove this
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
         getDimension();//vars here will also need to eb updated on f/e
@@ -71,13 +72,13 @@ $(document).ready(function(){
             }
         }
 
-        if(cur_big_screen !== screen_check){
-            for(var i = 1; i <= 12; i++){
-                b_checker[i].set_coords(0,0);
-                w_checker[i].set_coords(0,0);
-            }
-            game.adjust_screen_size(moveLength,moveDeviation);
-        }
+        // if(cur_big_screen !== screen_check){
+        //     for(var i = 1; i <= 12; i++){
+        //         b_checker[i].set_coords(0,0);
+        //         w_checker[i].set_coords(0,0);
+        //     }
+        //     game.adjust_screen_size(moveLength,moveDeviation);
+        // }
 
     };
 });
@@ -193,7 +194,7 @@ function enter_game_room(){
 //displayed when 2 users exists for nw
 function start_game_btn(){
     console.log("game has been started");
-    var msg = {"type" : "start_game", "room_value": room_value};//main user triggers this btn
+    var msg = {"type" : "start_game", "room_value": room_value,"player_id" : player_id};//main user triggers this btn
     game_started = true;
     document.getElementById('start_div').style.display = "none";
     game.send_data(msg);
@@ -420,18 +421,6 @@ class Game {
 
     }
 
-
-    //var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
-    //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
-    make_move(index){
-        console.log("sqaure clicked");
-        // var str = {"type" : "make_move","index" : index};
-        user_action = "make_move";
-        var str = {"type" : "make_move","room_action" : "N/A","room_value" : room_value,"index" : index};
-        var json_str = JSON.stringify(str);
-        this.socket.send(json_str);
-    }
-
     //No corrds changes in b/e only display changes in f/e
     adjust_screen_size(move_length,move_dev){
         var str = {"type" : "adjust_screen_size","move_length" : move_length ,"move_dev" : move_dev};
@@ -460,13 +449,13 @@ class Game {
     show_moves(index,colour)
     {
         //Allows for user click validations
-        if (the_checker === b_checker && colour === "white") {
-            alert("It's the black player's turn");
-            return false;
-        } else if (the_checker === w_checker && colour === "black") {
-            alert("It's the white player's turn");
-            return false;
-        }
+        // if (the_checker === b_checker && colour === "white") {
+        //     alert("It's the black player's turn");
+        //     return false;
+        // } else if (the_checker === w_checker && colour === "black") {
+        //     alert("It's the white player's turn");
+        //     return false;
+        // }
 
         //set colour here.
         if (colour === "white"){
@@ -478,7 +467,20 @@ class Game {
         console.log("square selected index below");
         console.log(index);
         user_action = "show_moves";
-        var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
+        var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_colour" : colour};
+        var json_str = JSON.stringify(str);
+        this.socket.send(json_str);
+    }
+
+
+
+    //var str = {"type" : "user","user_action" : user_action,"room_action" : "N/A","room_value" : room_value,"index" : index ,"player_colour" : colour};
+    //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
+    make_move(index){
+        console.log("square clicked");
+        // var str = {"type" : "make_move","index" : index};
+        user_action = "make_move";
+        var str = {"type" : "make_move","room_action" : "N/A","room_value" : room_value,"sqr_index" : index,"player_id":player_id};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -579,8 +581,17 @@ class Game {
                     // game.non_attack_move(piece_id,x_coord,y_coord);
                     game.change_turns();
                     break;
+
+                case "create_room_resp":
+                    if (packet.data === "Ok") {
+                        player_id = packet.player_id;
+                        console.log("room created");
+                    }
+                    break;
+
                 case "player_joined"://start btn dispalyed for owner of the game
                     if (packet.data === "successful"){
+                        player_id = packet.player_id;
                         document.getElementById("start_div").style.display = "block";
                         console.log("530");
                     }

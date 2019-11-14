@@ -134,7 +134,6 @@ public class Checkers {//for individual counters
     //For now will havv method as static and synced so only one possible move at a time.
     public synchronized boolean show_moves(Checkers piece,Room rm){//clciked piece shoudl be passed in here
         System.out.println("prev selected piece: " + selected_piece);
-        System.out.println(the_checker);
 
         boolean match =false;
         attack_possible = false;
@@ -330,7 +329,6 @@ public class Checkers {//for individual counters
 
     public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm){
         if (piece.coordY != top_limit){
-            System.out.println("221 " + piece.coordX + " " + LimitSide);
             if (piece.coordX != LimitSide && !cs.block[piece.occupiedSquare + moveDirection].isOccupied()){//isOccupied is the root
                 int value = piece.occupiedSquare + moveDirection;
                 java.lang.String sdfg = "";
@@ -386,7 +384,7 @@ public class Checkers {//for individual counters
         if(piece.colour.equals("white")){
             down_left = check_attack( piece , 3, 6, 1 , 1 , 7 , down_left,rm );
             down_right = check_attack( piece , 6 , 6 , -1, 1 ,9 , down_right,rm );
-            System.out.println(down_left + " 393 code");
+
         }
         else{//normal black check
             up_right = check_attack( piece , 6, 3 , -1 , -1 , -7, up_right,rm );

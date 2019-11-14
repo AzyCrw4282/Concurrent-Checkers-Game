@@ -34,7 +34,6 @@ public class CheckersHandler extends TextWebSocketHandler {
     Executor executor = Executors.newFixedThreadPool(10);//
     String cur_plyr = null;
     int piece_index = 0;
-    private Player plyr;
 
 
 
@@ -42,12 +41,12 @@ public class CheckersHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         try {
-            int player_id = game.player_ids.getAndIncrement();
+
             String payload = message.getPayload();
             JSONObject json = new JSONObject(payload);
             String type = json.getString("type");//this could be of any
             System.out.println("------------------------------------");
-            System.out.println("string from b/e "+ json);
+            System.out.println("string from f/e "+ json);
 
             switch (type){
 
@@ -55,20 +54,20 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "user"://all user related calls will be passed here. other cases would include rooms, chat, user handling etc.
 
                     Runnable threads_area = () -> {
-                        System.out.println("multi threads running n: " + Thread.currentThread().getId() + " playerId: "+ player_id);//shows b/e threads running
                           try{
 
                               String msg;
-                              String mesg;
-
                               Lk.lock();//sets a lock. specify to unlock at any necessary position
 //                            int difficulty = json.getInt("difficulty");
-                              plyr = new Player(player_id,"player",session);
+                              System.out.println("Player_id_to_be_Set");
+                              int player_id = game.player_ids.getAndIncrement();
+                              Player plyr = new Player(player_id,"player",session);
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);//session can manage the right object and can retrieve it
                               String user_action = json.getString("user_action");
                               Room rm;//to  be initized
                               String rm_val = json.getString("room_value");
+                              System.out.println("multi threads running n: " + Thread.currentThread().getId() + " playerId: "+ player_id);//shows b/e threads running
 
                              if (json.getString("room_action").equals("create_room")) {
                                  //if create rm check if exists-> false then wrong request
@@ -78,6 +77,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      rm.add_player_to_room(plyr);
                                      plyr.setRoom(rm);
                                      plyr.setColour("black");//starting player black
+                                     Player.players_hm.put(player_id,plyr);//static h_m that sets the vals of plyrs
 
                                      if (rm.getSmphore().availablePermits()+1==4){//permit held by user
                                          plyr.setRoom_value(rm_val);
@@ -86,8 +86,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      game.add_rooms(rm);
                                      game.add_player(plyr);
                                      int room_permits = rm.getSmphore().availablePermits();
-                                     msg = "{\"type\": \"create_room_resp\",\"data\":\"Ok\"}";
+                                     msg = String.format("{\"type\": \"create_room_resp\",\"data\":\"Ok\",\"player_id\":\"%d\"}",player_id);
                                      plyr.sendMessage(msg);
+
 
                                  } else {
                                      //already exist wrong request
@@ -110,6 +111,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                                      int semaphore_permits = rm.getSmphore().availablePermits();
                                      plyr.setRoom_value(rm_val);
+                                     Player.players_hm.put(player_id,plyr);//static h_m that sets the vals of plyrs
 
                                      if (semaphore_permits + 1 == 3 || semaphore_permits + 1 == 1 ){//3rd player or last player can initized the game
                                          //it can then be initialized. playing player of game and room owner can be fetched as needed.
@@ -139,7 +141,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      }
                                      //player handling
                                      if (player_added) {
-                                         msg = "{\"type\": \"player_joined\",\"data\":\"successful\"}";
+                                         msg = String.format("{\"type\": \"player_joined\",\"data\":\"successful\",\"player_id\":\"%d\"}",player_id);
                                          plyr.setRoom(rm);
                                          plyr.sendMessage(msg);
                                      } else {
@@ -166,20 +168,25 @@ public class CheckersHandler extends TextWebSocketHandler {
                     };
                   executor.execute(threads_area);
                   break;
-
                 case "show_moves":
+                    Player plyr = get_player_obj(json.getInt("player_id"));
+                    System.out.println("Current player id"+ plyr.getId());
                     int index = json.getInt("index");
+                    //need to get the right player obj
                     plyr.setIndex(index);
                     plyr.setShow_moves_req(true);
                     break;
 
                 case "make_move":
+                    plyr = get_player_obj(json.getInt("player_id"));
+                    plyr.setSqr_index(json.getInt("sqr_index"));
                     plyr.setMove_req(true);
                     break;
 
                 case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
                     //f/e update for anyone in rm that game is rdy
 //                    plyr = (Player) session.getAttributes().get(game_attribute);
+                    plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
                     Room rm = game.get_room(json.getString("room_value"));
@@ -202,12 +209,12 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "get_room_permits":
                     Player p = (Player) session.getAttributes().get(game_attribute);
-                    System.out.println("Player " + p + "asd " + plyr);
+                    System.out.println("Player " + p.getId());//tell if it's unique
                     Room rom = game.get_room(json.getString("room_value"));
                     int room_permits = rom.getSmphore().availablePermits() +1;//permit held by the user
                     String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\"}", room_permits);
                     System.out.println(mesg);
-                    plyr.sendMessage(mesg);
+                    p.sendMessage(mesg);
                     break;
 
                 case "connection_incoming":
@@ -220,13 +227,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     //static changes made since >1 game will be of same size.
                     Checkers.move_length = move_length;
                     Checkers.move_deviation = move_dev;
-                    System.out.println("screen size adjusted");
                     break;
-
-                case "sync_data":
-                    //To sync f/e and b/e
-                    break;
-
                 //other cases for chat, room handling to be written
 
             }
@@ -237,6 +238,20 @@ public class CheckersHandler extends TextWebSocketHandler {
         }
 
     }
+
+    public Player get_player_obj(int id){
+
+        //iterate through hm and check for the correct val of id
+        for (Player p : Player.players_hm.values()){
+            if (p.getId() == id){
+                return p;
+            }
+        }
+        return null;
+
+    }
+
+
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

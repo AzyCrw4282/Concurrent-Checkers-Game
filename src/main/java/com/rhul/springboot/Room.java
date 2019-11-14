@@ -41,7 +41,7 @@ public class Room {
 
     }
 
-    public boolean add_player_to_room(Player playr) throws Exception {
+    public boolean add_player_to_room(Player playr) {
         try {
             if (smphore.availablePermits() == 0) {
                 String msg = "{\"type\": \"no_permits_available\"}";

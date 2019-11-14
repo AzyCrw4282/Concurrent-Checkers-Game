@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,8 @@ public class Player {
     public AtomicInteger playerId = new AtomicInteger(0);
     public AtomicInteger roomId = new AtomicInteger(0);
 
+    public static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
+    //hm to keep track of all players in the room
 
     //lombok used here
     private final int id;
@@ -33,9 +36,11 @@ public class Player {
     private boolean show_moves_req = false;
     public Checkers checks_obj;
     private int index;//val to make the move
+    private int sqr_index;
     private String room_value;
     private String colour;
     private String cur_plyr;
+
     CheckersGame game = new CheckersGame();
 
     public Player(int id, String name, WebSocketSession session){
@@ -118,13 +123,12 @@ public class Player {
     //Each player will have a scheduled thread
     public void start_game_thread(){
         scheduler = Executors.newScheduledThreadPool(1);//1 scheduled pool for each user
-        scheduler.scheduleAtFixedRate(()-> update_game(),2000,2000, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(()-> update_game(),1000,1000, TimeUnit.MILLISECONDS);
     }
-
 
     public void update_game(){
         //game obj will be shared by 2 players
-        System.out.println("runing");
+
         if (show_moves_req){
             this.show_moves();
             show_moves_req = false;
@@ -133,11 +137,16 @@ public class Player {
             this.make_move();
             move_req = false;
         }
-
     }
 
     public void show_moves(){
         //At this point, 2 players in
+        //get checks obj from hm.
+        if (this.checks_obj == null){
+            checks_obj = CheckersGame.get_game_obj(this);
+        }
+
+
         Room rm = game.get_room(room_value);
         int piece_index = index;//index or id val of the piece
         System.out.println("129");
@@ -160,8 +169,12 @@ public class Player {
 
     public void make_move(){
 
+        if (this.checks_obj == null){
+            checks_obj = CheckersGame.get_game_obj(this);
+        }
+
         Room rm = game.get_room(room_value);
-        int square_index = index;//index or id val of the piece
+        int square_index = sqr_index;//index or id val of the piece
         System.out.println("make_move_b/e  call");
 
         if (this.colour.equals("white")) {
@@ -178,10 +191,5 @@ public class Player {
 
 
     }
-
-
-
-
-
 
 }
