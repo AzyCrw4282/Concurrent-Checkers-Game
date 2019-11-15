@@ -14,7 +14,7 @@ var user_permit_val = 0;//add 1 to get the value held by the user
 var player_game;//1/2
 var permit_obtained = false;
 var already_opened = false;
-var player_id =0;
+var player_id = undefined;
 //first game
 var square_class = document.getElementsByClassName("square");
 var square_class2 = document.getElementsByClassName("square2");
@@ -203,7 +203,7 @@ function start_game_btn(){
 function start_game_btn2(){
     console.log(" 2 game has been started");
     var msg = {"type" : "start_game2", "room_value": room_value,"player_id" : player_id};//main user triggers this btn
-    game_started = true;
+    game_started2 = true;
     document.getElementById('start_div2').style.display = "none";
     game.send_data(msg);
 }
@@ -217,7 +217,7 @@ class checkers_squares {
             if (game_started & player_game == 1) {
                 game.make_move(index);
             }
-            else if (game_started & player_game ===2){
+            else if (game_started2 & player_game == 2){
                 game2.make_move(index);
             }
             else{
@@ -246,7 +246,7 @@ class checkers{
                 if (game_started && player_game == 1) {
                     game.show_moves(index, colour);
                 }
-                else if(game_started && player_game == 2){
+                else if(game_started2 && player_game == 2){
                     game2.show_moves(index, colour);
                 }
                 else{
@@ -267,17 +267,20 @@ class checkers{
             this.id.style.top = y + 'px';
             this.id.style.left = x+17 + 'px';
          }
-        move_coords(X,Y){
+        move_coords(X,Y,game_no){
             // var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             // var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
             // console.log("Here we go", X,Y,x,y,this.id);
-            if (player_game == 1){
+            if (game_no == 1){
+                console.log("game no 1 move ");
                 this.id.style.top = Y + 'px';
                 this.id.style.left = X + 'px';
             }
-            else{
+            else if (game_no == 2){
+                console.log("Game no 2 move")
                 this.id.style.top = Y + 'px';
-                this.id.style.left = X + 17 + 'px';
+                let new_x = parseInt(X) + 17;
+                this.id.style.left = new_x + 'px';
             }
 
 
@@ -452,8 +455,25 @@ class Game {
         }
     }
 
+    change_turn_game_2(){
+        if (the_checker2 === w_checker2){
+            the_checker2 = b_checker2;
+            document.getElementById("cur_player_img_id2").src = "black_checker.jpg"
+        }
+        else if (the_checker2 ===  b_checker2){
+            the_checker2 = w_checker2;
+            document.getElementById("cur_player_img_id2").src = "white_checker.png"
+        }
+        else{
+            the_checker2 = w_checker2
+        }
+    }
+
+
     show_moves(index,colour)
     {
+
+        //To be improved
         //Allows for user click validations
         // if (player_game === 1){
         //     if (the_checker === b_checker && colour === "white") {
@@ -473,15 +493,6 @@ class Game {
         //         return false;
         //     }
         // }
-
-        // set colour here.
-        if (colour === "white"){
-            the_checker = w_checker;
-        }
-        else if (colour === "black"){
-            the_checker = b_checker;
-        }
-
 
         console.log("square selected index, ", index );
         user_action = "show_moves";
@@ -504,20 +515,39 @@ class Game {
     }
 
 
-    remove_road(upLeft,upRight,downLeft,downRight){ //to check this
+    remove_road(upLeft,upRight,downLeft,downRight,cur_game){ //to check this
         console.log(downRight,downLeft,upRight,upLeft );
-        if(downRight >0 ) block[downRight].id.style.background = "#BA7A3A";
-        if(downLeft >0) block[downLeft].id.style.background = "#BA7A3A";
-        if(upRight >0) block[upRight].id.style.background = "#BA7A3A";
-        if(upLeft >0) block[upLeft].id.style.background = "#BA7A3A";
+        if (cur_game == 1) {
+            if (downRight > 0) block[downRight].id.style.background = "#BA7A3A";
+            if (downLeft > 0) block[downLeft].id.style.background = "#BA7A3A";
+            if (upRight > 0) block[upRight].id.style.background = "#BA7A3A";
+            if (upLeft > 0) block[upLeft].id.style.background = "#BA7A3A";
+        }
+        else if (cur_game == 2){
+            if (downRight > 0) block2[downRight].id.style.background = "#BA7A3A";
+            if (downLeft > 0) block2[downLeft].id.style.background = "#BA7A3A";
+            if (upRight > 0) block2[upRight].id.style.background = "#BA7A3A";
+            if (upLeft > 0) block2[upLeft].id.style.background = "#BA7A3A";
+        }
     }
 
-    apply_road(index){
-        if (index > 0) block[index].id.style.background = "#704923";
+    apply_road(index,cur_game){
+        if (index > 0 && cur_game == 1 ){
+            block[index].id.style.background = "#704923";
+        }
+        else if (index >0 && cur_game == 2){
+            block2[index].id.style.background = "#704923";
+        }
     }
 
-    move_attack(index){
-        if (index > 0) block[index].id.style.background = "#007010";
+    move_attack(index,game_no){
+        if (index > 0 && game_no == 1 ){
+            if (index > 0) block[index].id.style.background = "#007010";
+        }
+        else if (index >0 & game_no == 2){
+            if (index > 0) block2[index].id.style.background = "#007010";
+        }
+
     }
 
     non_attack_move(id,x,y){
@@ -565,7 +595,8 @@ class Game {
                 case 'apply_road':
                     console.log(packet.data);
                     var parsed_val = parseInt(packet.data);
-                    game.apply_road(parsed_val);
+                    var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
+                    game.apply_road(parsed_val,game_move);
                     break;
 
                 case 'remove_road':
@@ -573,28 +604,37 @@ class Game {
                     var up_right = packet.up_right;
                     var down_left = packet.down_left;
                     var down_right = packet.down_right;
-                    game.remove_road(up_left,up_right,down_left,down_right);
+                    var game_move = packet.game_no;
+                    game.remove_road(up_left,up_right,down_left,down_right,game_move);
                     break;
 
                 case 'move_attack':
                     console.log("make the move");
                     var index = packet.data;
-                    game.move_attack(index);
+                    var game_move = packet.game_no;
+                    game.move_attack(index,game_move);
                     //once move made, set the other players turn
-                    game.change_turns();
+                    if (game_move == 1){
+                        game.change_turns();
+                    }
+                    else if(game_move == 2){
+                        game2.change_turn_game_2();
+                    }
+                    // game.change_turns();
                     break;
 
                 case 'eliminate_piece':
                     console.log("Piece elimination");
                     let elim_piece_id = packet.data;
+                    var game_move = packet.game_no;
                     console.log(elim_piece_id);
 
-                    if (player_game === 1){
-                        the_checker2[elim_piece_id].id.style.display = "none";
+                    if (game_move == 1){
+                        the_checker[elim_piece_id].id.style.display = "none";
                         //make the move on game player and then update it on the other players
                     }
-                    else if (player_game === 2){
-                        the_checker[elim_piece_id].id.style.display = "none";
+                    else if (game_move == 2){
+                        the_checker2[elim_piece_id].id.style.display = "none";
                     }
                     break;
 
@@ -606,16 +646,17 @@ class Game {
                     var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
 
                     //wrong approach
-                    if (game_move === 1){
-                        the_checker[piece_id].move_coords(x_coord,y_coord);
+                    if (game_move == 1){
+                        the_checker[piece_id].move_coords(x_coord,y_coord,game_move);
+                        game.change_turns();
                     }
-                    else if(game_move === 2){
-                        the_checker2[piece_id].move_coords(x_coord,y_coord);
+                    else if(game_move == 2){
+                        the_checker2[piece_id].move_coords(x_coord,y_coord,game_move);
+                        game2.change_turn_game_2();
                     }
 
                     console.log("Move_made");
                     // game.non_attack_move(piece_id,x_coord,y_coord);
-                    game.change_turns();
                     break;
 
                 case "create_room_resp":
@@ -638,8 +679,9 @@ class Game {
                 case "player_joined2"://start btn displayed for owner of the game. x-> shown joined player
                     if (packet.data === "successful"){
                         player_id = packet.player_id;
-                        document.getElementById("start_div2").style.display = "block";
-                        console.log("613");
+                        if (player_id == 4){
+                            document.getElementById("start_div2").style.display = "block";
+                        }
                     }
                     else{
                         console.log(packet.data);
@@ -648,19 +690,17 @@ class Game {
                 case "start_game_1":
                     if (packet.data === "rdy"){
                         game_started = true;
-                        console.log("Game is rdy to start");
+                        console.log("Game 1 is rdy to start");
                         document.getElementById("start_div").style.display = "none";
                         the_checker = w_checker;//to begin with
-
                     }
                     break;
                 case "start_game_2":
                     if (packet.data === "rdy_2"){
                         game_started2 = true;
-                        console.log("Game is rdy to start");
+                        console.log("Game 2 is rdy to start");
                         document.getElementById("start_div").style.display = "none";
                         the_checker2 = w_checker2;//to begin with
-
                     }
                     break;
                 case "room_permits":// Iniz here?
@@ -698,7 +738,7 @@ class Game {
                 var check_permits = {"type": "get_room_permits", "room_value" : room_value};
                 game.send_data(check_permits);
             }
-        },5000);
+        },2000);
 
     }
 }

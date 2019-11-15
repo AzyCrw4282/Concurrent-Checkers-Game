@@ -78,7 +78,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      rm = new Room(player_id, rm_val, plyr);
                                      rm.add_player_to_room(plyr);
                                      plyr.setRoom(rm);
-                                     plyr.setColour("black");//starting player black
+                                     plyr.setColour("white");//starting player white always
                                      Player.players_hm.put(player_id,plyr);//static h_m that sets the vals of plyrs
 
                                      if (rm.getSmphore().availablePermits()+1==4){//permit held by user
@@ -121,14 +121,14 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      if (semaphore_permits + 1 == 3 || semaphore_permits + 1 == 1 ){//3rd player or last player can initized the game
                                          //it can then be initialized. playing player of game and room owner can be fetched as needed.
                                          CheckersGame.player_game_hm.put(plyr,plyr.initialize());
-                                         plyr.setColour("white");
+                                         plyr.setColour("black");
                                          plyr.setRoom_value(rm_val);
                                          plyr.start_game_thread();
                                          System.out.println(" game 1/2 opponent ready 120");
                                      }
                                      else if(semaphore_permits + 1 == 2){
                                          plyr.setRoom_value(rm_val);
-                                         plyr.setColour("black");
+                                         plyr.setColour("white");
                                          plyr.start_game_thread();
                                      }
                                      else if (semaphore_permits == 0) {
@@ -150,7 +150,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          plyr.setRoom(rm);
                                          plyr.sendMessage(msg);
                                      }
-                                     else  if (player_added && player_id > 2){//2nd game last player
+                                     else if (player_added && player_id > 2){//2nd game last player can initiate the start
                                          System.out.println("last player added 149");
                                          msg = String.format("{\"type\": \"player_joined2\",\"data\":\"successful\",\"player_id\":\"%d\"}",player_id);
                                          plyr.setRoom(rm);

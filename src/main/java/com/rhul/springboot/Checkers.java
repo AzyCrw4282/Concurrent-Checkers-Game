@@ -490,20 +490,16 @@ public class Checkers {//for individual counters
         String msg = "";
         switch (type) {
             case "apply_road":
-                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"}", square);
-
+                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"", square);
                 break;
             case "remove_road":
-                msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"}", up_left,up_right,down_left,down_right);
-
+                msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"", up_left,up_right,down_left,down_right);
                 break;
             case "eliminate_piece":
-                msg = String.format("{\"type\": \"eliminate_piece\",\"data\":\"%d\"}", square);
-
+                msg = String.format("{\"type\": \"eliminate_piece\",\"data\":\"%d\"", square);
                 break;
             case "move_attack":
-                msg = String.format("{\"type\": \"move_attack\",\"data\":\"%d\"}", square);
-
+                msg = String.format("{\"type\": \"move_attack\",\"data\":\"%d\"", square);
                 break;
             case "non_attack_move":
                 msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
