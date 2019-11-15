@@ -79,7 +79,9 @@ public class Room {
                     if (this.getRm_owner().getId()== plyr.getId() || this.getRm_owner().getId()+1 == plyr.getId()) {//if game 1
                         System.out.println("plyer id: " + plyr.getId());
                         try {
-                            plyr.sendMessage(msg);
+                            String new_msg = msg + ",\"game_no\":\"1\"}";
+                            plyr.sendMessage(new_msg);
+                            //append a msg here if game 1/2
                         } catch (Exception e) {
                             e.printStackTrace();
                             remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
@@ -87,7 +89,8 @@ public class Room {
                     }
                     else{//2nd game, with player id's of 2,3
                         try {
-                            plyr.sendMessage(msg);
+                            String new_msg = msg + ",\"game_no\":\"2\"}";
+                            plyr.sendMessage(new_msg);
 
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -98,5 +101,4 @@ public class Room {
             }
 
     }
-
 }

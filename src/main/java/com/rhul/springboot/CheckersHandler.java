@@ -205,7 +205,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
                     Room rm = game.get_room(json.getString("room_value"));
-                    String msg = "{\"type\": \"start_game_1\",\"data\": \"rdy\"}";
+                    String msg = "{\"type\": \"start_game_1\",\"data\": \"rdy\"";
                     //the checker value to begin with on all ends.
                     rm.apply_to_room_users(msg,rm,plyr);//should not be for all
                     break;
@@ -218,7 +218,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
                     rm = game.get_room(json.getString("room_value"));
-                    msg = "{\"type\": \"start_game_2\",\"data\": \"rdy_2\"}";
+                    msg = "{\"type\": \"start_game_2\",\"data\": \"rdy_2\"";
                     //the checker value to begin with on all ends.
                     rm.apply_to_room_users(msg,rm,plyr);//should not be for all
                     break;

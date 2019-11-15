@@ -44,8 +44,8 @@ var b_checker = [];
 var block2 = [];
 var w_checker2 = [];
 var b_checker2 = [];
-var the_checker ;
-var the_checker2 ;
+var the_checker = undefined;
+var the_checker2 = undefined ;
 var user_action;
 var user_action2;
 
@@ -452,27 +452,38 @@ class Game {
         }
     }
 
-
     show_moves(index,colour)
     {
         //Allows for user click validations
-        // if (the_checker === b_checker && colour === "white") {
-        //     alert("It's the black player's turn");
-        //     return false;
-        // } else if (the_checker === w_checker && colour === "black") {
-        //     alert("It's the white player's turn");
-        //     return false;
+        // if (player_game === 1){
+        //     if (the_checker === b_checker && colour === "white") {
+        //         alert("It's the black player's turn");
+        //         return false;
+        //     } else if (the_checker === w_checker && colour === "black") {
+        //         alert("It's the white player's turn");
+        //         return false;
+        //     }
+        // }
+        // else if (player_game === 2){
+        //     if (the_checker2 === b_checker2 && colour === "white") {
+        //         alert("It's the black player's turn for game 2");
+        //         return false;
+        //     } else if (the_checker2 === w_checker2 && colour === "black") {
+        //         alert("It's the white player's turn for gamwe 2");
+        //         return false;
+        //     }
         // }
 
-        //set colour here.
+        // set colour here.
         if (colour === "white"){
             the_checker = w_checker;
         }
         else if (colour === "black"){
             the_checker = b_checker;
         }
-        console.log("square selected index below");
-        console.log(index);
+
+
+        console.log("square selected index, ", index );
         user_action = "show_moves";
         var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_colour" : colour};
         var json_str = JSON.stringify(str);
@@ -564,6 +575,7 @@ class Game {
                     var down_right = packet.down_right;
                     game.remove_road(up_left,up_right,down_left,down_right);
                     break;
+
                 case 'move_attack':
                     console.log("make the move");
                     var index = packet.data;
@@ -571,19 +583,36 @@ class Game {
                     //once move made, set the other players turn
                     game.change_turns();
                     break;
+
                 case 'eliminate_piece':
                     console.log("Piece elimination");
                     let elim_piece_id = packet.data;
                     console.log(elim_piece_id);
-                    the_checker[elim_piece_id].id.style.display = "none";
+
+                    if (player_game === 1){
+                        the_checker2[elim_piece_id].id.style.display = "none";
+                        //make the move on game player and then update it on the other players
+                    }
+                    else if (player_game === 2){
+                        the_checker[elim_piece_id].id.style.display = "none";
+                    }
                     break;
+
                 case 'non_attack_move':// p - the_checker enabled one f/e and nt the other and hence undefined
                     console.log("non-attack move");
                     var piece_id = packet.id;
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
+                    var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
 
-                    the_checker[piece_id].move_coords(x_coord,y_coord);
+                    //wrong approach
+                    if (game_move === 1){
+                        the_checker[piece_id].move_coords(x_coord,y_coord);
+                    }
+                    else if(game_move === 2){
+                        the_checker2[piece_id].move_coords(x_coord,y_coord);
+                    }
+
                     console.log("Move_made");
                     // game.non_attack_move(piece_id,x_coord,y_coord);
                     game.change_turns();

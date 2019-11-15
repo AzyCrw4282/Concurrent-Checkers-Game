@@ -17,7 +17,7 @@ public class CheckersGame {
     public AtomicInteger player_ids = new AtomicInteger(1);//all starts at 1
     public AtomicInteger room_ids = new AtomicInteger(1);
     //keeps which players are associated to which game may need
-    public static ConcurrentHashMap<Player,Checkers> player_game_hm = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Player,Checkers> player_game_hm = new ConcurrentHashMap<>();//Able to get the game and append it to string
     private static ConcurrentHashMap<Integer,Room> rooms_hm = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
 
