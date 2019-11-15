@@ -21,15 +21,15 @@ public class Checkers {//for individual counters
     private boolean game_started = false;
     private boolean one_move = false;
     private Room rm;
-    public  Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
-    public  Checkers[] b_checkers = new Checkers[13];
+    public Checkers[] w_checkers = new Checkers[13];//array obj initized from 0-12 so works :)
+    public Checkers[] b_checkers = new Checkers[13];
     private int coordX;
     private int coordY;
     private boolean alive;
     private int occupiedSquare;
     private int selected_piece;
-    private  boolean attack_possible = false;
-    private  Checkers the_checker[];
+    private boolean attack_possible = false;
+    private Checkers the_checker[];
     private Player plyr;
     private CheckersSquare cs;
 
@@ -58,7 +58,6 @@ public class Checkers {//for individual counters
         this.cs = cS;
     }
 
-
     //keeps track of the board and counters. need this int game_id,
     public Checkers(int square_piece, String colour, int square){//add  player, String game_type ltr vrsions
         this.id = square_piece;
@@ -69,8 +68,6 @@ public class Checkers {//for individual counters
         this.alive = true;
         this.coordX = getXcoordinates(square);//both updated when initiazled
         this.coordY = getYcoordinates(square);
-
-
     }
 
     public int getXcoordinates(int square){
@@ -135,14 +132,14 @@ public class Checkers {//for individual counters
 
     //starting with coutner selections first
     //For now will havv method as static and synced so only one possible move at a time.
-    public synchronized boolean show_moves(Checkers piece,Room rm) throws Exception{//clciked piece shoudl be passed in here
+    public synchronized boolean show_moves(Checkers piece,Room rm){//clciked piece shoudl be passed in here
         System.out.println("prev selected piece: " + selected_piece);
-        System.out.println(the_checker);
 
         boolean match =false;
         attack_possible = false;
 
-        apply_front_changes(rm,0,"remove_road",null);//nt primitive type so can pass in null
+
+//        apply_front_changes(rm,0,"remove_road",null);//nt primitive type so can pass in null
         //Before setting selected piece remove roads
 
         if(selected_piece > 0){ //refers to id
@@ -221,7 +218,7 @@ public class Checkers {//for individual counters
     }
 
     //passes in the index
-    public synchronized boolean make_move(int index,String colour,Room rm) throws  Exception{
+    public synchronized boolean make_move(int index,String colour,Room rm){
 
         boolean isMove = false;
         boolean must_attack = false;
@@ -330,9 +327,8 @@ public class Checkers {//for individual counters
     }
 
 
-    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm) throws Exception{
+    public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm){
         if (piece.coordY != top_limit){
-            System.out.println("221 " + piece.coordX + " " + LimitSide);
             if (piece.coordX != LimitSide && !cs.block[piece.occupiedSquare + moveDirection].isOccupied()){//isOccupied is the root
                 int value = piece.occupiedSquare + moveDirection;
                 java.lang.String sdfg = "";
@@ -351,7 +347,7 @@ public class Checkers {//for individual counters
 
     }
 
-    public int check_attack(Checkers piece, int X, int Y, int negX, int negY,int squareMove, int direction,Room rm ) throws Exception{
+    public int check_attack(Checkers piece, int X, int Y, int negX, int negY,int squareMove, int direction,Room rm ) {
 
         if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && cs.block[piece.occupiedSquare + squareMove].isOccupied() && cs.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !cs.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
             attack_possible = true;
@@ -367,7 +363,7 @@ public class Checkers {//for individual counters
     }
 
 
-    public boolean attack_move(Checkers piece, Room rm) throws  Exception{
+    public boolean attack_move(Checkers piece, Room rm){
 
         //types of moves possible
         up_left=0;
@@ -388,7 +384,7 @@ public class Checkers {//for individual counters
         if(piece.colour.equals("white")){
             down_left = check_attack( piece , 3, 6, 1 , 1 , 7 , down_left,rm );
             down_right = check_attack( piece , 6 , 6 , -1, 1 ,9 , down_right,rm );
-            System.out.println(down_left + " 393 code");
+
         }
         else{//normal black check
             up_right = check_attack( piece , 6, 3 , -1 , -1 , -7, up_right,rm );
@@ -425,7 +421,7 @@ public class Checkers {//for individual counters
         }
     }
 
-    public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Room rm,Checkers piece) throws Exception{//index is the board pos and nt counter id
+    public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Room rm,Checkers piece){//index is the board pos and nt counter id
         if (cur_player.equals("white")){
             w_checkers[selected_piece].changeCoordinates(X,Y);
             apply_front_changes(rm,0,"non_attack_move",w_checkers[selected_piece]);
@@ -452,7 +448,7 @@ public class Checkers {//for individual counters
     }
 
 
-    public  void eliminate_check(int index,Room rm) throws  Exception{
+    public  void eliminate_check(int index,Room rm) {
         if (index > 0 && index < 65){
             Checkers piece = cs.block[index].getPieceId();
             System.out.println("Eliminate Id " + piece + " index: " +index);
@@ -489,32 +485,28 @@ public class Checkers {//for individual counters
 //        msg to f/e that game has been won.
     }
     //Needs to be modifed to show moves to all users.
-    public void apply_front_changes(Room rm,int square, String type,Checkers piece) throws Exception{
+    public void apply_front_changes(Room rm,int square, String type,Checkers piece) {
         System.out.println("f/e change requested");
         String msg = "";
         switch (type) {
             case "apply_road":
-                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"}", square);
-
+                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"", square);
                 break;
             case "remove_road":
-                msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"}", up_left,up_right,down_left,down_right);
-
+                msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"", up_left,up_right,down_left,down_right);
                 break;
             case "eliminate_piece":
-                msg = String.format("{\"type\": \"eliminate_piece\",\"data\":\"%d\"}", square);
-
+                msg = String.format("{\"type\": \"eliminate_piece\",\"data\":\"%d\"", square);
                 break;
             case "move_attack":
-                msg = String.format("{\"type\": \"move_attack\",\"data\":\"%d\"}", square);
-
+                msg = String.format("{\"type\": \"move_attack\",\"data\":\"%d\"", square);
                 break;
             case "non_attack_move":
-                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"}",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
+                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
                 System.out.println(msg + " " + piece.getCoordX() + " " + piece.getCoordY());
                 break;
         }
-        rm.apply_to_room_users(msg,rm);
+        rm.apply_to_room_users(msg,rm,plyr);
     }
 
 

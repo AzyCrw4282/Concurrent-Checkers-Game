@@ -15,6 +15,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Room {
 
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
+    //each rm can have 2 games
+    private ConcurrentHashMap<Integer,Player> players_hm_game_1 = new ConcurrentHashMap<Integer, Player>();
+    private ConcurrentHashMap<Integer,Player> players_hm_game_2 = new ConcurrentHashMap<Integer, Player>();
     public AtomicInteger players_count = new AtomicInteger(0);
     private Semaphore smphore;
     private String room_name;
@@ -24,7 +27,6 @@ public class Room {
 
     AtomicInteger counter;
 
-
     public Room(int id, String room_nm, Player plyr ){
         this.room_id = id;
         this.room_name = room_nm;
@@ -33,16 +35,13 @@ public class Room {
 
     }
 
-
     public void remove_player_from_room(Player playr){
         players_hm.remove(playr.getId());
         smphore.release();
 
-
     }
 
-
-    public boolean add_player_to_room(Player playr) throws Exception {
+    public boolean add_player_to_room(Player playr) {
         try {
             if (smphore.availablePermits() == 0) {
                 String msg = "{\"type\": \"no_permits_available\"}";
@@ -70,22 +69,35 @@ public class Room {
 
     }
     //this method is responsible for applying moves to f/e for all users in a room
-    public synchronized void apply_to_room_users(String msg,Room rm){
+    public synchronized void apply_to_room_users(String msg,Room rm, Player player){
 
             if (msg.length() >0){
+                //needs to be applied only on the subset of the rm users
 
+//                0 and 1 player id for game 1 or 2 and 3 for game 2
                 for (Player plyr : rm.getPlayers_hm().values()){
-                    System.out.println("plyer id: "+plyr.getId());
-                    try{
-                        plyr.sendMessage(msg);
-
-                    }catch (Exception e){
-                        e.printStackTrace();
-                        remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                    if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {//if game 1
+                        System.out.println("plyer id: " + plyr.getId());
+                        try {
+                            String new_msg = msg + ",\"game_no\":\"1\"}";
+                            plyr.sendMessage(new_msg);
+                            //append a msg here if game 1/2
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                        }
+                    }
+                    else{//2nd game, with player id's of 2,3
+                        try {
+                            String new_msg = msg + ",\"game_no\":\"2\"}";
+                            plyr.sendMessage(new_msg);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            remove_player_from_room(plyr);//error handling to ensure player that left the room is removed
+                        }
                     }
                 }
             }
 
     }
-
 }

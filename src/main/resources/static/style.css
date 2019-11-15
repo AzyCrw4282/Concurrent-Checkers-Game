@@ -61,16 +61,16 @@ body , html{
     margin : 0 0;
     padding: 0  0;
 }
-.square{
+.square, .square2{
     float: left;
     width: 80px;
     height: 80px;
 }
 
-.white_square{
+.white_square, .white_square2{
     background-color:#F0D2B4;
 }
-.black_square{
+.black_square, .black_square2{
     background-color :#BA7A3A;
 }
 .clear_float{
@@ -83,7 +83,7 @@ body , html{
     height: 640px;
     margin: 0 auto;
 }
-.score{
+.score, score2{
     background-color: #1aaaad;
     color: white;
     display: none;
@@ -121,7 +121,7 @@ body , html{
 
 }
 
-.white_checker{
+.white_checker,.white_checker2{
     background: #fffcff;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
@@ -129,7 +129,7 @@ body , html{
     transition: 0.3s ease-in-out;
 }
 
-.black_checker{
+.black_checker,.black_checker2{
     background: #00001F;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
@@ -137,7 +137,7 @@ body , html{
     transition: 0.3s ease-in-out;
 }
 
-.black_background{
+.black_background, .black_background2{
     position: fixed;
     width: 100%;
     height: 100%;
@@ -153,12 +153,16 @@ hr {
 
 
 @media only screen and (max-width : 2700px){
-    .table{
+    .table, .table2{
         width: 400px;
         height: 400px;
     }
 
     .square{
+        width: 50px;
+        height: 50px;
+    }
+    .square2{
         width: 50px;
         height: 50px;
     }

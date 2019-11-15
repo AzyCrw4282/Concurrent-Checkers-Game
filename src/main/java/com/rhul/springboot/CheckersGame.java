@@ -14,11 +14,14 @@ public class CheckersGame {
     private int game_id;
     private String player_name;
     private WebSocketSession session;
-    public AtomicInteger player_ids = new AtomicInteger(0);
-    public AtomicInteger room_ids = new AtomicInteger(0);
+    public AtomicInteger player_ids = new AtomicInteger(1);//all starts at 1
+    public AtomicInteger room_ids = new AtomicInteger(1);
+    //keeps which players are associated to which game may need
+    public static ConcurrentHashMap<Player,Checkers> player_game_hm = new ConcurrentHashMap<>();//Able to get the game and append it to string
+    private static ConcurrentHashMap<Integer,Room> rooms_hm = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
 
-    private ConcurrentHashMap<Integer,Room> rooms_hm = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
+
 
 
     synchronized protected void sendMessage(String msg)  {
@@ -40,6 +43,7 @@ public class CheckersGame {
         }
         return false;
     }
+
     //check the room value exists in rm_hm
     public Room get_room(String rm){
         Room rm_obj= null;
@@ -53,6 +57,35 @@ public class CheckersGame {
         return rm_obj;
     }
 
+    //returns game obj, so if player is in that game object then return
+    // Or game obj is always held by the user with id =2,4 so retunr that
+
+    public static Checkers get_game_obj(Player plyr){
+        int playr_id = plyr.getId();
+
+        if (playr_id <3){//first game
+            return (get_player_obj(2).checks_obj);
+        }
+        else if (playr_id > 2 && playr_id < 5){
+            return (get_player_obj(4).checks_obj);
+        }
+        return null;
+
+    }
+
+    public static Player get_player_obj(int id){
+
+        //iterate through hm and check for the correct val of id
+        for (Player p : Player.players_hm.values()){
+            if (p.getId() == id){
+                return p;
+            }
+        }
+        return null;
+
+    }
+
+
 
     public void add_rooms(Room rm){
         rooms_hm.put(rm.getRoom_id(),rm);
@@ -61,7 +94,7 @@ public class CheckersGame {
 
     public void add_player(Player plyr){
         players_hm.put(plyr.getId(),plyr);
-        player_ids.getAndIncrement();
+//        player_ids.getAndIncrement();
     }
 
 
