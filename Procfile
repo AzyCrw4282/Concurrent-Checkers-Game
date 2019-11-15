@@ -1,1 +1,1 @@
-web:    java -Dserver.port=35889 $JAVA_OPTS -jar target/springboot-0.0.1-SNAPSHOT.jar
+web:    java $JAVA_OPTS -jar target/dependency/webapp-runner.jar --port $PORT target/*.war
