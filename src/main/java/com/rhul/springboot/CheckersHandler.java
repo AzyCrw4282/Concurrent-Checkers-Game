@@ -31,7 +31,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     private Checkers checks_obj;
     private boolean joining =false;
     CheckersGame game = new CheckersGame();//only one game instance bt with many rooms and also players in or in the given rooms
-    Executor executor = Executors.newFixedThreadPool(10);//
+    Executor executor = Executors.newFixedThreadPool(20);//
     String cur_plyr = null;
     int piece_index = 0;
 
@@ -66,7 +66,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                               Player plyr = new Player(player_id,"player",session);
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);//session can manage the right object and can retrieve it
-                              String user_action = json.getString("user_action");
+//                              String user_action = json.getString("user_action");
                               Room rm;//to  be initized
                               String rm_val = json.getString("room_value");
                               System.out.println("multi threads running n: " + Thread.currentThread().getId() + " playerId: "+ player_id);//shows b/e threads running
@@ -169,13 +169,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                                  System.out.println("join room lk relaesed");
                                  }
 
-
-                             if (json.getString("user_action").equals("initialize") & !joining) {
-
-                                 //set the game started process here
-//                                 Lk.unlock(); Does nt require unlock since it will be handled in another if block
-                             }
-
                           } catch (Exception ex) {
                               ex.printStackTrace();
                           }
@@ -244,9 +237,15 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Checkers.move_length = move_length;
                     Checkers.move_deviation = move_dev;
                     break;
+
                 case "ping":
 //                    System.out.println();//keeps conenction alive
                 //other cases for chat, room handling to be written
+                    break;
+
+                case "game_finish":
+                    System.out.println("Game finished, thanks for playing");
+                    break;
 
             }
 
@@ -273,9 +272,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-
-
 
 
     }

@@ -730,7 +730,6 @@ class Game {
     open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
-        console.log(632);
         this.socket.send(json_str);
 
         setTimeout(function () {
