@@ -72,12 +72,14 @@ $(document).ready(function(){
             }
         }
 
+        game.adjust_screen_size(moveLength,moveDeviation);
+
         // if(cur_big_screen !== screen_check){
         //     for(var i = 1; i <= 12; i++){
         //         b_checker[i].set_coords(0,0);
         //         w_checker[i].set_coords(0,0);
         //     }
-        //     game.adjust_screen_size(moveLength,moveDeviation);
+        //
         // }
 
     };
@@ -214,10 +216,10 @@ class checkers_squares {
         this.occupied = false;
         this.piece_id = undefined;
         this.id.onclick = function () {
-            if (game_started & player_game == 1) {
+            if (game_started && player_game == 1) {
                 game.make_move(index);
             }
-            else if (game_started2 & player_game == 2){
+            else if (game_started2 && player_game == 2){
                 game2.make_move(index);
             }
             else{
@@ -730,7 +732,6 @@ class Game {
     open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
-        console.log(632);
         this.socket.send(json_str);
 
         setTimeout(function () {

@@ -31,7 +31,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     private Checkers checks_obj;
     private boolean joining =false;
     CheckersGame game = new CheckersGame();//only one game instance bt with many rooms and also players in or in the given rooms
-    Executor executor = Executors.newFixedThreadPool(10);//
+    Executor executor = Executors.newFixedThreadPool(20);//
     String cur_plyr = null;
     int piece_index = 0;
 
@@ -62,11 +62,17 @@ public class CheckersHandler extends TextWebSocketHandler {
                               System.out.println("I am in");
 //                            int difficulty = json.getInt("difficulty");
                               System.out.println("Player_id_to_be_Set");
+
+                              //implemented to enable test case
+                              if (game.player_ids.get()> 4){
+                                  game.player_ids.set(1);
+                              }
+
                               int player_id = game.player_ids.getAndIncrement();
                               Player plyr = new Player(player_id,"player",session);
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);//session can manage the right object and can retrieve it
-                              String user_action = json.getString("user_action");
+//                              String user_action = json.getString("user_action");
                               Room rm;//to  be initized
                               String rm_val = json.getString("room_value");
                               System.out.println("multi threads running n: " + Thread.currentThread().getId() + " playerId: "+ player_id);//shows b/e threads running
@@ -90,6 +96,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      int room_permits = rm.getSmphore().availablePermits();
                                      msg = String.format("{\"type\": \"create_room_resp\",\"data\":\"Ok\",\"player_id\":\"%d\"}",player_id);
                                      plyr.sendMessage(msg);
+                                     System.out.println("Create room user done");
 
 
                                  } else {
@@ -138,8 +145,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      }
 
                                      if (semaphore_permits > 0 & (!rm.isGame_started())) {
-                                         msg = "{\"type\": \"join_room_resp\",\"data\":\"rdy_to_join\"}";
-                                         rm.getRm_owner().sendMessage(msg);//send start instruction to game owner
+//                                         msg = "{\"type\": \"join_room_resp\",\"data\":\"rdy_to_join\"}";
+//                                         rm.getRm_owner().sendMessage(msg);//send start instruction to game owner
 //                                         plyr.sendMessage(msg);
                                          rm.setGame_started(true);
                                          System.out.println("136 joining player rdy");
@@ -166,15 +173,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      plyr.sendMessage(msg);
                                     }
                                  Lk.unlock();
-                                 System.out.println("join room lk relaesed");
+                                 System.out.println("join room lk released");
                                  }
-
-
-                             if (json.getString("user_action").equals("initialize") & !joining) {
-
-                                 //set the game started process here
-//                                 Lk.unlock(); Does nt require unlock since it will be handled in another if block
-                             }
 
                           } catch (Exception ex) {
                               ex.printStackTrace();
@@ -199,8 +199,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
-                    //f/e update for anyone in rm that game is rdy
-//                    plyr = (Player) session.getAttributes().get(game_attribute);
+//                  plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
@@ -223,6 +222,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     rm.apply_to_room_users(msg,rm,plyr);//should not be for all
                     break;
 
+
                 case "get_room_permits":
                     Player p = (Player) session.getAttributes().get(game_attribute);
                     System.out.println("Player " + p.getId());//tell if it's unique
@@ -241,13 +241,25 @@ public class CheckersHandler extends TextWebSocketHandler {
                     int move_length = json.getInt("move_length");
                     int move_dev = json.getInt("move_dev");
                     //static changes made since >1 game will be of same size.
-                    Checkers.move_length = move_length;
+                    Checkers.move_length = move_length;//static vals are updated
                     Checkers.move_deviation = move_dev;
                     break;
+
                 case "ping":
 //                    System.out.println();//keeps conenction alive
                 //other cases for chat, room handling to be written
+                    break;
 
+                case "game_finish":
+                    p = (Player) session.getAttributes().get(game_attribute);
+                    System.out.println("Player value " + p.getId());
+                    mesg = String.format("{\"type\": \"game_finish_resp\",\"data\": \"game_terminated\"}");
+                    p.sendMessage(mesg);
+                    System.out.println("Game finished, thanks for playing");
+                    break;
+                case "update_player_id":
+                    game.player_ids.set(1);
+                    break;
             }
 
         } catch (Exception e){
@@ -273,9 +285,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-
-
-
 
 
     }
