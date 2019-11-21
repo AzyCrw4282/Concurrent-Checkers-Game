@@ -37,14 +37,14 @@ public class Checkers {//for individual counters
     public static int move_length = 50;
     public static int move_deviation = 6;
 
-    int reverse_tableLimit;
-    int tableLimit;
-    int tableLimitRight;
-    int tableLimitLeft;
-    int moveUpRight;
-    int moveUpLeft;
-    int moveDownRight;
-    int moveDownLeft;
+    int reverse_table_limit;
+    int table_limit;
+    int table_limit_right;
+    int table_limit_left;
+    int move_up_right;
+    int move_up_left;
+    int move_down_right;
+    int move_down_left;
     private int move_factor;
     private int up_left =0;
     private int up_right=0;
@@ -176,35 +176,35 @@ public class Checkers {//for individual counters
         }
 
         if (piece.colour.equals("white")){
-            tableLimit = 8;
-            tableLimitRight = 1;
-            tableLimitLeft = 8;
-            moveUpRight = 7;
-            moveUpLeft = 9;
-            moveDownRight = -9;
-            moveDownLeft = -7;
+            table_limit = 8;
+            table_limit_right = 1;
+            table_limit_left = 8;
+            move_up_right = 7;
+            move_up_left = 9;
+            move_down_right = -9;
+            move_down_left = -7;
         }
         else if (piece.colour.equals("black")){// if black
-            tableLimit = 1;
-            tableLimitRight = 8;
-            tableLimitLeft = 1;
-            moveUpRight = -7;
-            moveUpLeft = -9;
-            moveDownRight = 9;
-            moveDownLeft = 7;
+            table_limit = 1;
+            table_limit_right = 8;
+            table_limit_left = 1;
+            move_up_right = -7;
+            move_up_left = -9;
+            move_down_right = 9;
+            move_down_left = 7;
         }
 
         attack_move(the_checker[i],rm);
 
         if (!attack_possible){//if attack not possible then make just a move
 
-            down_left = check_move(the_checker[i], tableLimit , tableLimitRight , moveUpRight , down_left,rm);
-            down_right = check_move( the_checker[i] , tableLimit , tableLimitLeft , moveUpLeft , down_right,rm);
+            down_left = check_move(the_checker[i], table_limit , table_limit_right , move_up_right , down_left,rm);
+            down_right = check_move( the_checker[i] , table_limit , table_limit_left , move_up_left , down_right,rm);
 
 
             if (the_checker[i].isKing()){
-                up_left = check_move( the_checker[i] , reverse_tableLimit , tableLimitRight , moveDownRight , up_left,rm);
-                up_right = check_move( the_checker[i], reverse_tableLimit , tableLimitLeft , moveDownLeft, up_right,rm);
+                up_left = check_move( the_checker[i] , reverse_table_limit , table_limit_right , move_down_right , up_left,rm);
+                up_right = check_move( the_checker[i], reverse_table_limit , table_limit_left , move_down_left, up_right,rm);
             }
         }
 
@@ -233,17 +233,17 @@ public class Checkers {//for individual counters
 
         if (colour.equals("white")){
 
-            moveUpRight = down_right;
-            moveUpLeft = down_left;
-            moveDownRight = up_right;
-            moveDownLeft = up_left;
+            move_up_right = down_right;
+            move_up_left = down_left;
+            move_down_right = up_right;
+            move_down_left = up_left;
         }
         else if (colour.equals("black")){// if black
 
-            moveUpRight = down_left;
-            moveUpLeft = down_right;
-            moveDownRight = up_left;
-            moveDownLeft = up_right;
+            move_up_right = down_left;
+            move_up_left = down_right;
+            move_down_right = up_left;
+            move_down_left = up_right;
         }
 
 
@@ -253,7 +253,7 @@ public class Checkers {//for individual counters
         else{
             move_factor =  1; //black player
         }
-        if (moveUpRight == index){
+        if (move_up_right == index){
             isMove = true;
             if (the_checker == w_checkers){
                 execute_move("white",index,move_factor * 1, move_factor * 1, move_factor * 9,rm,the_checker[selected_piece]);
@@ -266,7 +266,7 @@ public class Checkers {//for individual counters
             }
 
         }
-        if (moveUpLeft == index){
+        if (move_up_left == index){
             isMove = true;
             if (the_checker == w_checkers){
                 execute_move("white",index,move_factor * -1, move_factor * 1, move_factor * 7,rm,the_checker[selected_piece]);
@@ -279,7 +279,7 @@ public class Checkers {//for individual counters
         }
 
         if (the_checker[selected_piece].isKing()){
-            if (moveDownRight == index){
+            if (move_down_right == index){
                 isMove = true;
                 if (the_checker == w_checkers){
                     execute_move("white",index,move_factor * 1, move_factor * -1, move_factor * -9,rm,the_checker[selected_piece]);
@@ -290,7 +290,7 @@ public class Checkers {//for individual counters
                     if (attack_possible){eliminate_check(index-9,rm);}
                 }
             }
-            if (moveDownLeft == index){
+            if (move_down_left == index){
                 isMove = true;
                 if (the_checker == w_checkers){
                     execute_move("white",index,move_factor * -1, move_factor * -1, move_factor * -9,rm,the_checker[selected_piece]);
@@ -508,6 +508,5 @@ public class Checkers {//for individual counters
         }
         rm.apply_to_room_users(msg,rm,plyr);
     }
-
 
 }

@@ -90,6 +90,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      int room_permits = rm.getSmphore().availablePermits();
                                      msg = String.format("{\"type\": \"create_room_resp\",\"data\":\"Ok\",\"player_id\":\"%d\"}",player_id);
                                      plyr.sendMessage(msg);
+                                     System.out.println("Create room user done");
 
 
                                  } else {
@@ -138,8 +139,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      }
 
                                      if (semaphore_permits > 0 & (!rm.isGame_started())) {
-                                         msg = "{\"type\": \"join_room_resp\",\"data\":\"rdy_to_join\"}";
-                                         rm.getRm_owner().sendMessage(msg);//send start instruction to game owner
+//                                         msg = "{\"type\": \"join_room_resp\",\"data\":\"rdy_to_join\"}";
+//                                         rm.getRm_owner().sendMessage(msg);//send start instruction to game owner
 //                                         plyr.sendMessage(msg);
                                          rm.setGame_started(true);
                                          System.out.println("136 joining player rdy");
@@ -166,7 +167,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      plyr.sendMessage(msg);
                                     }
                                  Lk.unlock();
-                                 System.out.println("join room lk relaesed");
+                                 System.out.println("join room lk released");
                                  }
 
                           } catch (Exception ex) {
@@ -192,7 +193,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
-                    //f/e update for anyone in rm that game is rdy
 //                    plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
@@ -215,6 +215,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     //the checker value to begin with on all ends.
                     rm.apply_to_room_users(msg,rm,plyr);//should not be for all
                     break;
+
 
                 case "get_room_permits":
                     Player p = (Player) session.getAttributes().get(game_attribute);
@@ -244,6 +245,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "game_finish":
+                    p = (Player) session.getAttributes().get(game_attribute);
+                    System.out.println("Player value " + p.getId());
+                    mesg = String.format("{\"type\": \"game_finish_resp\",\"data\": \"game_terminated\"}");
+                    p.sendMessage(mesg);
                     System.out.println("Game finished, thanks for playing");
                     break;
 
