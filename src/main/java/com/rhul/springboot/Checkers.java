@@ -484,9 +484,13 @@ public class Checkers {//for individual counters
     public void declare_winner(){
 //        msg to f/e that game has been won.
     }
+
+
+
+
     //Needs to be modifed to show moves to all users.
     public void apply_front_changes(Room rm,int square, String type,Checkers piece) {
-        System.out.println("f/e change requested");
+        System.out.println("f/e change requested. Type : "+ type);
         String msg = "";
         switch (type) {
             case "apply_road":

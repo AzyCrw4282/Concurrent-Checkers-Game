@@ -62,6 +62,12 @@ public class CheckersHandler extends TextWebSocketHandler {
                               System.out.println("I am in");
 //                            int difficulty = json.getInt("difficulty");
                               System.out.println("Player_id_to_be_Set");
+
+                              //implemented to enable test case
+                              if (game.player_ids.get()> 4){
+                                  game.player_ids.set(1);
+                              }
+
                               int player_id = game.player_ids.getAndIncrement();
                               Player plyr = new Player(player_id,"player",session);
                               plyr.setCur_thread(Thread.currentThread());
@@ -193,7 +199,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
-//                    plyr = (Player) session.getAttributes().get(game_attribute);
+//                  plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
@@ -235,7 +241,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     int move_length = json.getInt("move_length");
                     int move_dev = json.getInt("move_dev");
                     //static changes made since >1 game will be of same size.
-                    Checkers.move_length = move_length;
+                    Checkers.move_length = move_length;//static vals are updated
                     Checkers.move_deviation = move_dev;
                     break;
 
@@ -251,7 +257,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                     p.sendMessage(mesg);
                     System.out.println("Game finished, thanks for playing");
                     break;
-
+                case "update_player_id":
+                    game.player_ids.set(1);
+                    break;
             }
 
         } catch (Exception e){
