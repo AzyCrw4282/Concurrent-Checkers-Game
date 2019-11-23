@@ -1,3 +1,8 @@
+/**
+CSS styling for the game. It does contain some  code from here for the front-end https://codepen.io/calincojo/pen/wBQqYm,
+which most have been adapted and changes to fit my game.
+ */
+
 #div_id_name{
     width: 640px;
     height: 480px;

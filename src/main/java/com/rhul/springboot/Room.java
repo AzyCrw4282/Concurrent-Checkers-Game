@@ -1,7 +1,4 @@
 package com.rhul.springboot;
-/*
-Class responsible for adding/removing users from the room
- */
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.jni.Time;
@@ -11,6 +8,10 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**Class represents players present in a room and handles adding/removing users from the room.
+ * Each room currently holds upto 4 players.
+ * @author Azky
+ */
 @Getter @Setter
 public class Room {
 

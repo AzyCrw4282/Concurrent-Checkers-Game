@@ -12,7 +12,9 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-//Main runnable class.
+/**Main runnable class.
+ * @author Azky
+ */
 @RestController
 @Controller
 @EnableWebSocket
@@ -24,10 +26,6 @@ public class ConcurrentCheckersApplication implements WebSocketConfigurer {
         SpringApplication.run(ConcurrentCheckersApplication.class, args);
     }
 
-    @RequestMapping(value = "/test", method = RequestMethod.GET)
-    public String sayHello(){
-        return "test success";
-    }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {

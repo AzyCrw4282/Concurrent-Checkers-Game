@@ -14,9 +14,9 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 
 
-/** This class is used to via websocket and test for connections in the Junit tests.
+/** This class is used perform test via websocket and test for connections in the Junit tests.
  *
- * @author Lasse Steenbock Vestergaard
+ * @author Lasse Steenbock Vestergaard . The whole code belongs to the person mentioned and i do not take any credit for any implementation done below.
  *
  * Class for creating websocket client connections to any websocket server. Sub-protocols have not yet been implemented, and it's therefore only possible to connect to regular websocket servers.
  *
