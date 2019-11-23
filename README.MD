@@ -1,6 +1,6 @@
-#Concurrent Checkers Game for FYP@RHUL 19/20
+# Concurrent Checkers Game for FYP@RHUL 19/20
 
-##Overview
+## Overview
 
 A concurrent game that is played through WebSockets. The game is first hosted by
 a user who creates a room object and joining users enter the unique id to join
@@ -10,7 +10,7 @@ illustrates 4 games in actions.
 
 ![](/git_images/game_3.png)
 
-###Requirements
+### Requirements
 ```
 -Java 1.8
 
@@ -29,7 +29,7 @@ Mvn spring-boot:run
 ```
 
 
-####Design/Development Implementations
+#### Design/Development Implementations
 
 - Application with Spring Boot, MVN, JAVA 8 & WebSockets
 - Illustrates concurrency by using multi threads, locking, semaphore, sessions, concurrent Data-structures
@@ -38,7 +38,7 @@ Mvn spring-boot:run
 - Developed TDD test cases to check all functionalities in the game
 
 
-####Game Images
+#### Game Images
 UI to handle users creating and joining the room
 
 ![](/git_images/Game_join_create.PNG)
