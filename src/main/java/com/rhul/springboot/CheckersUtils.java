@@ -1,6 +1,9 @@
 package com.rhul.springboot;
 
-//class will be used to handle all utilities.
+/**Utility class to handle all misc operations such as colour change, board size updating, etc.
+ * This will be worked on from the second term.
+ * @author Azly
+ */
 
 public class CheckersUtils extends CheckersHandler {
     //

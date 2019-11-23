@@ -5,13 +5,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.lang.reflect.Array;
-
-@Getter @Setter @NoArgsConstructor
-
-//handles the board related funcs. individual object shall also handle
-//the  checking mechanisms and other too . may need to change should
-//rules or something needs to be adapted
-
+/** This class handles all board related functionalities. An instance is user for each game, so 2 players use 1 game.
+ * Some of the algorithms that check and performs checker move has been taken and adpted from the repo of the mentioned author.
+ * @author Azky & Elise(From github)
+ */
+@Getter @Setter @NoArgsConstructor//Lombok import statements
 public class Checkers {//for individual counters
 
     private int id;

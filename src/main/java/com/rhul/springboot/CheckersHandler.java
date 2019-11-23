@@ -15,10 +15,10 @@ import org.json.JSONObject;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
-/*
-The main handler class and responsible for all socket communications.
+/**The main handler class that's responsible for communicating with the client and triggering server command.
+ * @author Azky
  */
+
 public class CheckersHandler extends TextWebSocketHandler {
 
     //Object creations and initialization will have to be done

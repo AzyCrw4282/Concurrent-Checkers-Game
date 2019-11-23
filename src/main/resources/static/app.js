@@ -1,6 +1,8 @@
-
+/**JS code handles all front-end functionality and communicating with server via web-sockets.
+ * @author Azky & calincojo (Used this as reference for the front-end implementation https://codepen.io/calincojo/pen/wBQqYm)
+ */
 /*
-I have use this as reference. https://codepen.io/calincojo/pen/wBQqYm, though most of the code are changed.
+I have use this as reference. , though most of the code are changed.
  */
 var user;
 var room_value;;

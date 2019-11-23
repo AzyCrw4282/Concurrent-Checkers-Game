@@ -1,7 +1,3 @@
-/*
-    This class is for the active players of the game
-
- */
 package com.rhul.springboot;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +9,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+/**Class represents players in the game. Each player has an instance of this class and
+ * this is where scheduled thread performs an operation if it's requested by the user.
+ * @author Azky
+ */
+
 
 @Getter @Setter
 public class Player {

@@ -9,6 +9,10 @@ import org.springframework.web.socket.WebSocketSession;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**Class that handles game instance for each room. 1 instance is used for each game that's present
+ * @author Azky
+ *
+ */
 public class CheckersGame {
 
     private int game_id;
