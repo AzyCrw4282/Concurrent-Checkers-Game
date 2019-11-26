@@ -6,10 +6,12 @@ which most have been adapted and changes to fit my game.
 #div_id_name{
     width: 640px;
     height: 480px;
-    margin-left: 3%;
+    margin-top: 10%;
+    margin-left: 25%;
     font-family: myFont2;
 
 }
+
 #id_name{
     font-size: 170%;
     margin-top: 20%;
@@ -17,11 +19,17 @@ which most have been adapted and changes to fit my game.
     font-weight: bold;
 }
 
+#div_id_room_settings{
+    font-size: 170%;
+    margin-top: 20%;
+    margin-left: 32%;
+}
+
 #div_id_menu{
     width: 640px;
     height: 480px;
     margin-top: 20%;
-    margin-left: 32%;
+    margin-left: 36%;
     display: none;
     font-family: myFont2;
 

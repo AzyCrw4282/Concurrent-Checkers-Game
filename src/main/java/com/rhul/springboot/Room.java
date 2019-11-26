@@ -49,7 +49,7 @@ public class Room {
                 playr.sendMessage(msg);
             }
             else {//if permits exists then add a player to a room
-                //try to aquire the lock and then add it hm and print all plyer in hm return bool val
+                //try to acquire the lock and then add it hm and print all plyer in hm return bool val
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     //if acquired then
                     players_hm.put(playr.getId(), playr);

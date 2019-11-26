@@ -33,20 +33,13 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 </head>
 <body>
     <div class="row">
-        <div class="col-md-4" id="div_id_name">
+        <div class="col-md-4" id="div_id_name" >
             <p id="id_name">Enter your name</p>
             <input id="id_name_value">
-            <button class=".btn" id="button1" onclick="enterName()">Enter(Room and Name)</button>
-            <div class="col-md-4" style="margin-left: 185px;margin-top: 100px">
-                <p id="rm_name">Enter your room name</p>
-                <input id="rm_nm_value">
-
-                <button class=".btn" id="join_room_btn" onclick="join_a_room()">Join room</button>
-            </div>
+            <button class=".btn" id="button1" onclick="enterName()">Enter Name</button>
         </div>
 
-
-        <!--theDifferentOptionsToPlayAreShown-->
+        <!--the Different Options To Play Are Shown-->
         <div class="col-md-4 btn-group" id="div_id_menu">
             <button class=".btn" id="create_room" style="margin-top: 15px" onclick="create_room()">Create a Room  </button>
             <button class=".btn" id="join_room" style="margin-top: 15px" onclick="join_a_room()"> Join a Room </button>
@@ -56,16 +49,16 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
     </div>
 
     <!-- createRoom -->
-    <div class="col-md-4 btn-group" id="div_id_create_room">
-        <p id="titCrear">Enter the name of the room and the difficulty</p>
-        <input id="room_id">
-
+    <div class="col-md-4 btn-group" id="div_id_room_settings" style="display: none">
+        <p id="create_rm_name" style="font-weight: bold">Enter your room name</p>
         <label id="opc" class="radio-inline"><input type="radio" id="radio1" name="optradio" checked="checked">Easy</label>
         <label id="opc2" class="radio-inline"><input type="radio" id="radio2" name="optradio">Normal</label>
         <label id="opc3" class="radio-inline"><input type="radio" id="radio3" name="optradio">Hard</label>
         <br>
-        <button class=".btn" id="button2" style="margin-top: 15px" onclick="enter_game_room()">Create Room</button>
+        <input id="rm_nm_value">
+        <button class=".btn" id="button2" style="margin-top: 15px" onclick="enter_game_room()">Enter Room</button>
     </div>
+
 
     <!-- Chat -->
     <div class="col-md-3" id="div_id_chat" style="display: none;">

@@ -74,7 +74,7 @@ $(document).ready(function(){
             }
         }
 
-        game.adjust_screen_size(moveLength,moveDeviation);
+        // game.adjust_screen_size(moveLength,moveDeviation);
 
         // if(cur_big_screen !== screen_check){
         //     for(var i = 1; i <= 12; i++){
@@ -87,50 +87,49 @@ $(document).ready(function(){
     };
 });
 
+function enterName(){
+
+    user = $("#id_name_value").val();//gets users name
+    // room_value = $("#rm_nm_value").val();
+    // room_action = "create_room";
+
+    // start_game();
+    /* we show the buttons to create room, join room and chat*/
+    // document.getElementById('div_id_menu').style.display = "block";
+    document.getElementById('div_id_name').style.display = "none";
+    document.getElementById('div_id_menu').style.display = "block";
+    // document.getElementById('table2').style.display = "block";
+    // document.getElementById('game_status').style.display = "block";
+    // document.getElementById('game_status2').style.display = "block";
+    // document.getElementById('div_id_menu').innerHTML = "White";
+
+
+}
 
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
     /*we show the elements to create room and hide what we don't need*/
     document.getElementById('div_id_menu').style.display = "none";
-    document.getElementById('div_id_create_room').style.display = "block";
+    document.getElementById('div_id_room_settings').style.display = "block";
     document.getElementById('div_id_chat').style.display = "none";
     document.getElementById('console').style.height = "90%";
 
 }
-function enterName(){
 
-    user = $("#id_name_value").val();
-    room_value = $("#rm_nm_value").val();
-    room_action = "create_room";
-
-    start_game();
-    /*we show the buttons to create room, join room and chat*/
-    // document.getElementById('div_id_menu').style.display = "block";
-    document.getElementById('div_id_name').style.display = "none";
-    document.getElementById('table').style.display = "block";
-    document.getElementById('table2').style.display = "block";
-    document.getElementById('game_status').style.display = "block";
-    document.getElementById('game_status2').style.display = "block";
-    // document.getElementById('cur_player_id').innerHTML = "White";
-
-}
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
 
     //to use the above for the real design
-    room_value = $("#rm_nm_value").val();
-    room_action = "join_room";
+    // room_value = $("#rm_nm_value").val();
+    // room_action = "join_room";
     /*we show the buttons to create room, join room and chat*/
     // document.getElementById('div_id_menu').style.display = "block";
-    start_game();
+    // start_game();
 
-    document.getElementById('div_id_name').style.display = "none";
-    document.getElementById('table').style.display = "block";
-    document.getElementById('table2').style.display = "block";
-    document.getElementById('game_status').style.display = "block";
-    document.getElementById('game_status2').style.display = "block";
+    document.getElementById('div_id_menu').style.display = "none";
+    document.getElementById('div_id_room_settings').style.display = "block";
     // game_2.initialize_snd_game();
 ``
 }
@@ -180,11 +179,16 @@ function enter_chat(){
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
 
-    document.getElementById('div_id_create_room').style.display = "none";
+    document.getElementById('div_id_room_settings').style.display = "none";
     document.getElementById('table').style.display = "block";
 
+    document.getElementById('table').style.display = "block";
+    document.getElementById('table2').style.display = "block";
+    document.getElementById('game_status').style.display = "block";
+    document.getElementById('game_status2').style.display = "block";
+
     /*weGetTheValues​​toCreateTheRoom*/
-    room_value = $("#rm_name").val();
+    room_value = $("#rm_nm_value").val();
 
     difficulty = 0;
 
@@ -565,6 +569,7 @@ class Game {
     connect() {
         user_action = "initialize";
         this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
+
         /*startTheConnection*/
         this.socket.onopen = () => {
             if (!already_opened) {
