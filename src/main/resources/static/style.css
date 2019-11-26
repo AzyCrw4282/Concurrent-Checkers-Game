@@ -22,7 +22,7 @@ which most have been adapted and changes to fit my game.
 #div_id_room_settings{
     font-size: 170%;
     margin-top: 20%;
-    margin-left: 32%;
+    margin-left: 37%;
 }
 
 #div_id_menu{
@@ -68,6 +68,7 @@ which most have been adapted and changes to fit my game.
 
 }
 body , html{
+
     transition: 1s ease-in-out;
     width: 100%;
     height : 100%;
