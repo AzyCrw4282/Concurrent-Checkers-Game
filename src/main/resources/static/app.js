@@ -54,7 +54,7 @@ var user_action2;
 
 $(document).ready(function(){
     //error with this function. may need to remove this
-    document.getElementById("body_id").src = "bkground.png";
+    // document.getElementById("body_id").src = "bkground.png";
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
         getDimension();//vars here will also need to eb updated on f/e
