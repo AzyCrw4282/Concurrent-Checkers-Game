@@ -54,6 +54,7 @@ var user_action2;
 
 $(document).ready(function(){
     //error with this function. may need to remove this
+    // document.getElementById("body_id").src = "bkground.png";
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
         getDimension();//vars here will also need to eb updated on f/e
@@ -109,6 +110,8 @@ function enterName(){
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
+
+    room_action = "create_room";
     /*we show the elements to create room and hide what we don't need*/
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
@@ -120,7 +123,7 @@ function create_room(){
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
-
+    room_action = "join_room";
     //to use the above for the real design
     // room_value = $("#rm_nm_value").val();
     // room_action = "join_room";
@@ -179,6 +182,7 @@ function enter_chat(){
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
 
+    document.getElementsByTagName("body").style.backgroundColor = "#ffffff";
     document.getElementById('div_id_room_settings').style.display = "none";
     document.getElementById('table').style.display = "block";
 
@@ -746,7 +750,7 @@ class Game {
                 var check_permits = {"type": "get_room_permits", "room_value" : room_value};
                 game.send_data(check_permits);
             }
-        },2000);
+        },3000);
 
     }
 }
