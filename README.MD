@@ -44,11 +44,11 @@ UI to handle users creating and joining the room
 ![](/git_images/game_new_image_1.png)
 
 
-Two games in action
-
 ![](/git_images/game_new_image_2.png)
 
 
-Four games in action
-
 ![](/git_images/game_new_image_3.png)
+
+Two games in action
+
+![](/git_images//game_2.PNG)
