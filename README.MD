@@ -41,14 +41,14 @@ Mvn spring-boot:run
 #### Game Images
 UI to handle users creating and joining the room
 
-![](/git_images/Game_join_create.PNG)
+![](/git_images/game_new_image_1.png)
 
+
+![](/git_images/game_new_image_2.png)
+
+
+![](/git_images/game_new_image_3.png)
 
 Two games in action
 
-![](/git_images/game_2.PNG)
-
-
-Four games in action
-
-![](/git_images/game_3.png)
+![](/git_images//game_2.PNG)
