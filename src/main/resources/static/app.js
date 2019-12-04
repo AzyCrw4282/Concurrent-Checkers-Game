@@ -181,8 +181,8 @@ function enter_chat(){
 
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
-
-    document.getElementsByTagName("body").style.backgroundColor = "#ffffff";
+    document.body.style.backgroundImage = "none";
+    document.getElementById("body_id").style.backgroundColor = "#ffffff";
     document.getElementById('div_id_room_settings').style.display = "none";
     document.getElementById('table').style.display = "block";
 

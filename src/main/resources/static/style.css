@@ -68,7 +68,7 @@ which most have been adapted and changes to fit my game.
 
 }
 body , html{
-    background-image: url("../images/bkground.png");
+    background-image: url("bkground.png");
     transition: 1s ease-in-out;
     width: 100%;
     height : 100%;
