@@ -17,6 +17,8 @@ illustrates 4 games in actions.
 -MVN
 
 -Spring Boot
+
+-Lombok plugin
 ```
 
 Then Build the app with:
