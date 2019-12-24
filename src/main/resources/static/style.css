@@ -53,8 +53,31 @@ which most have been adapted and changes to fit my game.
     border:2px solid #383838;
     border-radius: 2%;
     margin-top: 5%;
-    margin-bottom:4%;
+    margin-bottom:1%;
 }
+
+#btnMsg{
+    border:none;
+    border-radius: 3px;
+}
+#div_Chat{
+    margin-top: -1%;
+}
+#msg_id{
+    border-radius: 3px;
+    width: 87%;
+}
+#btnMsg{
+    border:none;
+    border-radius: 3px;
+}
+
+
+
+
+
+
+
 
 .btn-group button {
     border: 1px solid #116280; /* Green border */
@@ -84,7 +107,7 @@ which most have been adapted and changes to fit my game.
 
 }
 body , html{
-    background-image: url("bkground.png");
+    /*background-image: url("bkground.png");*/
     transition: 1s ease-in-out;
     width: 100%;
     height : 100%;
