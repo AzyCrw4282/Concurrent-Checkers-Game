@@ -250,6 +250,14 @@ public class CheckersHandler extends TextWebSocketHandler {
                 //other cases for chat, room handling to be written
                     break;
 
+                case "global_chat":
+                    String global_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";
+                    game.global_broadcast(global_msg);
+                    break;
+
+                case "game_chat":
+                    break;
+
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);
                     System.out.println("Player value " + p.getId());

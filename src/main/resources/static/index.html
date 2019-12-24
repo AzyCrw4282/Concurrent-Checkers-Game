@@ -61,18 +61,6 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
         <button class=".btn" id="button2" style="margin-top: 15px" onclick="enter_game_room()">Enter Room</button>
     </div>
 
-
-    <!-- Chat, for next term -->
-    <div class="col-md-3" id="div_id_chat" style="display: none;">
-        <div id="console">
-
-        </div>
-        <div id="divChat">
-            <input type="text" id="mensaje">
-            <button class=".btn" id="btnMsg" onclick="actionMensajeChat()">Send</button>
-        </div>
-    </div>
-
     <div class="row">
 <!--        Game 1-->
         <div class="col-lg-4 col-md-4">
@@ -381,12 +369,16 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             </div>
 
 
-
         </div>
-<!--         Chat interface-->
-        <div class="col-lg-4 col-md-4">
+        <!-- Chat -->
+        <div class="col-md-3" id="chat_div_id" style="display: none">
+            <div id="console_id">
 
-
+            </div>
+            <div id="div_Chat">
+                <input type="text" id="msg_id">
+                <button class=".btn" id="btnMsg" onclick="action_chat_msg()">Send</button>
+            </div>
         </div>
 
     </div>

@@ -68,7 +68,6 @@ public class ConcurrentCheckersApplicationTests {
         WebSocketTest ws = new WebSocketTest();
         //msg from back-end, i.e. responses
 
-
         Runnable area = () -> {
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
             //for each runnable thread we get the running id of it

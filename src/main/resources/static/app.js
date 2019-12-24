@@ -107,6 +107,16 @@ function enterName(){
 
 }
 
+function action_chat_msg(){
+    document.getElementById('div_id_menu').style.display = "none";
+    document.getElementById('chat_div_id').style.display = "block";
+    var msg = user + " : " +$("#msg_id").val();
+    $("#msg_id").val("");
+    let msg_data = {"type": "global_chat", "msg": msg};
+    game.send_data(msg_data);//send it to b-e
+
+}
+
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
