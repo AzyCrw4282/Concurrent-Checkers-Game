@@ -310,6 +310,27 @@ class checkers{
 
 
 }
+
+var chatbox_logs = {};
+
+chatbox_logs.log = (function (msg) {
+    var chatbox = document.getElementById("console_id");
+    var p_msg = document.createElement('p');
+    p_msg.style.wordWrap = 'break-word';
+    p_msg.innerHTML = msg;
+    chatbox.appendChild(p_msg);
+
+    //optimise the chat box
+    while(chatbox.childNodes.length > 20){
+        //remove to keep chat in place
+        chatbox.removeChild(chatbox.firstChild);//removes the top element
+    }
+    chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
+});
+
+
+
+
 //used to check the player of the game to use the right game obj.
 class Player {
 
@@ -631,6 +652,9 @@ class Game {
                     game.remove_road(up_left,up_right,down_left,down_right,game_move);
                     break;
 
+                case "chat":
+                    chatbox_logs.log(msg);
+                    break;
                 case 'move_attack':
                     console.log("make the move");
                     var index = packet.data;

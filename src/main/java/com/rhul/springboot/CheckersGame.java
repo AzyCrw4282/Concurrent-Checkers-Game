@@ -29,7 +29,7 @@ public class CheckersGame {
 
 
     public synchronized void global_broadcast(String msg){
-        global_chat.send_message(msg);
+        global_chat.broadcast(msg);
     }
 
     synchronized protected void sendMessage(String msg)  {

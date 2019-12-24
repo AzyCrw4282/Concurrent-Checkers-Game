@@ -40,6 +40,22 @@ which most have been adapted and changes to fit my game.
     border-radius: 3px;
 
 }
+#chat_div_id {
+    border: 2px solid #383838;
+    height: 480px;
+    margin-left: 3%;
+    border-radius: 2%;
+    font-family: myFont2;
+}
+#console_id{
+    overflow-y: scroll;
+    height: 90%;
+    border:2px solid #383838;
+    border-radius: 2%;
+    margin-top: 5%;
+    margin-bottom:4%;
+}
+
 .btn-group button {
     border: 1px solid #116280; /* Green border */
     color: #000000; /* White text */
