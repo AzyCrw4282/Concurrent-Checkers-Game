@@ -179,6 +179,9 @@ function enter_chat(){
 
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
+    document.getElementById('chat_div_id').style.left = "0px";
+    document.getElementById('chat_div_id').style.top = "0px";
+    document.getElementById('chat_div_id').style.marginLeft = "0px";
     document.body.style.backgroundImage = "none";
     document.getElementById("body_id").style.backgroundColor = "#ffffff";
     document.getElementById('div_id_room_settings').style.display = "none";
