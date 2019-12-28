@@ -37,6 +37,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
 
 
+
     //handles All Messages Received From f/e Customers
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -248,6 +249,14 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "ping":
 //                    System.out.println();//keeps conenction alive
                 //other cases for chat, room handling to be written
+                    break;
+
+                case "global_chat":
+                    String global_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";
+                    game.global_broadcast(global_msg);
+                    break;
+
+                case "game_chat":
                     break;
 
                 case "game_finish":

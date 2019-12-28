@@ -94,32 +94,32 @@ function enterName(){
     // room_value = $("#rm_nm_value").val();
     // room_action = "create_room";
 
-    // start_game();
-    /* we show the buttons to create room, join room and chat*/
-    // document.getElementById('div_id_menu').style.display = "block";
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('div_id_menu').style.display = "block";
-    // document.getElementById('table2').style.display = "block";
-    // document.getElementById('game_status').style.display = "block";
-    // document.getElementById('game_status2').style.display = "block";
-    // document.getElementById('div_id_menu').innerHTML = "White";
 
+
+
+}
+
+function action_chat_msg(){
+    var msg = user + " : " +$("#msg_id").val();
+    $("#msg_id").val("");
+    let msg_data = {"type": "global_chat", "msg": msg};
+    game.send_data(msg_data);//send it to b-e
 
 }
 
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
-
     room_action = "create_room";
     /*we show the elements to create room and hide what we don't need*/
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
-    document.getElementById('div_id_chat').style.display = "none";
+    document.getElementById('chat_div_id').style.display = "none";
     document.getElementById('console').style.height = "90%";
 
 }
-
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
@@ -141,7 +141,6 @@ function getDimension (){
     windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 }
-
 
 /*weJoinARandomRoom*/
 function action_matchmaking(){
@@ -166,26 +165,28 @@ function action_matchmaking(){
 
 /*weSelectTheChat*/
 function enter_chat(){
-    document.getElementById('divChat').style.display = "block";
-    document.getElementById('chat').style.display = "none";
-    document.getElementById('console').style.height = "400px";
+
+    document.getElementById('chat_div_id').style.display = "block";
+    document.getElementById('chat_div_id').style.left = "-200px";
+    document.getElementById('chat_div_id').style.top = "-565px";
+    document.getElementById('chat_div_id').style.marginLeft = "100px";
+    document.getElementById('console_id').style.height = "400px";
 
     /*thePlayerIsAddedToTheChat*/
-
-
-    players.push(new Player(user));
-    updatePlayerBox();
+    // players.push(new Player(user));
     chat =  true;
-
 }
 
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
+    document.getElementById('chat_div_id').style.left = "0px";
+    document.getElementById('chat_div_id').style.top = "0px";
+    document.getElementById('chat_div_id').style.marginLeft = "0px";
     document.body.style.backgroundImage = "none";
     document.getElementById("body_id").style.backgroundColor = "#ffffff";
     document.getElementById('div_id_room_settings').style.display = "none";
     document.getElementById('table').style.display = "block";
-
+    document.getElementById('chat_div_id').style.display = "block";
     document.getElementById('table').style.display = "block";
     document.getElementById('table2').style.display = "block";
     document.getElementById('game_status').style.display = "block";
@@ -286,7 +287,7 @@ class checkers{
             if (game_no == 1){
                 console.log("game no 1 move ");
                 this.id.style.top = Y + 'px';
-                this.id.style.left = X + 'px';
+                this.id.styl2e.left = X + 'px';
             }
             else if (game_no == 2){
                 console.log("Game no 2 move")
@@ -294,12 +295,29 @@ class checkers{
                 let new_x = parseInt(X) + 17;
                 this.id.style.left = new_x + 'px';
             }
-
-
         }
-
-
 }
+
+var chatbox_logs = {};
+
+chatbox_logs.log = (function (msg) {
+    var chatbox = document.getElementById("console_id");
+    var p_msg = document.createElement('p');
+    p_msg.style.wordWrap = 'break-word';
+    p_msg.innerHTML = msg;
+    chatbox.appendChild(p_msg);
+
+    //optimise the chat box
+    while(chatbox.childNodes.length > 20){
+        //remove to keep chat in place
+        chatbox.removeChild(chatbox.firstChild);//removes the top element
+    }
+    chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
+});
+
+
+
+
 //used to check the player of the game to use the right game obj.
 class Player {
 
@@ -621,6 +639,9 @@ class Game {
                     game.remove_road(up_left,up_right,down_left,down_right,game_move);
                     break;
 
+                case "chat":
+                    chatbox_logs.log(packet.msg);
+                    break;
                 case 'move_attack':
                     console.log("make the move");
                     var index = packet.data;

@@ -57,7 +57,7 @@ public class Player {
             if(this.session.isOpen())
                 this.session.sendMessage(new TextMessage(msg));
         }catch (Exception e){
-
+            e.printStackTrace();
         }
 
     }
@@ -65,7 +65,6 @@ public class Player {
     public Checkers initialize(){
 
         //so if joining then  give this object reference to other player
-
         System.out.println("game initializer");
         //used as parent/main objects
         CheckersSquare checks_sqr = new CheckersSquare();
