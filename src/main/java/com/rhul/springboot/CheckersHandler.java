@@ -187,7 +187,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Player plyr = get_player_obj(json.getInt("player_id"));
                     System.out.println("Current player id"+ plyr.getId());
                     int index = json.getInt("index");
-
                     plyr.setIndex(index);
                     plyr.setShow_moves_req(true);
                     break;
@@ -201,10 +200,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "start_game":
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);
-
                     Room rm = game.get_room(json.getString("room_value"));
                     String msg = "{\"type\": \"start_game_1\",\"data\": \"rdy\"";
-
                     rm.apply_to_room_users(msg,rm,plyr);
                     break;
 
@@ -212,10 +209,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "start_game2":
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);
-
                     rm = game.get_room(json.getString("room_value"));
                     msg = "{\"type\": \"start_game_2\",\"data\": \"rdy_2\"";
-
                     rm.apply_to_room_users(msg,rm,plyr);
                     break;
 
@@ -232,14 +227,11 @@ public class CheckersHandler extends TextWebSocketHandler {
 
 
                 case "get_rooms_players":
-
-
-
-
+                    Player player_obj = (Player) session.getAttributes().get(game_attribute);
+                    game.get_rooms_data(player_obj);
                     break;
 
                 case "enter_chat_lobby":
-
                     int plyr_id = game.lobby_plyrs.getAndIncrement();
                     Player player_instance = new Player(plyr_id,"player",session);
                     CheckersGame.lobby_chat_players.put(plyr_id,player_instance);

@@ -16,14 +16,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Room {
 
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
-    public AtomicInteger players_count = new AtomicInteger(0);
+    private AtomicInteger players_count = new AtomicInteger(0);
     private Semaphore smphore;
     private String room_name;
     private int room_id;
     private Player rm_owner;
     private boolean game_started;
-
-    AtomicInteger counter;
 
     public Room(int id, String room_nm, Player plyr ){
         this.room_id = id;
@@ -38,7 +36,6 @@ public class Room {
         smphore.release();
 
     }
-
 
     public boolean add_player_to_room(Player playr) {
         try {
@@ -71,8 +68,6 @@ public class Room {
     public synchronized void apply_to_room_users(String msg,Room rm, Player player){
 
         if (msg.length() >0){
-
-
 
             for (Player plyr : rm.getPlayers_hm().values()){
                 if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
