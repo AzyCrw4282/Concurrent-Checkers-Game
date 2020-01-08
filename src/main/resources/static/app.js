@@ -134,14 +134,17 @@ function join_a_room(){
 
 function update_room_players(data){
     //here should update all the rows for the fetched records
+    console.log("137");
+    var cells_cmd = [i+1, game_id, game_name, players_active];
+    var table =document.getElementById("room_players_data");
+
     for (var i = 0; i<data.length;i++){
-        //add for each row
-
-
+        var row = table.insertRow(i);
+        for (var j =0;j<cells_cmd.length;j++){
+            var cell_i = row.insertCell(j);
+            cell_i.innerHTML = data[i].cells_cmd[j];
+        }
     }
-
-
-
 }
 
 
