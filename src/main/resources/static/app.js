@@ -26,8 +26,6 @@ var white_checker_class2 = document.getElementsByClassName("white_checker2");
 var black_checker_class2 = document.getElementsByClassName("black_checker2");
 
 //second game
-
-
 var moveSound = document.getElementById("moveSound");
 var winSound = document.getElementById("winSound");
 var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -82,10 +80,6 @@ $(document).ready(function(){
         if (e.key === "Enter") { action_chat_msg(); console.log("85")}
     }, false);
 });
-
-
-
-
 
 function enterName(){
 

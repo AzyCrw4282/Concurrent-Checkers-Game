@@ -14,11 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Getter @Setter
 public class Room {
-
+    //cotnains the players in the room
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
-    //each rm can have 2 games
-    private ConcurrentHashMap<Integer,Player> players_hm_game_1 = new ConcurrentHashMap<Integer, Player>();
-    private ConcurrentHashMap<Integer,Player> players_hm_game_2 = new ConcurrentHashMap<Integer, Player>();
     public AtomicInteger players_count = new AtomicInteger(0);
     private Semaphore smphore;
     private String room_name;
@@ -41,6 +38,16 @@ public class Room {
         smphore.release();
 
     }
+
+
+    public String get_room_players(){
+        //return the name of game, players active for each room
+
+
+
+
+    }
+
 
     public boolean add_player_to_room(Player playr) {
         try {

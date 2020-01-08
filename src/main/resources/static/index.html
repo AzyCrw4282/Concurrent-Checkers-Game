@@ -53,15 +53,32 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
     </div>
 
-    <!-- createRoom -->
+    <!-- createRoom and JoinRoom-->
     <div class="col-md-4 btn-group" id="div_id_room_settings" style="display: none">
         <p id="create_rm_name" style="font-weight: bold">Enter your room name and select difficulty</p>
-        <label id="opc" class="radio-inline"><input type="radio" id="radio1" name="optradio" checked="checked">Easy</label>
-        <label id="opc2" class="radio-inline"><input type="radio" id="radio2" name="optradio">Normal</label>
-        <label id="opc3" class="radio-inline"><input type="radio" id="radio3" name="optradio">Hard</label>
         <br>
         <input id="rm_nm_value">
-        <button class=".btn" id="button2" style="margin-top: 15px" onclick="enter_game_room()">Enter Room</button>
+        <button class="btn btn-success" id="button2" style="margin-top: 15px" onclick="enter_game_room()">New Game</button>
+
+<!--        a new game button that brings up a prompt-->
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Game Room Name</th>
+                    <th scope="col">Players Active</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 <!--Game 1-->
@@ -215,7 +232,6 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             <div id="cancel_div" style="display:none;">
                 <button class=".btn" id="cancelar" onclick="cancel_game_btn()"> Cancel </button>
             </div>
-
         </div>
 
     </div>

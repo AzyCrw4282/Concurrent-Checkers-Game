@@ -200,7 +200,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "start_game"://so before the 4 threshold is reached/ the user has pressed the btn
-//                  plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
@@ -212,8 +211,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 //need another case for game 2
                 case "start_game2"://so before the 4 threshold is reached/ the user has pressed the btn
-                    //f/e update for anyone in rm that game is rdy
-//                    plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr = get_player_obj(json.getInt("player_id"));
                     plyr.getRoom().setGame_started(true);//so the first player, e.g room holder
                     //get all users and send them a msg that game is rdy and update boolean var
@@ -232,6 +229,14 @@ public class CheckersHandler extends TextWebSocketHandler {
                     String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\"}", room_permits);
                     System.out.println(mesg);
                     p.sendMessage(mesg);
+                    break;
+
+
+                case "get_rooms_players":
+                    //fetch the details on the existing data and append it to and send it to f/e
+
+
+
                     break;
 
                 case "enter_chat_lobby":
@@ -264,10 +269,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "ping":
 //                    System.out.println();//keeps conenction alive
-                //other cases for chat, room handling to be written
                     break;
-
-
 
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);
