@@ -174,7 +174,8 @@ function enter_chat(){
 
     /*thePlayerIsAddedToTheChat*/
     // players.push(new Player(user));
-    start_game();
+
+    enter_chat_lobby(user);
     chat =  true;
 }
 
@@ -778,6 +779,16 @@ class Game {
 // multiple objects for multiple games
 let game = new Game();
 let game2 = new Game();
+
+
+function enter_chat_lobby(){
+    this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
+    this.socket.onopen = () => {
+        console.log('Info: WebSocket connection opened.');
+        var check_permits = {"type": "enter_chat_lobby"};
+        game.send_data(check_permits);
+    }
+}
 
 function start_game(){
     game.connect();

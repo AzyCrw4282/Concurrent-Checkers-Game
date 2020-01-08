@@ -234,6 +234,14 @@ public class CheckersHandler extends TextWebSocketHandler {
                     p.sendMessage(mesg);
                     break;
 
+                case "enter_chat_lobby":
+                    //need a global hm of all players present in this and distinugish msg trans of this and the game chat
+
+
+
+
+                    break;
+
                 case "connection_incoming":
                     System.out.print("connection active");
                     break;
