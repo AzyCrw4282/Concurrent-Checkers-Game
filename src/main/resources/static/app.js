@@ -75,17 +75,13 @@ $(document).ready(function(){
             }
         }
     };
+
+    document.getElementById("msg_id").addEventListener("keydown", function(e) {
+        if (!e) { var e = window.event; }
+        // Enter is pressed
+        if (e.key === "Enter") { action_chat_msg(); console.log("85")}
+    }, false);
 });
-
-
-function send_msg_check(e,input) {
-    var code = (e.keyCode ? e.keyCode : e.which);
-    if (code == 13) { //Enter keycode
-        action_chat_msg();
-    }
-
-}
-
 
 
 
@@ -186,6 +182,7 @@ function enter_chat(){
 
     start_game();
     chat =  true;
+
 }
 
 function enter_game_room(){
