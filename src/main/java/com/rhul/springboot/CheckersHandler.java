@@ -228,7 +228,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Player p = (Player) session.getAttributes().get(game_attribute);
                     System.out.println("Player " + p.getId());//tell if it's unique
                     Room rom = game.get_room(json.getString("room_value"));
-                    int room_permits = rom.getSmphore().availablePermits() +1;//permit held by the user
+                    int room_permits = rom.getSmphore().availablePermits() + 1;//permit held by the user
                     String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\"}", room_permits);
                     System.out.println(mesg);
                     p.sendMessage(mesg);

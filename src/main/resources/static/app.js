@@ -5,7 +5,7 @@
 I have use this as reference. , though most of the code are changed.
  */
 var user;
-var room_value;;
+var room_value;
 var room_action;
 var difficulty;
 var players= [];
@@ -174,6 +174,7 @@ function enter_chat(){
 
     /*thePlayerIsAddedToTheChat*/
     // players.push(new Player(user));
+    start_game();
     chat =  true;
 }
 
@@ -194,7 +195,6 @@ function enter_game_room(){
 
     /*weGetTheValues​​toCreateTheRoom*/
     room_value = $("#rm_nm_value").val();
-
     difficulty = 0;
 
     if ($('#radio2').prop('checked')){
@@ -595,8 +595,7 @@ class Game {
         /*startTheConnection*/
         this.socket.onopen = () => {
             if (!already_opened) {
-                console.log('Info: WebSocket connection opened.');
-                // weSendTheUserToTheServer
+                console.log('Info: WebSocket connection opened.');                // weSendTheUserToTheServer
                 already_opened = true;
                 this.open();
             }
