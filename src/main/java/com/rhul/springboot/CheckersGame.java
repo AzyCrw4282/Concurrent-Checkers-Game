@@ -18,29 +18,25 @@ public class CheckersGame {
     private int game_id;
     private String player_name;
     private WebSocketSession session;
-    private Chat global_chat = new Chat();
+    private Chat game_chat = new Chat();
     public AtomicInteger player_ids = new AtomicInteger(1);//all starts at 1
     public AtomicInteger room_ids = new AtomicInteger(1);
+    public AtomicInteger lobby_plyrs = new AtomicInteger(1);
 
     //keeps which players are associated to which game may need
     public static ConcurrentHashMap<Player,Checkers> player_game_hm = new ConcurrentHashMap<>();//Able to get the game and append it to string
     private static ConcurrentHashMap<Integer,Room> rooms_hm = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
-
+    public static ConcurrentHashMap<Integer,Player> lobby_chat_players = new ConcurrentHashMap<>();
 
     public synchronized void global_broadcast(String msg){
-        global_chat.broadcast(msg);
+        game_chat.global_broadcast(msg);
     }
 
-    synchronized protected void sendMessage(String msg)  {
-        try{
-            if(this.session.isOpen())
-                this.session.sendMessage(new TextMessage(msg));
-        }catch(Exception e){
-            e.printStackTrace();
-
-        }
+    public synchronized void game_broadcast(String msg){
+        game_chat.broadcast(msg);
     }
+
 
     public boolean check_room_exists(String rm){
         for (Room room : rooms_hm.values()){

@@ -32,6 +32,18 @@ public class Chat  {
         }
     }
 
+    public synchronized void global_broadcast(String msg){
+        try{
+
+            for(Player plyr : CheckersGame.lobby_chat_players.values()){
+                plyr.sendMessage(msg);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
 

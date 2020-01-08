@@ -236,10 +236,19 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "enter_chat_lobby":
                     //need a global hm of all players present in this and distinugish msg trans of this and the game chat
+                    int plyr_id = game.lobby_plyrs.getAndIncrement();
+                    Player player_instance = new Player(plyr_id,"player",session);
+                    CheckersGame.lobby_chat_players.put(plyr_id,player_instance);
+                    break;
 
+                case "global_chat":
+                    String global_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";
+                    game.global_broadcast(global_msg);
 
-
-
+                    break;
+                case "game_chat":
+                    String usr_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";
+                    game.game_broadcast(usr_msg);
                     break;
 
                 case "connection_incoming":
@@ -259,13 +268,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                 //other cases for chat, room handling to be written
                     break;
 
-                case "global_chat":
-                    String global_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";
-                    game.global_broadcast(global_msg);
-                    break;
 
-                case "game_chat":
-                    break;
 
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);

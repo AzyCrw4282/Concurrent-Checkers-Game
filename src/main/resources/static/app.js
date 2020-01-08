@@ -74,17 +74,6 @@ $(document).ready(function(){
                 cur_big_screen = 1;
             }
         }
-
-        // game.adjust_screen_size(moveLength,moveDeviation);
-
-        // if(cur_big_screen !== screen_check){
-        //     for(var i = 1; i <= 12; i++){
-        //         b_checker[i].set_coords(0,0);
-        //         w_checker[i].set_coords(0,0);
-        //     }
-        //
-        // }
-
     };
 });
 
@@ -97,16 +86,22 @@ function enterName(){
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('div_id_menu').style.display = "block";
 
-
-
 }
 
 function action_chat_msg(){
-    var msg = user + " : " +$("#msg_id").val();
-    $("#msg_id").val("");
-    let msg_data = {"type": "global_chat", "msg": msg};
-    game.send_data(msg_data);//send it to b-e
 
+    if (user_permit_val == 0){//global chat broadcast
+        var msg = user + " : " +$("#msg_id").val();
+        $("#msg_id").val("");
+        let msg_data = {"type": "global_chat", "msg": msg};
+        game.send_data(msg_data);//send it to b-e
+    }
+    else{
+        var msg = user + " : " +$("#msg_id").val();
+        $("#msg_id").val("");
+        let msg_data = {"type": "game_chat", "msg": msg};
+        game.send_data(msg_data);//send it to b-e
+    }
 }
 
 
