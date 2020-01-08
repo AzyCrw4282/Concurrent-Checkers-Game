@@ -10,9 +10,9 @@ public class CheckersSquare {
 
     private int id;
     private boolean occupied;
-    private Checkers pieceId;//the id of the piece on the square
+    private Checkers pieceId;
 
-    //creats 64 squares objects to identify each and all
+
     public CheckersSquare(){
 
     }
@@ -25,15 +25,15 @@ public class CheckersSquare {
 
     }
 
-    //event handler will trigger this call
+
     public void onClick() throws Exception{
-        //when square selected and valid, make a move
+
         Checkers checkers_obj = new Checkers();
-//        checkers_obj.make_move(1,"game+_1");
+
     }
 
 
-    //these can be removed if lombok is working
+
     public void setOccupied(){
         this.occupied = true;
     }

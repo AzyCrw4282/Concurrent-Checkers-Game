@@ -44,7 +44,7 @@ public class ConcurrentCheckersApplicationTests {
     public void test_connection() throws Exception {
         System.out.println("----------------------------Testing connection-------------------");
         WebSocketTest Wsc = new WebSocketTest();
-        Wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+        Wsc.connect("ws:
         System.out.println("Successfully connected");
         Wsc.disconnect();
     }
@@ -57,37 +57,37 @@ public class ConcurrentCheckersApplicationTests {
 
     @Test
     public void test_join() throws Exception {
-        //steps - > connect, if coutner firstr then create room requ. else join req
-        //send the msg of
-        //and then finish request
-        //conenction disconnet
+
+
+
+
         CyclicBarrier c_barrier = new CyclicBarrier(4);
         Executor execut = Executors.newFixedThreadPool(4);
 
         AtomicReferenceArray<String> array = new AtomicReferenceArray(4);
         WebSocketTest ws = new WebSocketTest();
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
-            //for each runnable thread we get the running id of it
+
             ws.onMessage((session, message) -> {
-                array.compareAndSet(id, null, message);//msg is then set in the string array
+                array.compareAndSet(id, null, message);
                 System.out.println("array id " + id);
                 System.out.println("Msg from back-end " + message);
             });
 
             try {
-                ws.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                ws.connect("ws:
                 String message;
 
-                //All users being tested are joining the same room.
+
                 if (counter.incrementAndGet() == 1) {
-                    //value hard_coded for the purpose fo testing
+
                     message = String.format("{\"type\": \"user\", \"room_action\":\"create_room\",\"room_value\":\"%d\"}", 234);
-                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {//joining users opp, automatically initz game
+                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 234);
-                } else {//joinig user of second game
+                } else {
                     System.out.println("Joining user of the second game");
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 234);
 
@@ -114,9 +114,9 @@ public class ConcurrentCheckersApplicationTests {
 
         for (int i = 0; i < 4; i++) {
             String array_msg = array.get(i);
-            if (i == 0) {//rm owner
+            if (i == 0) {
                 assertTrue("Room owner returned 'OK' " + array_msg, array_msg.contains("Ok"));
-            } else {//joining users
+            } else {
                 assertTrue("Joining room users returned 'successful' " + array_msg, array_msg.contains("successful"));
             }
         }
@@ -135,16 +135,16 @@ public class ConcurrentCheckersApplicationTests {
 
         AtomicReferenceArray<String> array = new AtomicReferenceArray(2);
         counter.set(0);
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
 
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
             System.out.println("The id value "+ id);
-            //for each runnable thread we get the running id of it
+
             WebSocketTest wsc = new WebSocketTest();
             wsc.onMessage((session, message) -> {
-//                    array2.compareAndSet(id, null, message);//msg is then set in the string array
+
                 if (message.contains("rdy")){
                     array.set(id, message);
                     System.out.println("Array id " + id);
@@ -153,20 +153,20 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                wsc.connect("ws:
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
-                    //value hard_coded for the purpose fo testing
+
                     message =("{\"type\": \"update_player_id\"}");
                     wsc.sendMessage(message);
                     Thread.sleep(2000);
                     message = String.format("{\"type\": \"user\", \"room_action\":\"create_room\",\"room_value\":\"%d\"}", 999);
                     wsc.sendMessage(message);
-                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {//joining users opp, automatically initz game
+                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 999);
                     wsc.sendMessage(message);
-                } else {//joinig user of second game
+                } else {
                     System.out.println("Joining user of the second game");
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 999);
                     wsc.sendMessage(message);
@@ -211,15 +211,15 @@ public class ConcurrentCheckersApplicationTests {
 
         AtomicReferenceArray<String> array = new AtomicReferenceArray(4);
         counter.set(0);
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
 
-            //For each runnable thread we get the running id of it
+
             WebSocketTest wsc = new WebSocketTest();
             wsc.onMessage((session, message) -> {
-//                    array2.compareAndSet(id, null, message);//msg is then set in the string array
+
                 if (message.contains("result_move")) {
                     array.set(id, message);
                     System.out.println("Array id " + id);
@@ -228,17 +228,17 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                wsc.connect("ws:
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
-                    //value hard_coded for the purpose fo testing
+
                     message = String.format("{\"type\": \"user\", \"room_action\":\"create_room\",\"room_value\":\"%d\"}", 345);
                     wsc.sendMessage(message);
-                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {//joining users opp, automatically initz game
+                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 345);
                     wsc.sendMessage(message);
-                } else {//joinig user of second game
+                } else {
                     System.out.println("Joining user of the second game");
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 345);
                     wsc.sendMessage(message);
@@ -247,7 +247,7 @@ public class ConcurrentCheckersApplicationTests {
                 System.out.println("Show moves tests for each player");
                 Thread.sleep(2000);
                 c_barrier.await();
-                message = String.format("{\"type\": \"show_moves\", \"player_id\":\"%d\",\"room_value\":\"123\",\"index\": \"%d\"}", id+1,11);//piece with id 11 tested for all users
+                message = String.format("{\"type\": \"show_moves\", \"player_id\":\"%d\",\"room_value\":\"123\",\"index\": \"%d\"}", id+1,11);
                 wsc.sendMessage(message);
                 Thread.sleep(1000);
                 wsc.disconnect();
@@ -284,16 +284,16 @@ public class ConcurrentCheckersApplicationTests {
 
         AtomicReferenceArray<String> array = new AtomicReferenceArray(2);
         counter.set(0);
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
 
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
 
-            //For each runnable thread we get the running id of it
+
             WebSocketTest wsc = new WebSocketTest();
             wsc.onMessage((session, message) -> {
-//                    array2.compareAndSet(id, null, message);//msg is then set in the string array
+
                 if (message.contains("non_attack_move")) {
                     array.set(id, message);
                     System.out.println("Array id " + id);
@@ -302,17 +302,17 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                wsc.connect("ws:
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
-                    //value hard_coded for the purpose fo testing
+
                     message = String.format("{\"type\": \"user\", \"room_action\":\"create_room\",\"room_value\":\"%d\"}", 456);
                     wsc.sendMessage(message);
-                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {//joining users opp, automatically initz game
+                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 456);
                     wsc.sendMessage(message);
-                } else {//joinig user of second game
+                } else {
                     System.out.println("Joining user of the second game");
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 456);
                     wsc.sendMessage(message);
@@ -321,20 +321,20 @@ public class ConcurrentCheckersApplicationTests {
                 System.out.println("show move is applied and then make move tests for each player");
                 Thread.sleep(2000);
                 if (id == 0){
-                    message = String.format("{\"type\": \"show_moves\", \"player_id\":\"%d\",\"room_value\":\"123\",\"index\": \"%d\"}", id+1,11);//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"show_moves\", \"player_id\":\"%d\",\"room_value\":\"123\",\"index\": \"%d\"}", id+1,11);
                     wsc.sendMessage(message);
                     c_barrier.await();
                     Thread.sleep(2000);
-                    message = String.format("{\"type\": \"make_move\", \"player_id\":\"%d\",\"room_value\":\"123\",\"sqr_index\": \"%d\"}", id+1,30);//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"make_move\", \"player_id\":\"%d\",\"room_value\":\"123\",\"sqr_index\": \"%d\"}", id+1,30);
                     wsc.sendMessage(message);
                     Thread.sleep(1000);
                 }
                 else if (id == 1){
-                    message = String.format("{\"type\": \"show_moves\", \"player_id\":\"%d\",\"room_value\":\"123\",\"index\": \"%d\"}", id+1,11);//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"show_moves\", \"player_id\":\"%d\",\"room_value\":\"123\",\"index\": \"%d\"}", id+1,11);
                     wsc.sendMessage(message);
                     c_barrier.await();
                     Thread.sleep(2000);
-                    message = String.format("{\"type\": \"make_move\", \"player_id\":\"%d\",\"room_value\":\"123\",\"sqr_index\": \"%d\"}", id+1,37);//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"make_move\", \"player_id\":\"%d\",\"room_value\":\"123\",\"sqr_index\": \"%d\"}", id+1,37);
                     wsc.sendMessage(message);
                     Thread.sleep(1000);
                 }
@@ -376,16 +376,16 @@ public class ConcurrentCheckersApplicationTests {
         AtomicReferenceArray<String> array = new AtomicReferenceArray(4);
         AtomicInteger counter2 = new AtomicInteger(0);
 
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
 
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
 
-            //For each runnable thread we get the running id of it
+
             WebSocketTest wsc = new WebSocketTest();
             wsc.onMessage((session, message) -> {
-//                    array2.compareAndSet(id, null, message);//msg is then set in the string array
+
                 if (message.contains("room_permits")) {
                     array.set(id, message);
                     System.out.println("Array id " + id);
@@ -394,28 +394,28 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                wsc.connect("ws:
                 String message;
 
                 if (counter2.incrementAndGet() == 1) {
-                    //value hard_coded for the purpose fo testing
+
                     message = String.format("{\"type\": \"user\", \"room_action\":\"create_room\",\"room_value\":\"%d\"}", 567);
                     wsc.sendMessage(message);
                     Thread.sleep(5000);
-                    message = String.format("{\"type\": \"get_room_permits\",\"room_value\":\"567\"}");//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"get_room_permits\",\"room_value\":\"567\"}");
                     wsc.sendMessage(message);
-                } else if (counter2.incrementAndGet() == 2 || counter2.incrementAndGet() == 4) {//joining users opp, automatically initz game
+                } else if (counter2.incrementAndGet() == 2 || counter2.incrementAndGet() == 4) {
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 567);
                     wsc.sendMessage(message);
                     Thread.sleep(5000);
-                    message = String.format("{\"type\": \"get_room_permits\",\"room_value\":\"567\"}");//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"get_room_permits\",\"room_value\":\"567\"}");
                     wsc.sendMessage(message);
-                } else {//joinig user of second game
+                } else {
                     System.out.println("Joining user of the second game");
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 567);
                     wsc.sendMessage(message);
                     Thread.sleep(5000);
-                    message = String.format("{\"type\": \"get_room_permits\",\"room_value\":\"567\"}");//piece with id 11 tested for all users
+                    message = String.format("{\"type\": \"get_room_permits\",\"room_value\":\"567\"}");
                     wsc.sendMessage(message);
                 }
 
@@ -438,7 +438,7 @@ public class ConcurrentCheckersApplicationTests {
 
         for (int i = 0; i < 4; i++) {
             String array_msg = array.get(i);
-            assertTrue("Game_star status " + array_msg, array_msg.contains("room_permits"));//returns the val of semaphore permits available
+            assertTrue("Game_star status " + array_msg, array_msg.contains("room_permits"));
             System.out.println("Asserting checking values for i "+ i);
         }
 
@@ -455,15 +455,15 @@ public class ConcurrentCheckersApplicationTests {
         CyclicBarrier c_barrier = new CyclicBarrier(5);
         Executor execut = Executors.newFixedThreadPool(4);
 
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
 
-            //For each runnable thread we get the running id of it
+
             WebSocketTest wsc = new WebSocketTest();
 
             try {
-                wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                wsc.connect("ws:
                 String message;
                 System.out.println("Adjusted screen size update for each player");
                 message = "{\"type\": \"adjust_screen_size\", \"move_length\":\"50\",\"move_dev\":\"60\"}";
@@ -485,7 +485,7 @@ public class ConcurrentCheckersApplicationTests {
         c_barrier.await();
         Thread.sleep(2500);
 
-        //no assertion performed since the updated values are done to a static class and no responses are returned.
+
         System.out.println("Screen size change updated for all players");
     }
 
@@ -500,16 +500,16 @@ public class ConcurrentCheckersApplicationTests {
 
         AtomicReferenceArray<String> array = new AtomicReferenceArray(4);
         counter.set(0);
-        //msg from back-end, i.e. responses
+
 
         Runnable area = () -> {
 
             int id = Character.getNumericValue(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length() - 1) - 1);
 
-            //For each runnable thread we get the running id of it
+
             WebSocketTest wsc = new WebSocketTest();
             wsc.onMessage((session, message) -> {
-//                    array2.compareAndSet(id, null, message);//msg is then set in the string array
+
                 if (message.contains("game_terminated")){
                     array.set(id, message);
                     System.out.println("Array id " + id);
@@ -518,17 +518,17 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+                wsc.connect("ws:
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
-                    //value hard_coded for the purpose fo testing
+
                     message = String.format("{\"type\": \"user\", \"room_action\":\"create_room\",\"room_value\":\"%d\"}", 888);
                     wsc.sendMessage(message);
-                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {//joining users opp, automatically initz game
+                } else if (counter.incrementAndGet() == 2 || counter.incrementAndGet() == 4) {
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 888);
                     wsc.sendMessage(message);
-                } else {//joinig user of second game
+                } else {
                     System.out.println("Joining user of the second game");
                     message = String.format("{\"type\": \"user\", \"room_action\":\"join_room\",\"room_value\":\"%d\"}", 888);
                     wsc.sendMessage(message);

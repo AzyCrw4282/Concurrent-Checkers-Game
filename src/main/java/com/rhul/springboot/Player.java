@@ -23,9 +23,9 @@ public class Player {
     public AtomicInteger roomId = new AtomicInteger(0);
 
     public static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
-    //hm to keep track of all players in the room
 
-    //lombok used here
+
+
     private final int id;
     private final String name;
     private Room room;
@@ -37,7 +37,7 @@ public class Player {
     private boolean move_req = false;
     private boolean show_moves_req = false;
     public Checkers checks_obj;
-    private int index;//val to make the move
+    private int index;
     private int sqr_index;
     private String room_value;
     private String colour;
@@ -64,18 +64,18 @@ public class Player {
 
     public Checkers initialize(){
 
-        //so if joining then  give this object reference to other player
+
         System.out.println("game initializer");
-        //used as parent/main objects
+
         CheckersSquare checks_sqr = new CheckersSquare();
         checks_obj = new Checkers(this, checks_sqr);
-        //To fully initialize the game
-        //id and session field act as unique in this case
+
+
 
         for (int i = 1; i <= 64; i++) {
-            checks_sqr.block[i] = new CheckersSquare(i);//64 objects of squares
+            checks_sqr.block[i] = new CheckersSquare(i);
         }
-        // white counters
+
         for (int i = 1; i <= 4; i++) {
             checks_obj.w_checkers[i] = new Checkers(i, "white", 2 * i - 1);
             checks_obj.w_checkers[i].setCoordinates(0, 0);
@@ -121,14 +121,14 @@ public class Player {
         return checks_obj;
     }
 
-    //Each player will have a 1 thread and 1 scheduled thread  for each game
+
     public void start_game_thread(){
-        scheduler = Executors.newScheduledThreadPool(1);//1 scheduled pool for each user
+        scheduler = Executors.newScheduledThreadPool(1);
         scheduler.scheduleAtFixedRate(()-> update_game(),1000,1000, TimeUnit.MILLISECONDS);
     }
 
     public void update_game(){
-        //game obj will be shared by 2 players
+
 
         if (show_moves_req){
             this.show_moves();
@@ -141,21 +141,21 @@ public class Player {
     }
 
     public void show_moves(){
-        //At this point, 2 players in
-        //get checks obj from hm.
+
+
         if (this.checks_obj == null){
             checks_obj = CheckersGame.get_game_obj(this);
         }
 
 
         Room rm = game.get_room(room_value);
-        int piece_index = index;//index or id val of the piece
+        int piece_index = index;
         System.out.println("129");
-        //To check for possible moves for a given piece
+
 
         if (this.colour.equals("white")) {
             cur_plyr = "white";
-            if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], rm)) {//if an attack/move possible
+            if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], rm)) {
                 String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                 this.sendMessage(mesg);
 
@@ -175,12 +175,12 @@ public class Player {
         }
 
         Room rm = game.get_room(room_value);
-        int square_index = sqr_index;//index or id val of the piece
+        int square_index = sqr_index;
         System.out.println("make_move_b/e  call");
 
         if (this.colour.equals("white")) {
             cur_plyr = "white";
-            if (checks_obj.make_move(square_index, cur_plyr, rm)) {//if an attack/move possible
+            if (checks_obj.make_move(square_index, cur_plyr, rm)) {
                 String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                 this.sendMessage(mesg);
             }

@@ -6,7 +6,7 @@ package com.rhul.springboot;
  */
 
 public class CheckersUtils extends CheckersHandler {
-    //
+
 
     public static String getRandomColur(){
 

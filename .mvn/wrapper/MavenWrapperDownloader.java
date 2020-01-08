@@ -7,7 +7,7 @@ to you under the Apache License, Version 2.0 (the
 "License"); you may not use this file except in compliance
 with the License.  You may obtain a copy of the License at
 
-  https://www.apache.org/licenses/LICENSE-2.0
+  https:
 
 Unless required by applicable law or agreed to in writing,
 software distributed under the License is distributed on an
@@ -32,7 +32,7 @@ public class MavenWrapperDownloader {
      * Default URL to download the maven-wrapper.jar from, if no 'downloadUrl' is provided.
      */
     private static final String DEFAULT_DOWNLOAD_URL =
-            "https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/0.4.2/maven-wrapper-0.4.2.jar";
+            "https:
 
     /**
      * Path to the maven-wrapper.properties file, which might contain a downloadUrl property to
@@ -57,8 +57,8 @@ public class MavenWrapperDownloader {
         File baseDirectory = new File(args[0]);
         System.out.println("- Using base directory: " + baseDirectory.getAbsolutePath());
 
-        // If the maven-wrapper.properties exists, read it and check if it contains a custom
-        // wrapperUrl parameter.
+
+
         File mavenWrapperPropertyFile = new File(baseDirectory, MAVEN_WRAPPER_PROPERTIES_PATH);
         String url = DEFAULT_DOWNLOAD_URL;
         if (mavenWrapperPropertyFile.exists()) {
@@ -76,7 +76,7 @@ public class MavenWrapperDownloader {
                         mavenWrapperPropertyFileInputStream.close();
                     }
                 } catch (IOException e) {
-                    // Ignore ...
+
                 }
             }
         }
