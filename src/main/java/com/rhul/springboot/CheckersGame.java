@@ -111,7 +111,7 @@ public class CheckersGame {
             }
         }
         sb.deleteCharAt(sb.length()-2);//delete the last added ,
-        String room_data = String.format("{\"type\": \"join\",\"data\":[%s]}", sb.toString());
+        String room_data = String.format("{\"type\": \"room_players_data\",\"data\":[%s]}", sb.toString());
         plyr.sendMessage(room_data);
     }
 

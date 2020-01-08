@@ -118,23 +118,33 @@ function create_room(){
     document.getElementById('chat_div_id').style.display = "none";
     document.getElementById('console').style.height = "90%";
 
+    let msg_data = {"type" : "get_room_players","msg" : "N/A"};
+    game.send_data(msg_data);
 }
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
     room_action = "join_room";
-    //to use the above for the real design
-    // room_value = $("#rm_nm_value").val();
-    // room_action = "join_room";
-    /*we show the buttons to create room, join room and chat*/
-    // document.getElementById('div_id_menu').style.display = "block";
-    // start_game();
-
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
     // game_2.initialize_snd_game();
-``
+    let msg_data = {"type" : "get_room_players","msg" : "N/A"};
+    game.send_data(msg_data);
 }
+
+function update_room_players(data){
+    //here should update all the rows for the fetched records
+    for (var i = 0; i<data.length;i++){
+        //add for each row
+
+
+    }
+
+
+
+}
+
+
 
 function getDimension (){
     windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -619,6 +629,12 @@ class Game {
                     var parsed_val = parseInt(packet.data);
                     var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
                     game.apply_road(parsed_val,game_move);
+                    break;
+
+
+                case "room_players_data":
+                    console.log(packet.data);
+                    update_room_players(packet.data);
                     break;
 
                 case 'remove_road':
