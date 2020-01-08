@@ -31,6 +31,7 @@ public class CheckersGame {
 
     public synchronized void global_broadcast(String msg){
         game_chat.global_broadcast(msg);
+        System.out.println("34");
     }
 
     public synchronized void game_broadcast(String msg){

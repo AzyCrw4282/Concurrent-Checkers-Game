@@ -244,7 +244,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "global_chat":
                     String global_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";
                     game.global_broadcast(global_msg);
-
                     break;
                 case "game_chat":
                     String usr_msg = "{\"type\": \"chat\",\"msg\": \"" + json.getString("msg") + "\"}";

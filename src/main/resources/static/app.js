@@ -77,6 +77,20 @@ $(document).ready(function(){
     };
 });
 
+
+function send_msg_check(e,input) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) { //Enter keycode
+        action_chat_msg();
+    }
+
+}
+
+
+
+
+
+
 function enterName(){
 
     user = $("#id_name_value").val();//gets users name
@@ -170,7 +184,7 @@ function enter_chat(){
     /*thePlayerIsAddedToTheChat*/
     // players.push(new Player(user));
 
-    enter_chat_lobby(user);
+    start_game();
     chat =  true;
 }
 
@@ -310,23 +324,6 @@ chatbox_logs.log = (function (msg) {
     }
     chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
 });
-
-
-
-
-//used to check the player of the game to use the right game obj.
-class Player {
-
-    constructor(name) {
-        this.name = name;
-    }
-
-    get_plyr_name(){
-        return this.name;
-
-    }
-
-}
 
 //A game class
 class Game {
@@ -591,9 +588,17 @@ class Game {
         /*startTheConnection*/
         this.socket.onopen = () => {
             if (!already_opened) {
-                console.log('Info: WebSocket connection opened.');                // weSendTheUserToTheServer
+                console.log('Info: WebSocket connection opened.');// weSendTheUserToTheServer
                 already_opened = true;
-                this.open();
+                if (room_value !== undefined){
+                    console.log("580", room_value);
+                    this.open();
+                }
+                else{
+                    var enter_chat = {"type": "enter_chat_lobby"};
+                    game.send_data(enter_chat);
+                    // this.enter_chat_lobby();
+                }
             }
         };
 
@@ -608,7 +613,7 @@ class Game {
         /*define the actions when receiving the different messages*/
         this.socket.onmessage = (message) => {
             var packet = JSON.parse(message.data);
-            console.log("packet received :", packet);
+            console.log("packet received from B/E :", packet);
             //handles message received from b/e. need work on this
             switch (packet.type) {
                 /*removeAPlayerFromTheRoom*/
@@ -769,65 +774,21 @@ class Game {
         },3000);
 
     }
+
+    enter_chat_lobby() {
+        this.socket.onopen = () => {
+            console.log('Info: WebSocket connection opened.');
+            var enter_chat = {"type": "enter_chat_lobby"};
+            game.send_data(enter_chat);
+        }
+    }
 }
 
 // multiple objects for multiple games
 let game = new Game();
 let game2 = new Game();
 
-
-function enter_chat_lobby(){
-    this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
-    this.socket.onopen = () => {
-        console.log('Info: WebSocket connection opened.');
-        var check_permits = {"type": "enter_chat_lobby"};
-        game.send_data(check_permits);
-    }
-}
-
 function start_game(){
     game.connect();
 
 }
-
-// setInterval(()=> {
-//     var msg = {"type" : "ping"};
-//     game.send_data(msg);
-// },15000);
-
-
-//these will have to be changed for new game method
-// var square_p = function(square,index){
-//     //this.gameId = game_id; //identifies the game of which there can be many
-//     this.id = square;
-//     this.occupied = false;
-//     this.pieceId = undefined;
-//     this.id.onclick = function(){
-//         // b/e process to send to check for moves
-//         game.make_move(index);
-//
-//     }
-// };
-//
-// //these when implemented needs to be uniquely idenfitied for each game
-// var checker = function(piece,color,square,index) {//unique idenfitification for each counter
-//     this.id = piece;
-//     this.color = color;
-//     this.index = index;
-//     this.king = false;
-//     this.ocupied_square = square;
-//     this.alive = true;
-//     this.attack = false;
-//     if(square%8){
-//         this.coordX= square%8;
-//         this.coordY = Math.floor(square/8) + 1 ;
-//     }
-//     else{
-//         this.coordX = 8;
-//         this.coordY = square/8 ;
-//     }
-//     //clickable function
-//     this.id.onclick = function  () {
-//         game.show_moves(index,color);//index is nt unique as they can be same for black/white
-//     }
-// };//identifies each checker

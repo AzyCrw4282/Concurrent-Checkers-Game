@@ -37,6 +37,7 @@ public class Chat  {
 
             for(Player plyr : CheckersGame.lobby_chat_players.values()){
                 plyr.sendMessage(msg);
+                System.out.println("40");
             }
 
         }catch (Exception e){
