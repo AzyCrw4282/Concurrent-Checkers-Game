@@ -44,7 +44,7 @@ public class ConcurrentCheckersApplicationTests {
     public void test_connection() throws Exception {
         System.out.println("----------------------------Testing connection-------------------");
         WebSocketTest Wsc = new WebSocketTest();
-        Wsc.connect("ws:
+        Wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
         System.out.println("Successfully connected");
         Wsc.disconnect();
     }
@@ -78,7 +78,7 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                ws.connect("ws:
+                ws.connect("ws://127.0.0.1:8080/springboot");
                 String message;
 
 
@@ -153,7 +153,7 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws:
+                wsc.connect("ws://127.0.0.1:8080/springboot");
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
@@ -228,7 +228,7 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws:
+                wsc.connect("ws://127.0.0.1:8080/springboot");
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
@@ -302,7 +302,7 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws:
+                wsc.connect("ws://127.0.0.1:8080/springboot");
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
@@ -394,7 +394,7 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws:
+                wsc.connect("ws://127.0.0.1:8080/springboot");
                 String message;
 
                 if (counter2.incrementAndGet() == 1) {
@@ -463,7 +463,7 @@ public class ConcurrentCheckersApplicationTests {
             WebSocketTest wsc = new WebSocketTest();
 
             try {
-                wsc.connect("ws:
+                wsc.connect("ws://127.0.0.1:8080/springboot");
                 String message;
                 System.out.println("Adjusted screen size update for each player");
                 message = "{\"type\": \"adjust_screen_size\", \"move_length\":\"50\",\"move_dev\":\"60\"}";
@@ -518,7 +518,7 @@ public class ConcurrentCheckersApplicationTests {
             });
 
             try {
-                wsc.connect("ws:
+                wsc.connect("ws://127.0.0.1:8080/springboot");
                 String message;
 
                 if (counter.incrementAndGet() == 1) {
