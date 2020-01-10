@@ -12,6 +12,7 @@ var players= [];
 var chat = false;
 var game_started = false;
 var game_started2 = false;
+var get_room_players =false;
 var user_permit_val = 0;//add 1 to get the value held by the user
 var player_game;//1/2
 var permit_obtained = false;
@@ -116,10 +117,9 @@ function create_room(){
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
     document.getElementById('chat_div_id').style.display = "none";
-    document.getElementById('console').style.height = "90%";
-
+    get_room_players = true;
     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
-    game.send_data(msg_data);
+    start_game(msg_data);
 }
 
 /*When we join the room we are asked for the name of the room*/
@@ -132,22 +132,38 @@ function join_a_room(){
     game.send_data(msg_data);
 }
 
-function update_room_players(data){
+// var cells_cmd = [game_id, game_name, players_active];
+
+function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
     console.log("137");
-    var cells_cmd = [i+1, game_id, game_name, players_active];
+    // var game_id;
+    // var game_name;
+    // var players_active;
+
     var table =document.getElementById("room_players_data");
 
-    for (var i = 0; i<data.length;i++){
-        var row = table.insertRow(i);
-        for (var j =0;j<cells_cmd.length;j++){
-            var cell_i = row.insertCell(j);
-            cell_i.innerHTML = data[i].cells_cmd[j];
-        }
-    }
+    var row = table.insertRow(id-1);
+    var cell_i = row.insertCell(0);
+    cell_i.innerHTML = id;
+    cell_i = row.insertCell(1);
+    cell_i.innerHTML = name;
+    cell_i = row.insertCell(2);
+    cell_i.innerHTML = num_of_players + "/4";
+
+
+        // for (var j =0;j<3;j++){
+        //     var cell_i = row.insertCell(j);
+        //     var cmd = data[j];
+        //     if (j == 2){
+        //         cell_i.innerHTML = data[j]+ "/4";
+        //     }
+        //     else {
+        //
+        //         cell_i.innerHTML = ;
+        //     }
+
 }
-
-
 
 function getDimension (){
     windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -184,11 +200,10 @@ function enter_chat(){
     document.getElementById('chat_div_id').style.marginLeft = "100px";
     document.getElementById('console_id').style.height = "400px";
 
-    /*thePlayerIsAddedToTheChat*/
-    // players.push(new Player(user));
-
-    start_game();
     chat =  true;
+    var enter_chat = {"type": "enter_chat_lobby"};
+    start_game(enter_chat);
+
 
 }
 
@@ -209,13 +224,6 @@ function enter_game_room(){
 
     /*weGetTheValues​​toCreateTheRoom*/
     room_value = $("#rm_nm_value").val();
-    difficulty = 0;
-
-    if ($('#radio2').prop('checked')){
-        difficulty = 1;
-    }else if ($('#radio3').prop('checked')){
-        difficulty = 2;
-    }
     start_game();
 }
 //displayed when 2 users exists for nw
@@ -585,7 +593,7 @@ class Game {
 
 
     /*connect to the server and define the socket methods*/
-    connect() {
+    connect(msg_data) {
         user_action = "initialize";
         this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
 
@@ -593,25 +601,24 @@ class Game {
         this.socket.onopen = () => {
             if (!already_opened) {
                 console.log('Info: WebSocket connection opened.');// weSendTheUserToTheServer
-                already_opened = true;
+                // already_opened = true;
                 if (room_value !== undefined){
                     console.log("580", room_value);
                     this.open();
                 }
+                // else if (chat === true){
+                //     var enter_chat = {"type": "enter_chat_lobby"};
+                //     game.send_data(enter_chat);
+                //     // this.enter_chat_lobby();
+                // }
+                // else if (get_room_players === true){
+                //     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
+                //     game.send_data(msg_data);
+                // }
                 else{
-                    var enter_chat = {"type": "enter_chat_lobby"};
-                    game.send_data(enter_chat);
-                    // this.enter_chat_lobby();
+                    game.send_data(msg_data);
                 }
             }
-        };
-
-        /*closeTheConnection*/
-        this.socket.onclose = () => {
-            // let dic = {"type": "delete", "name": user};
-            // // game.process_data(dic);
-            // console.log('Info: WebSocket closed.');
-            // this.stopGameLoop();
         };
 
         /*define the actions when receiving the different messages*/
@@ -634,10 +641,11 @@ class Game {
                     game.apply_road(parsed_val,game_move);
                     break;
 
-
                 case "room_players_data":
-                    console.log(packet.data);
-                    update_room_players(packet.data);
+
+                    for (var i=0;i<packet.data.length;i++){
+                        update_room_players(packet.game_id,packet.game_name,packet.players_active);
+                    }
                     break;
 
                 case 'remove_road':
@@ -768,6 +776,14 @@ class Game {
                     break;
             }
         }
+
+        /*closeTheConnection*/
+        this.socket.onclose = () => {
+            // let dic = {"type": "delete", "name": user};
+            // // game.process_data(dic);
+            // console.log('Info: WebSocket closed.');
+            // this.stopGameLoop();
+        };
     }
 
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
@@ -798,7 +814,7 @@ class Game {
 let game = new Game();
 let game2 = new Game();
 
-function start_game(){
-    game.connect();
+function start_game(msg){
+    game.connect(msg);
 
 }
