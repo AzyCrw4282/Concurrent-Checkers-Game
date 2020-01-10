@@ -644,7 +644,7 @@ class Game {
                 case "room_players_data":
 
                     for (var i=0;i<packet.data.length;i++){
-                        update_room_players(packet.game_id,packet.game_name,packet.players_active);
+                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active);
                     }
                     break;
 
