@@ -779,14 +779,13 @@ class Game {
 
         /*closeTheConnection*/
         this.socket.onclose = () => {
-            // let dic = {"type": "delete", "name": user};
-            // // game.process_data(dic);
-            // console.log('Info: WebSocket closed.');
+
             // this.stopGameLoop();
         };
     }
 
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
+    //fix error on this
     open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
         var json_str=JSON.stringify(msg);
