@@ -221,9 +221,10 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "get_room_players":
                     if (game.player_ids.get() > 1){ //not shows if its the first player in the game
-                        Player player_obj = (Player) session.getAttributes().get(game_attribute);
-                        System.out.println("Player obj " + player_obj);
-                        game.get_rooms_data(player_obj);
+//                        Player player_obj = (Player) session.getAttributes().get(game_attribute);
+                        System.out.println("Player obj " + session);//try to use session
+                        game.get_rooms_data(session);
+
                     }
                     break;
 

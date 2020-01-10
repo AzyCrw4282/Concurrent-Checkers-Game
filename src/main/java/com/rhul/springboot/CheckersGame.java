@@ -6,6 +6,8 @@ Acts as the main wrapper for all game funcs in the game, such as game room, play
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+
+import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -80,14 +82,12 @@ public class CheckersGame {
 
     public static Player get_player_obj(int id){
 
-
         for (Player p : Player.players_hm.values()){
             if (p.getId() == id){
                 return p;
             }
         }
         return null;
-
     }
 
     public void add_rooms(Room rm){
@@ -100,7 +100,7 @@ public class CheckersGame {
 
     }
 
-    public void get_rooms_data(Player plyr){
+    public void get_rooms_data(WebSocketSession session) throws IOException {
 
         StringBuilder sb = new StringBuilder();
         System.out.println("Rooms HM "+ rooms_hm.entrySet());
@@ -110,14 +110,14 @@ public class CheckersGame {
                 sb.append(String.format("{\"game_id\": %s, \"game_name\": \"%s\",\"players_active\":\"%s\"}",rm.getRoom_id(),rm.getRoom_name(), rm.getPlayers_count()));
                 sb.append(',');
             }
-            System.out.println("String vals : " + sb);
+            System.out.println("String vals: " + sb);
         }
         if (sb.length() > 1){
             sb.deleteCharAt(sb.length()-1);//delete the last added ,
         }
 
         String room_data = String.format("{\"type\": \"room_players_data\",\"data\":[%s]}", sb.toString());
-        plyr.sendMessage(room_data);
+        session.sendMessage(new TextMessage(room_data));
     }
 
 
