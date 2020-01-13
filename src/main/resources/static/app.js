@@ -151,18 +151,6 @@ function update_room_players(id,name,num_of_players){
     cell_i = row.insertCell(2);
     cell_i.innerHTML = num_of_players + "/4";
 
-
-        // for (var j =0;j<3;j++){
-        //     var cell_i = row.insertCell(j);
-        //     var cmd = data[j];
-        //     if (j == 2){
-        //         cell_i.innerHTML = data[j]+ "/4";
-        //     }
-        //     else {
-        //
-        //         cell_i.innerHTML = ;
-        //     }
-
 }
 
 function getDimension (){
