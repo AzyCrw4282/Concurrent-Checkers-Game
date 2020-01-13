@@ -154,14 +154,6 @@ function update_room_players(id,name,num_of_players){
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
     cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
 
-    // cell_i.innerHTML  = "<button class=\"btn btn-primary\" type=\"button\"  style=\"width:120px;height: 50px\"  onclick='join_selected_room(\''+remove_url+'\')/>"+ '<span ></span> Join Room</button>';
-
-    // var element = document.createElement("BUTTON");
-    // element.type = "Btn btn-primary";
-    // element.value = "Join Room "+id; // Really? You want the default value to be the type string?
-    // element.onclick = function() { // Note this is a function
-    //     join_a_room(id);
-    // };
 }
 
 function getDimension (){
