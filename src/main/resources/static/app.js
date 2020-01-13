@@ -129,28 +129,39 @@ function join_a_room(){
     document.getElementById('div_id_room_settings').style.display = "block";
     // game_2.initialize_snd_game();
     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
-    game.send_data(msg_data);
+    start_game(msg_data);
 }
 
-// var cells_cmd = [game_id, game_name, players_active];
+function join_selected_room(room_id){
+    room_value = room_id;
+    enter_game_room();
+}
+
 
 function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
     console.log("137");
-    // var game_id;
-    // var game_name;
-    // var players_active;
-
+    var game_room = ""+name;
     var table =document.getElementById("room_players_data");
-
     var row = table.insertRow(id-1);
-    var cell_i = row.insertCell(0);
-    cell_i.innerHTML = id;
-    cell_i = row.insertCell(1);
+    var cell_id = row.insertCell(0);
+    cell_id.innerHTML = id;
+    var cell_i = row.insertCell(1);
     cell_i.innerHTML = name;
     cell_i = row.insertCell(2);
     cell_i.innerHTML = num_of_players + "/4";
+    cell_i = row.insertCell(3);
+    // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
+    cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
 
+    // cell_i.innerHTML  = "<button class=\"btn btn-primary\" type=\"button\"  style=\"width:120px;height: 50px\"  onclick='join_selected_room(\''+remove_url+'\')/>"+ '<span ></span> Join Room</button>';
+
+    // var element = document.createElement("BUTTON");
+    // element.type = "Btn btn-primary";
+    // element.value = "Join Room "+id; // Really? You want the default value to be the type string?
+    // element.onclick = function() { // Note this is a function
+    //     join_a_room(id);
+    // };
 }
 
 function getDimension (){
@@ -211,7 +222,10 @@ function enter_game_room(){
     document.getElementById('game_status2').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
-    room_value = $("#rm_nm_value").val();
+    if (room_value === undefined) {
+        room_value = $("#rm_nm_value").val();
+    }//else uses the value of selected button
+
     start_game();
 }
 //displayed when 2 users exists for nw
@@ -590,8 +604,9 @@ class Game {
             if (!already_opened) {
                 console.log('Info: WebSocket connection opened.');// weSendTheUserToTheServer
                 // already_opened = true;
-                if (room_value !== undefined){
+                if (room_value !== undefined ){ //before entering game room this would stay undefined
                     console.log("580", room_value);
+                    already_opened = true;
                     this.open();
                 }
                 // else if (chat === true){

@@ -54,12 +54,14 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
     </div>
 
     <!-- createRoom and JoinRoom-->
-    <div class="col-md-4 btn-group" id="div_id_room_settings" style="display: none">
-        <p id="create_rm_name" style="font-weight: bold">Enter your room name</p>
-        <br>
-        <input id="rm_nm_value">
-        <button class="btn btn-success" id="button2" style="margin-top: 15px" onclick="enter_game_room()">New Game</button>
-
+    <div class="col-md-4 btn-group" id="div_id_room_settings" style="display: none;">
+        <div class="room_setting_componeent" style="margin-left: 203px;">
+            <p id="create_rm_name" style="font-weight: bold">Enter your room name</p>
+            <br>
+            <input id="rm_nm_value">
+            <br>
+            <button class="btn btn-success" id="button2" style="margin-top: 15px" onclick="enter_game_room()">New Game</button>
+        </div>
 <!--        A new game button that brings up a prompt-->
         <table class="table table-hover"  style="margin-top: 15px">
             <thead>
@@ -71,12 +73,6 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
                 </tr>
             </thead>
             <tbody id="room_players_data">
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
             </tbody>
         </table>
     </div>
