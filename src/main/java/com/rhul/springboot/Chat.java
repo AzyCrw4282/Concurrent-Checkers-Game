@@ -29,6 +29,7 @@ public class Chat  {
 
         }catch (Exception e){
             e.printStackTrace();
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Broadcasting message error"));
         }
     }
 
@@ -42,6 +43,7 @@ public class Chat  {
 
         }catch (Exception e){
             e.printStackTrace();
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Global broadcast message error"));
         }
     }
 

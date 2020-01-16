@@ -104,6 +104,7 @@ public class ConcurrentCheckersApplicationTests {
 
             } catch (Exception e) {
                 e.printStackTrace();
+
                 System.out.println("Test failed");
             }
         };

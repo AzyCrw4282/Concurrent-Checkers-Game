@@ -4,7 +4,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONException;//should be fixed
 import org.springframework.web.socket.CloseStatus;
@@ -12,7 +11,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.JSONObject;
-import java.util.concurrent.locks.Lock;
+
 import java.util.concurrent.locks.ReentrantLock;
 
 /**The main handler class that's responsible for communicating with the client and triggering server command.
@@ -20,7 +19,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class CheckersHandler extends TextWebSocketHandler {
-
 
 
     private static final String game_attribute = "checkers";
@@ -34,6 +32,8 @@ public class CheckersHandler extends TextWebSocketHandler {
     Executor executor = Executors.newFixedThreadPool(20);
     String cur_plyr = null;
     int piece_index = 0;
+    @Autowired
+//    Bugsnag bugsnag = new Bugsnag("58b3b400437ffde6119c14c6f0b358a8", true);
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -45,6 +45,7 @@ public class CheckersHandler extends TextWebSocketHandler {
             System.out.println("------------------------------------");
             System.out.println("string from f/e "+ json);
 
+
             switch (type){
 
 
@@ -52,7 +53,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     Runnable threads_area = () -> {
                           try{
-
                               String msg;
                               System.out.println("waiting for lock");
                               Lk.lock();
@@ -172,6 +172,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                           } catch (Exception ex) {
                               ex.printStackTrace();
+                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in joinig room"));
                           }
                     };
                   executor.execute(threads_area);
@@ -273,6 +274,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
         } catch (Exception e){
             System.err.println("Exception processing message: " + message.getPayload());
+            BugsnagConfig.bugsnag().notify(new RuntimeException("F/e message cannot be processed/resovled error"));
             e.printStackTrace(System.err);
         }
 
