@@ -1,5 +1,7 @@
 # Concurrent Checkers Game for FYP@RHUL 19/20
 
+[![Build Status](https://travis-ci.org/team142/gg.svg?branch=master)](https://travis-ci.com/AzyCrw4282/private_project)
+
 ## Overview
 
 A concurrent game that is played through WebSockets. The game is first hosted by
