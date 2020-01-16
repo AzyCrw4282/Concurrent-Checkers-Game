@@ -1,6 +1,6 @@
 language: java
 jdk:
-- AdoptOpenJDK 8
+- java --version
 # git strips the wrapper jar file so we have to force its download during the build
 install:
 - mvn -N io.takari:maven:wrapper
