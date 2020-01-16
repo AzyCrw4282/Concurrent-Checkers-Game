@@ -5,13 +5,17 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.bugsnag.Bugsnag;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.JSONObject;
+
+import javax.management.relation.RelationNotFoundException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -20,7 +24,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class CheckersHandler extends TextWebSocketHandler {
-
 
 
     private static final String game_attribute = "checkers";
@@ -34,6 +37,8 @@ public class CheckersHandler extends TextWebSocketHandler {
     Executor executor = Executors.newFixedThreadPool(20);
     String cur_plyr = null;
     int piece_index = 0;
+    @Autowired
+//    Bugsnag bugsnag = new Bugsnag("58b3b400437ffde6119c14c6f0b358a8", true);
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -45,6 +50,7 @@ public class CheckersHandler extends TextWebSocketHandler {
             System.out.println("------------------------------------");
             System.out.println("string from f/e "+ json);
 
+
             switch (type){
 
 
@@ -52,7 +58,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     Runnable threads_area = () -> {
                           try{
-
+                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error here man"));
                               String msg;
                               System.out.println("waiting for lock");
                               Lk.lock();

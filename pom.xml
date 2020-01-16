@@ -55,6 +55,11 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.bugsnag</groupId>
+            <version>[3.0,4.0)</version>
+            <artifactId>bugsnag-spring</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
