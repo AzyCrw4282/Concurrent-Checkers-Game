@@ -18,7 +18,7 @@ var player_game;//1/2
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
-var row_counter = 0;
+var row_counter =0;
 //first game
 var square_class = document.getElementsByClassName("square");
 var square_class2 = document.getElementsByClassName("square2");
@@ -141,7 +141,7 @@ function join_selected_room(room_id){
 
 function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
-    console.log("137");
+    console.log("144");
     var game_room = ""+name;
     var table =document.getElementById("room_players_data");
     var row = table.insertRow(row_counter);
@@ -154,7 +154,7 @@ function update_room_players(id,name,num_of_players){
     cell_i = row.insertCell(3);
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
     cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
-    row_counter +=1
+    row_counter +=1;
 }
 
 function getDimension (){
@@ -590,8 +590,8 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
         user_action = "initialize";
-        this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
-        //new WebSocket("wss://springboot21.herokuapp.com/springboot");
+        this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
+        //        this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");https://springboot21.herokuapp.com/
 
         /*startTheConnection*/
         this.socket.onopen = () => {

@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** -> Methods to include
  *
- * broadecast msg->for all the existing snakes send a msg
+ * broadecast msg->for all the existing snakes send a msgs
  *
  *
  */
