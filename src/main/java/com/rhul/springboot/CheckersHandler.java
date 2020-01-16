@@ -3,20 +3,12 @@ package com.rhul.springboot;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import com.bugsnag.Bugsnag;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.JSONObject;
 
-import javax.management.relation.RelationNotFoundException;
-import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**The main handler class that's responsible for communicating with the client and triggering server command.
