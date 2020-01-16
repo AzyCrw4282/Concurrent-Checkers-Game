@@ -59,7 +59,7 @@ public class Room {
             return false;
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error with semaphore permits acquiring. ");
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Error with semaphore permits acquiring"));
             return  false;
         }
 
@@ -78,6 +78,7 @@ public class Room {
 
                     } catch (Exception e) {
                         e.printStackTrace();
+                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 1"));
                         remove_player_from_room(plyr);
                     }
                 }
@@ -86,6 +87,7 @@ public class Room {
                         String new_msg = msg + ",\"game_no\":\"2\"}";
                         plyr.sendMessage(new_msg);
                     } catch (Exception e) {
+                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 2"));
                         e.printStackTrace();
                         remove_player_from_room(plyr);
                     }

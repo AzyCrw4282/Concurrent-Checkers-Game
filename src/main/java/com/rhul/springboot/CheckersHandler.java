@@ -58,7 +58,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                     Runnable threads_area = () -> {
                           try{
-                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error here man"));
                               String msg;
                               System.out.println("waiting for lock");
                               Lk.lock();
@@ -178,6 +177,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                           } catch (Exception ex) {
                               ex.printStackTrace();
+                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in joinig room"));
                           }
                     };
                   executor.execute(threads_area);
@@ -279,6 +279,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
         } catch (Exception e){
             System.err.println("Exception processing message: " + message.getPayload());
+            BugsnagConfig.bugsnag().notify(new RuntimeException("F/e message cannot be processed/resovled error"));
             e.printStackTrace(System.err);
         }
 

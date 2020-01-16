@@ -57,6 +57,7 @@ public class Player {
             if(this.session.isOpen())
                 this.session.sendMessage(new TextMessage(msg));
         }catch (Exception e){
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Error countered in session send message"));
             e.printStackTrace();
         }
 
