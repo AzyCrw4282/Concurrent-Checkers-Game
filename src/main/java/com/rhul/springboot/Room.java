@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**Class represents players present in a room and handles adding/removing users from the room.
- * Each room currently holds upto 4 players.
+ * Each room currently holds upto 8 players. To be improved during further developments....
  * @author Azky
  */
 @Getter @Setter

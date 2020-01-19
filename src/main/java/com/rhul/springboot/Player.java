@@ -50,7 +50,6 @@ public class Player {
         this.session = session;
     }
 
-
     public synchronized void sendMessage(String msg){
         try{
             if(this.session.isOpen())
@@ -63,7 +62,6 @@ public class Player {
     }
 
     public Checkers initialize(){
-
 
         System.out.println("game initializer");
 
