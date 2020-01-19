@@ -27,7 +27,7 @@ public class Room {
         this.room_id = id;
         this.room_name = room_nm;
         this.rm_owner = plyr;
-        this.smphore = new Semaphore(4,true);
+        this.smphore = new Semaphore(4,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
 
     }
 
@@ -53,7 +53,6 @@ public class Room {
                         apply_game_status(this,p.getName());
                     }
                     return true;
-
                 }
             }
             return false;

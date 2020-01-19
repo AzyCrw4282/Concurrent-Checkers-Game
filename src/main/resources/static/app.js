@@ -150,7 +150,7 @@ function update_room_players(id,name,num_of_players){
     var cell_i = row.insertCell(1);
     cell_i.innerHTML = name;
     cell_i = row.insertCell(2);
-    cell_i.innerHTML = num_of_players + "/4";
+    cell_i.innerHTML = num_of_players + "/8";
     cell_i = row.insertCell(3);
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
     cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
