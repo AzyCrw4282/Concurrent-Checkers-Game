@@ -50,8 +50,8 @@ public class Room {
                     players_count.getAndIncrement();
                     for (Player p : players_hm.values()) {
                         System.out.println("players in room :" + p.getId());
-                        apply_game_status(this,p.getName());
                     }
+                    apply_game_status(this,playr.getName(), playr.getId());
                     return true;
                 }
             }
@@ -95,11 +95,11 @@ public class Room {
     }
 
     //Method to update game_status on the player's that are present in the room
-    public synchronized void apply_game_status(Room rm,String msg){
+    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){
 
-        for (Player plyr : rm.getPlayers_hm().values()){
+        for (Player plyr : players_hm.values()){
             try {
-                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined\"}",msg);
+                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/8) active players\"}",plyr_nm,players_active);
                 plyr.sendMessage(new_msg);
 
             } catch (Exception e) {
@@ -107,7 +107,6 @@ public class Room {
                 BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying game status"));
                 remove_player_from_room(plyr);
             }
-
         }
     }
 }

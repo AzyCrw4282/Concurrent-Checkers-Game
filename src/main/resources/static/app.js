@@ -348,7 +348,7 @@ chatbox_logs.log = (function (msg) {
 });
 
 gameStatus_logs.log = (function (msg) {
-    if (msg === undefined) msg = "Game Status will appear below \n-----------------------------";
+    if (msg === undefined) msg = "Game Status will appear below";
     var gameStatus = document.getElementById("console_status_id");
     var p_msg = document.createElement('p');
     p_msg.style.wordWrap = 'break-word';
