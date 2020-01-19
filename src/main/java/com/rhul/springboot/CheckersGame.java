@@ -40,7 +40,6 @@ public class CheckersGame {
         game_chat.broadcast(msg);
     }
 
-
     public boolean check_room_exists(String rm){
         for (Room room : rooms_hm.values()){
             System.out.println(room.getRoom_name());
@@ -50,7 +49,6 @@ public class CheckersGame {
         }
         return false;
     }
-
 
     public Room get_room(String rm){
         Room rm_obj= null;
@@ -63,9 +61,6 @@ public class CheckersGame {
         }
         return rm_obj;
     }
-
-
-
 
     public static Checkers get_game_obj(Player plyr){
         int playr_id = plyr.getId();

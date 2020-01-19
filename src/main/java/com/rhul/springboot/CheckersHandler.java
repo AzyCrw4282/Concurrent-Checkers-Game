@@ -44,9 +44,7 @@ public class CheckersHandler extends TextWebSocketHandler {
             System.out.println("------------------------------------");
             System.out.println("string from f/e "+ json);
 
-
             switch (type){
-
 
                 case "user":
 
@@ -269,6 +267,10 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "update_player_id":
                     game.player_ids.set(1);
                     break;
+
+                case "show_leader_bd":
+
+                    break;
             }
 
         } catch (Exception e){
@@ -290,8 +292,6 @@ public class CheckersHandler extends TextWebSocketHandler {
         return null;
 
     }
-
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

@@ -48,9 +48,8 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             <button class=".btn" id="join_room" style="margin-top: 15px" onclick="join_a_room()"> Join a Room </button>
             <button class=".btn" id="matchmaking" style="margin-top: 15px" onclick="action_matchmaking()"> Matchmaking </button>
             <button class=".btn" id="chat" style="margin-top: 15px" onclick="enter_chat()"> Chat </button>
+            <button class=".btn" id="leaderboard_id" style="margin-top: 15px" onclick=""> Leaderboard </button>
         </div>
-
-
     </div>
 
     <!-- createRoom and JoinRoom-->
@@ -386,6 +385,13 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             <button class=".btn" id="btnMsg" onclick="action_chat_msg()">Send</button>
         </div>
     </div>
-
 </body>
 </html>
+
+<!-- Game status. Pos: right beneath game status -->
+<div class="col-md-3" id="game_status_id" style="display: none">
+    <div id="console_status_id"></div>
+    <div id="div_Chat_game_status">
+        <input type="text" id="msg_game_status_id">
+    </div>
+</div>

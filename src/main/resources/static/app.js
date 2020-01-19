@@ -182,6 +182,18 @@ function action_matchmaking(){
         // game.open(); fault here
     }
 }
+/*Updates game status msges*/
+function handle_game_status(msg){
+
+
+
+
+
+
+}
+
+
+
 
 /*weSelectTheChat*/
 function enter_chat(){
@@ -316,6 +328,7 @@ class checkers{
 }
 
 var chatbox_logs = {};
+var gameStatus_logs = {};
 
 chatbox_logs.log = (function (msg) {
     var chatbox = document.getElementById("console_id");
@@ -331,6 +344,22 @@ chatbox_logs.log = (function (msg) {
     }
     chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
 });
+
+gameStatus_logs.log = (function (msg) {
+    var gameStatus = document.getElementById("console_status_id");
+    var p_msg = document.createElement('p');
+    p_msg.style.wordWrap = 'break-word';
+    p_msg.innerHTML = msg;
+    gameStatus.appendChild(p_msg);
+
+    //optimise the chat box
+    while(gameStatus.childNodes.length > 20){
+        //remove to keep chat in place
+        gameStatus.removeChild(gameStatus.firstChild);//removes the top element
+    }
+    gameStatus.scrollTop = gameStatus.scrollHeight;//scrolls it to height measurement to adjust chatbox
+});
+
 
 //A game class
 class Game {
@@ -590,8 +619,8 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
         user_action = "initialize";
-        this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
-        //        this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");https://springboot21.herokuapp.com/
+        // this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
+           this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
 
         /*startTheConnection*/
         this.socket.onopen = () => {
