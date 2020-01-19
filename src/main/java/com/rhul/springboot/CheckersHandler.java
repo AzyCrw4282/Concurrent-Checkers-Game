@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONException;//should be fixed
+
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -32,8 +33,6 @@ public class CheckersHandler extends TextWebSocketHandler {
     Executor executor = Executors.newFixedThreadPool(20);
     String cur_plyr = null;
     int piece_index = 0;
-    @Autowired
-//    Bugsnag bugsnag = new Bugsnag("58b3b400437ffde6119c14c6f0b358a8", true);
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
