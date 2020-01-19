@@ -60,7 +60,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                               }
 
                               int player_id = game.player_ids.getAndIncrement();
-                              Player plyr = new Player(player_id,"player",session);
+                              Player plyr = new Player(player_id,json.getString("plyr_name"),session);
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);
 

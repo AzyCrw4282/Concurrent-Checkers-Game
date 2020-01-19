@@ -4,7 +4,7 @@
 /*
 I have use this as reference. , though most of the code are changed.
  */
-var user;
+var user_name;
 var room_value;
 var room_action;
 var difficulty;
@@ -85,7 +85,7 @@ $(document).ready(function(){
 
 function enterName(){
 
-    user = $("#id_name_value").val();//gets users name
+    user_name = $("#id_name_value").val();//gets users name
     // room_value = $("#rm_nm_value").val();
     // room_action = "create_room";
 
@@ -215,12 +215,18 @@ function enter_game_room(){
     document.body.style.backgroundImage = "none";
     document.getElementById("body_id").style.backgroundColor = "#ffffff";
     document.getElementById('div_id_room_settings').style.display = "none";
+    //game 1
     document.getElementById('table').style.display = "block";
     document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('table').style.display = "block";
     document.getElementById('table2').style.display = "block";
     document.getElementById('game_status').style.display = "block";
     document.getElementById('game_status2').style.display = "block";
+    //game 2
+    document.getElementById('g2_table').style.display = "block";
+    document.getElementById('game_status_id').style.display = "block";
+    document.getElementById('g2_table2').style.display = "block";
+    document.getElementById('g2_game_status').style.display = "block";
+    document.getElementById('g2_game_status2').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
     if (room_value === undefined) {
@@ -342,6 +348,7 @@ chatbox_logs.log = (function (msg) {
 });
 
 gameStatus_logs.log = (function (msg) {
+    if (msg === undefined) msg = "Game Status will appear below \n-----------------------------";
     var gameStatus = document.getElementById("console_status_id");
     var p_msg = document.createElement('p');
     p_msg.style.wordWrap = 'break-word';
@@ -684,7 +691,7 @@ class Game {
                     break;
 
                 case "game_status_logs":
-                    gameStatus_logs.log(packet.msg);
+                    gameStatus_logs.log(packet.data);
                     break;
                 case 'move_attack':
                     console.log("make the move");
@@ -813,7 +820,7 @@ class Game {
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
     //fix error on this
     open() { //
-        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
+        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name};
         var json_str=JSON.stringify(msg);
         this.socket.send(json_str);
 

@@ -47,6 +47,16 @@ which most have been adapted and changes to fit my game.
     border-radius: 2%;
     font-family: myFont2;
 }
+
+#game_status_id{
+    border: 2px solid #383838;
+    height: 480px;
+    width: 400px;
+    /*margin-left: 3%;*/
+    border-radius: 2%;
+    font-family: myFont2;
+}
+
 #console_id{
     overflow-y: scroll;
     height: 90%;

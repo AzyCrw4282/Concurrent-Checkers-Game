@@ -37,7 +37,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
     <div class="row">
         <div class="col-md-4" id="div_id_name" >
             <img src="logo.png" style="position: relative;left: 125px;">
-            <p id="id_name">Enter your name</p>
+            <p id="id_name">Enter a unique name to identify your self</p>
             <input id="id_name_value">
             <button class=".btn" id="button1" onclick="enterName()">Enter Name</button>
         </div>
@@ -390,7 +390,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
     <div class="row">
         <!--Game 1-->
-        <div class="col-lg-4 col-md-4">
+        <div class="col-lg-4 col-md-4" style="margin-top: 20px;">
 
             <!-- These 2 are set for indexing of classes starting at 1-->
             <div class="checker white_checker" style="display:none"> </div>
@@ -541,10 +541,9 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
                     <button class=".btn" id="g2_cancelar" onclick="cancel_game_btn()"> Cancel </button>
                 </div>
             </div>
-
         </div>
         <!--Game 2-->
-        <div class="col-lg-4 col-md-4">
+        <div class="col-lg-4 col-md-4" style="margin-top: 20px;">
             <!-- code for the second game -->
             <div class="checker white_checker2" style="display:none"> </div>
             <div class="checker black_checker2" style="display:none"> </div>
@@ -692,9 +691,6 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
         <!-- Game status Id -->
         <div class="col-md-3" id="game_status_id" style="display: none">
             <div id="console_status_id"></div>
-            <div id="div_Chat_game_status">
-                <input type="text" id="msg_game_status_id">
-            </div>
         </div>
     </div>
 
