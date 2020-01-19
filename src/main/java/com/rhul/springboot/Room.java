@@ -46,11 +46,11 @@ public class Room {
             else {
 
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
-
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
                     for (Player p : players_hm.values()) {
                         System.out.println("players in room :" + p.getId());
+                        apply_game_status(this,p.getName());
                     }
                     return true;
 
@@ -62,7 +62,6 @@ public class Room {
             BugsnagConfig.bugsnag().notify(new RuntimeException("Error with semaphore permits acquiring"));
             return  false;
         }
-
     }
 
     public synchronized void apply_to_room_users(String msg,Room rm, Player player){
@@ -93,6 +92,23 @@ public class Room {
                     }
                 }
             }
+        }
+    }
+
+    //Method to update game_status on the player's that are present in the room
+    public synchronized void apply_game_status(Room rm,String msg){
+
+        for (Player plyr : rm.getPlayers_hm().values()){
+            try {
+                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined\"}",msg);
+                plyr.sendMessage(new_msg);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying game status"));
+                remove_player_from_room(plyr);
+            }
+
         }
     }
 }

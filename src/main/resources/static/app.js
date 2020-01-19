@@ -188,11 +188,7 @@ function handle_game_status(msg){
 
 
 
-
-
 }
-
-
 
 
 /*weSelectTheChat*/
@@ -685,6 +681,10 @@ class Game {
 
                 case "chat":
                     chatbox_logs.log(packet.msg);
+                    break;
+
+                case "game_status_logs":
+                    gameStatus_logs.log(packet.msg);
                     break;
                 case 'move_attack':
                     console.log("make the move");
