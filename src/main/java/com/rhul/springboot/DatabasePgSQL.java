@@ -2,10 +2,7 @@ package com.rhul.springboot;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**This class is used to initialize, add remove data from remote heroku db.
  * @Author Azky
@@ -24,20 +21,32 @@ public class DatabasePgSQL {
 
     public static void fetch_all_rows() throws SQLException {
         Statement stmt = cn.createStatement();
-        stmt.executeUpdate("SELECT * FROM leaderboard LIMIT 10");
+//        stmt.executeUpdate("SELECT * FROM leaderboard LIMIT 10");
+        ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard LIMIT 10");
+
+        //Add it to a 2d array method and send it to user
+
+        while (rs.next()){
+
+
+
+
+        }
 
 
     }
 
     public static void create_table() throws SQLException{
         Statement stmt = cn.createStatement();
-        stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) ,gamesCompleted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");
+        stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) ,gamesCompeted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");
     }
 
 
 
-    public static void add_rows(){
+    public static void add_rows()throws SQLException{
         Statement stmt = cn.createStatement();
+        stmt.executeUpdate("");
+
 
 
     }
@@ -49,7 +58,8 @@ public class DatabasePgSQL {
 
     }
 
-    public static void change_cell_value(){
+//requires user id to update a cell for that given row
+    public static void update_cell(String id){
 
 
 
