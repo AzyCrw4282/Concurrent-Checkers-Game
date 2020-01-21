@@ -48,8 +48,42 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             <button class=".btn" id="join_room" style="margin-top: 15px" onclick="join_a_room()"> Join a Room </button>
             <button class=".btn" id="matchmaking" style="margin-top: 15px" onclick="action_matchmaking()"> Matchmaking </button>
             <button class=".btn" id="chat" style="margin-top: 15px" onclick="enter_chat()"> Chat </button>
-            <button class=".btn" id="leaderboard_id" style="margin-top: 15px" onclick=""> Leaderboard </button>
+            <button class=".btn" id="leaderboard_id" style="margin-top: 15px" onclick="show_leaderboard()"> Leaderboard </button>
         </div>
+
+
+        <!--Only one interface of leaderboard/chat can be displayed at any time -->
+        <div class="col-md-3" id="leaderboard_div_id" style="display: none">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Games Competed</th>
+                    <th scope="col">Win Percentage</th>
+                    <th scope="col">Longest Win Streak</th>
+                    <th scope="col">Game Ranking</th>
+                </tr>
+                <!--                c_game(pk(user_id),Games Competed, games_win%, biggest_win_streak,current_win_streak, game Ranking-> Veteran, begineer, Hero, GrandMaster-->
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Mark</td>
+                    <td>128</td>
+                    <td>58%</td>
+                    <td>14</td>
+                    <td>GrandMaster</td>
+                </tr>
+                <tr>
+                    <td>Mark</td>
+                    <td>128</td>
+                    <td>58%</td>
+                    <td>14</td>
+                    <td>GrandMaster</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <!-- createRoom and JoinRoom-->

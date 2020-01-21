@@ -138,6 +138,14 @@ function join_selected_room(room_id){
     enter_game_room();
 }
 
+function update_leaderboard(){
+
+
+
+
+}
+
+
 
 function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
@@ -186,19 +194,35 @@ function action_matchmaking(){
 function handle_game_status(msg){
 
 
+}
 
+function show_leaderboard(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+        return
+    }
+
+    lb_div.style.display = "block";
+    lb_div.style.left = "-200px";
+    // document.getElementById('leaderboard_div_id').style.top = "-565px";
+    lb_div.style.marginTop = "10%";
 
 }
 
-
 /*weSelectTheChat*/
 function enter_chat(){
+    chat_div = document.getElementById("chat_div_id");
+    if (chat_div.style.display === "block"){
+        chat_div.style.display = "none";
+        return
+    }
 
-    document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('chat_div_id').style.left = "-200px";
-    document.getElementById('chat_div_id').style.top = "-565px";
-    document.getElementById('chat_div_id').style.marginLeft = "100px";
-    document.getElementById('console_id').style.height = "400px";
+    chat_div.style.display = "block";
+    chat_div.style.left = "-200px";
+    chat_div.style.top = "-565px";
+    chat_div.style.marginLeft = "100px";
+    chat_div.style.height = "400px";
 
     chat =  true;
     var enter_chat = {"type": "enter_chat_lobby"};
@@ -671,7 +695,6 @@ class Game {
                     break;
 
                 case "room_players_data":
-
                     for (var i=0;i<packet.data.length;i++){
                         update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active);
                     }
@@ -807,8 +830,14 @@ class Game {
                     }
                     //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
+
+                case "leaderboard_resp":
+                    //method call to update the fetched rows
+                    update_leaderboard();
+                    console.log("leaderboard updated");
+                    break;
             }
-        }
+        };
 
         /*closeTheConnection*/
         this.socket.onclose = () => {
