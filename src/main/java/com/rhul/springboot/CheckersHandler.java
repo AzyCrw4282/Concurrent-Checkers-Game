@@ -254,7 +254,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "ping":
-
                     break;
 
                 case "game_finish":

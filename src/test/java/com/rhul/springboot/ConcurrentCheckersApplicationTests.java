@@ -59,9 +59,6 @@ public class ConcurrentCheckersApplicationTests {
     @Test
     public void test_join() throws Exception {
 
-
-
-
         CyclicBarrier c_barrier = new CyclicBarrier(4);
         Executor execut = Executors.newFixedThreadPool(4);
 
