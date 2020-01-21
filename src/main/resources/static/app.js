@@ -114,6 +114,10 @@ function action_chat_msg(){
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
     room_action = "create_room";
     /*we show the elements to create room and hide what we don't need*/
     document.getElementById('div_id_menu').style.display = "none";
@@ -126,6 +130,10 @@ function create_room(){
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
     room_action = "join_room";
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
@@ -184,6 +192,10 @@ function getDimension (){
 
 /*weJoinARandomRoom*/
 function action_matchmaking(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
     document.getElementById('btnPrinc').style.display = "none";
     document.getElementById('canvas').style.display = "block";
     document.getElementById('divChat').style.display = "none";
@@ -228,6 +240,11 @@ function show_leaderboard(){
 /*weSelectTheChat*/
 function enter_chat(){
     chat_div = document.getElementById("chat_div_id");
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
+
     if (chat_div.style.display === "block"){
         chat_div.style.display = "none";
         return
