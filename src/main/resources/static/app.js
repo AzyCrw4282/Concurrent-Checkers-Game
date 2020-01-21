@@ -191,7 +191,7 @@ function getDimension (){
 }
 
 /*weJoinARandomRoom*/
-function action_matchmaking(){
+function join_matchmaking(){
     lb_div = document.getElementById("leaderboard_div_id");
     if (lb_div.style.display === "block"){
         lb_div.style.display = "none";
