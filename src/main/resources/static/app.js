@@ -189,8 +189,7 @@ function getDimension (){
     windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 }
-
-/*weJoinARandomRoom*/
+//Allocate user to a random room without picking any specific room. The algorithm would simple check for rooms and find the best one
 function join_matchmaking(){
     lb_div = document.getElementById("leaderboard_div_id");
     if (lb_div.style.display === "block"){
