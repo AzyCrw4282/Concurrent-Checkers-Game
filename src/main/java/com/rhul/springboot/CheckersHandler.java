@@ -30,6 +30,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     private Checkers checks_obj;
     private boolean joining =false;
     CheckersGame game = new CheckersGame();
+    DatabasePgSQL dbpgsql = new DatabasePgSQL();
     Executor executor = Executors.newFixedThreadPool(20);
     String cur_plyr = null;
     int piece_index = 0;
@@ -267,8 +268,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                     game.player_ids.set(1);
                     break;
 
-                case "show_leader_bd":
-
+                case "req_leaderboard":
+                    dbpgsql.fetch_all_rows(session);
                     break;
             }
 

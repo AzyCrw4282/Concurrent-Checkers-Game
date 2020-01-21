@@ -12,10 +12,8 @@ import java.sql.*;
 
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
 public class PostgresDbTest {
-    Connection cn = null;
+    private Connection cn = null;
 
     @Before
     public void getConnection() throws URISyntaxException, SQLException {
@@ -36,20 +34,29 @@ public class PostgresDbTest {
 
     @Test
     public void insert_data() throws SQLException {
-        String expected_out = "";
         Statement stmt = cn.createStatement();
-        stmt.executeUpdate("DROP TABLE IF EXISTS ticks");
-        stmt.executeUpdate("CREATE TABLE ticks (tick timestamp)");
-        stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-        ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-        while (rs.next()) {
-            System.out.println("Read from DB: " + rs.getTimestamp("tick"));
-            expected_out +=  rs.getTimestamp("tick");
-        }
-        assertTrue("Insert and fetch data validity",expected_out != "");//check something has been fetched
+        stmt.executeUpdate("DROP TABLE IF EXISTS leaderboard");
+
+        String sql = "CREATE TABLE leaderboard " +
+                "(userid VARCHAR(255) not NULL, " +
+                " gamescompeted INTEGER, " +
+                " winperc VARCHAR(255), " +
+                " longwinstreak INTEGER, " +
+                " gamerank VARCHAR(255), " +
+                " PRIMARY KEY ( userid ))";
+        stmt.executeUpdate(sql);
+//        stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) NOT NULL,gamesCompeted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('Meking',28,'57%',7,'Hero')");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('user4334',52,'63%',9,'Veteran')");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('tryingBe',183,'57%',15,'Grand Master')");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('UltimatePlayer',5,'40%',2,'Newbie')");
+
+//        assertTrue("Insert and fetch data validity",expected_out != "");//check something has been fetched
 
     }
-
+//        stmt.executeUpdate("CREATE TABLE ticks (tick timestamp )");
+//        stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+//        ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
 
 
 

@@ -18,7 +18,8 @@ var player_game;//1/2
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
-var row_counter =0;
+var room_row_counter =0;
+var leaderbd_row_counter = 0;
 //first game
 var square_class = document.getElementsByClassName("square");
 var square_class2 = document.getElementsByClassName("square2");
@@ -138,21 +139,32 @@ function join_selected_room(room_id){
     enter_game_room();
 }
 
-function update_leaderboard(){
-
-
-
-
+function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
+    //apply changes  below for correct table
+    var table =document.getElementById("leaderboard_data");
+    var row = table.insertRow(leaderbd_row_counter);
+    var cell_id = row.insertCell(0);
+    cell_id.innerHTML = user_id;
+    var cell_i = row.insertCell(1);
+    cell_i.innerHTML = games_competed;
+    cell_i = row.insertCell(2);
+    cell_i.innerHTML = win_per;
+    cell_i = row.insertCell(3);
+    cell_i.innerHTML = win_streak;
+    cell_i = row.insertCell(4);
+    cell_i.innerHTML = rank;
+    // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
+    // cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
+    leaderbd_row_counter +=1;
 }
 
 
 
 function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
-    console.log("144");
     var game_room = ""+name;
     var table =document.getElementById("room_players_data");
-    var row = table.insertRow(row_counter);
+    var row = table.insertRow(room_row_counter);
     var cell_id = row.insertCell(0);
     cell_id.innerHTML = id;
     var cell_i = row.insertCell(1);
@@ -162,7 +174,7 @@ function update_room_players(id,name,num_of_players){
     cell_i = row.insertCell(3);
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
     cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
-    row_counter +=1;
+    room_row_counter +=1;
 }
 
 function getDimension (){
@@ -207,6 +219,9 @@ function show_leaderboard(){
     lb_div.style.left = "-200px";
     // document.getElementById('leaderboard_div_id').style.top = "-565px";
     lb_div.style.marginTop = "10%";
+
+    var enter_chat = {"type": "req_leaderboard"};
+    start_game(enter_chat);
 
 }
 
@@ -700,6 +715,14 @@ class Game {
                     }
                     break;
 
+                case "leaderboard_resp":
+                    //method call to update the fetched rows
+                    for (var i=0;i<packet.data.length;i++){
+                        update_leaderboard(packet.data[i].user_id,packet.data[i].games_competed,packet.data[i].win_percent,packet.data[i].long_win_streak,packet.data[i].game_ranking);
+                    }
+                    console.log("leaderboard updated");
+                    break;
+
                 case 'remove_road':
                     var up_left = packet.up_left;
                     var up_right = packet.up_right;
@@ -831,11 +854,7 @@ class Game {
                     //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
 
-                case "leaderboard_resp":
-                    //method call to update the fetched rows
-                    update_leaderboard();
-                    console.log("leaderboard updated");
-                    break;
+
             }
         };
 

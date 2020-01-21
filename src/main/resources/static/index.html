@@ -54,7 +54,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
         <!--Only one interface of leaderboard/chat can be displayed at any time -->
         <div class="col-md-3" id="leaderboard_div_id" style="display: none">
-            <table class="table">
+            <table class="table table-bordered">
                 <thead>
                 <tr>
                     <th scope="col">User</th>
@@ -63,27 +63,12 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
                     <th scope="col">Longest Win Streak</th>
                     <th scope="col">Game Ranking</th>
                 </tr>
-                <!--                c_game(pk(user_id),Games Competed, games_win%, biggest_win_streak,current_win_streak, game Ranking-> Veteran, begineer, Hero, GrandMaster-->
+                <!-- c_game(pk(user_id),Games Competed, games_win%, biggest_win_streak,current_win_streak, game Ranking-> Veteran, begineer, Hero, GrandMaster-->
                 </thead>
-                <tbody>
-                <tr>
-                    <td>Mark</td>
-                    <td>128</td>
-                    <td>58%</td>
-                    <td>14</td>
-                    <td>GrandMaster</td>
-                </tr>
-                <tr>
-                    <td>Mark</td>
-                    <td>128</td>
-                    <td>58%</td>
-                    <td>14</td>
-                    <td>GrandMaster</td>
-                </tr>
+                <tbody id = "leaderboard_data">
                 </tbody>
             </table>
         </div>
-
     </div>
 
     <!-- createRoom and JoinRoom-->
