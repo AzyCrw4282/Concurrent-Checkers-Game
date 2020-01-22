@@ -4,15 +4,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.json.JSONException;
+import org.json.JSONException;//should be fixed
+
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.json.JSONObject;
-import java.util.concurrent.locks.Lock;
+
 import java.util.concurrent.locks.ReentrantLock;
 
 /**The main handler class that's responsible for communicating with the client and triggering server command.
@@ -20,7 +20,6 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 
 public class CheckersHandler extends TextWebSocketHandler {
-
 
 
     private static final String game_attribute = "checkers";
@@ -31,6 +30,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     private Checkers checks_obj;
     private boolean joining =false;
     CheckersGame game = new CheckersGame();
+    DatabasePgSQL dbpgsql = new DatabasePgSQL();
     Executor executor = Executors.newFixedThreadPool(20);
     String cur_plyr = null;
     int piece_index = 0;
@@ -47,12 +47,10 @@ public class CheckersHandler extends TextWebSocketHandler {
 
             switch (type){
 
-
                 case "user":
 
                     Runnable threads_area = () -> {
                           try{
-
                               String msg;
                               System.out.println("waiting for lock");
                               Lk.lock();
@@ -63,7 +61,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                               }
 
                               int player_id = game.player_ids.getAndIncrement();
-                              Player plyr = new Player(player_id,"player",session);
+                              Player plyr = new Player(player_id,json.getString("plyr_name"),session);
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);
 
@@ -172,6 +170,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                           } catch (Exception ex) {
                               ex.printStackTrace();
+                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in joinig room"));
                           }
                     };
                   executor.execute(threads_area);
@@ -256,7 +255,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "ping":
-
                     break;
 
                 case "game_finish":
@@ -269,10 +267,15 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "update_player_id":
                     game.player_ids.set(1);
                     break;
+
+                case "req_leaderboard":
+                    dbpgsql.fetch_all_rows(session);
+                    break;
             }
 
         } catch (Exception e){
             System.err.println("Exception processing message: " + message.getPayload());
+            BugsnagConfig.bugsnag().notify(new RuntimeException("F/e message cannot be processed/resovled error"));
             e.printStackTrace(System.err);
         }
 
@@ -289,8 +292,6 @@ public class CheckersHandler extends TextWebSocketHandler {
         return null;
 
     }
-
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {

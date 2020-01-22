@@ -36,8 +36,8 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 <body id="body_id">
     <div class="row">
         <div class="col-md-4" id="div_id_name" >
-            <img src="logo.png" style="position: relative;left: 175px;">
-            <p id="id_name">Enter your name</p>
+            <img src="logo.png" style="position: relative;left: 125px;">
+            <p id="id_name">Enter a unique name to identify your self. The King awaits!!!</p>
             <input id="id_name_value">
             <button class=".btn" id="button1" onclick="enterName()">Enter Name</button>
         </div>
@@ -46,11 +46,29 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
         <div class="col-md-4 btn-group" id="div_id_menu">
             <button class=".btn" id="create_room" style="margin-top: 15px" onclick="create_room()">Create a Room  </button>
             <button class=".btn" id="join_room" style="margin-top: 15px" onclick="join_a_room()"> Join a Room </button>
-            <button class=".btn" id="matchmaking" style="margin-top: 15px" onclick="action_matchmaking()"> Matchmaking </button>
+            <button class=".btn" id="matchmaking" style="margin-top: 15px" onclick="join_matchmaking()"> Matchmaking </button>
             <button class=".btn" id="chat" style="margin-top: 15px" onclick="enter_chat()"> Chat </button>
+            <button class=".btn" id="leaderboard_id" style="margin-top: 15px" onclick="show_leaderboard()"> Leaderboard </button>
         </div>
 
 
+        <!--Only one interface of leaderboard/chat can be displayed at any time -->
+        <div class="col-md-3" id="leaderboard_div_id" style="display: none">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">User</th>
+                    <th scope="col">Games Competed</th>
+                    <th scope="col">Win Percentage</th>
+                    <th scope="col">Longest Win Streak</th>
+                    <th scope="col">Game Ranking</th>
+                </tr>
+                <!-- c_game(pk(user_id),Games Competed, games_win%, biggest_win_streak,current_win_streak, game Ranking-> Veteran, begineer, Hero, GrandMaster-->
+                </thead>
+                <tbody id = "leaderboard_data">
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- createRoom and JoinRoom-->
@@ -67,7 +85,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             <thead>
                 <tr>
                     <th scope="col">Game Number</th>
-                    <th scope="col">Game Room Name</th>
+                    <th scope="col">Room Name</th>
                     <th scope="col">Players Active</th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -76,316 +94,627 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             </tbody>
         </table>
     </div>
+<!--    For game creation below, consider chaning it to dynamic creation-->
+    <div class="row">
+        <!--Game 1-->
+        <div class="col-lg-4 col-md-4">
 
-<!--Game 1-->
-    <div class="col-lg-4 col-md-4">
+            <!-- These 2 are set for indexing of classes starting at 1-->
+            <div class="checker white_checker" style="display:none"> </div>
+            <div class="checker black_checker" style="display:none"> </div>
 
-        <!-- These 2 are set for indexing of classes starting at 1-->
-        <div class="checker white_checker" style="display:none"> </div>
-        <div class="checker black_checker" style="display:none"> </div>
+            <!-- 1st game  canvas will not be used, instead a div style method to be used. First one defined below-->
+            <div class="square" style="display: none" id ="ht"> </div>
+            <div class="black_background" id="black_background"> </div>
 
-        <!-- 1st game  canvas will not be used, instead a div style method to be used. First one defined below-->
-        <div class="square" style="display: none" id ="ht"> </div>
-        <div class="black_background" id="black_background"> </div>
+            <div class="score" id="score">
+                <br>
+            </div>
+            <div class="table" style = "display: none" id="table">
 
-        <div class="score" id="score">
-            <br>
-        </div>
-        <div class="table" style = "display: none" id="table">
-
-            <div class="checker white_checker"></div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-            <div class="checker white_checker"> </div>
-
-
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
-            <div class="checker black_checker"> </div>
+                <div class="checker white_checker"></div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
 
 
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
 
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="clear_float"> </div>
 
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="square white_square"> </div>
-            <div class="square black_square"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
-        </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-        <div class="game_status" id = "game_status" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none">
-
-            <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
-            <hr>
-
-            <div class="prev_state">
-                <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
             </div>
 
-            <!--alternate text on player 1/2-->
-            <div class="cur_player" style="margin-left: 175px" >
-                <img class="cur_player" id="cur_player_img_id" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+            <div class="game_status" id = "game_status" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none">
+
+                <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
+                <hr>
+
+                <div class="prev_state">
+                    <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+
+                </div>
+
+                <!--alternate text on player 1/2-->
+                <div class="cur_player" style="margin-left: 175px" >
+                    <img class="cur_player" id="cur_player_img_id" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+                </div>
+
+            </div>
+
+            <div class="game_options" >
+                <div id="start_div" style="display:none;">
+                    <button class=".btn" id="button5" onclick="start_game_btn()">Start</button>
+                </div>
+
+                <div id="cancel_div" style="display:none;">
+                    <button class=".btn" id="cancelar" onclick="cancel_game_btn()"> Cancel </button>
+                </div>
             </div>
 
         </div>
+        <!--Game 2-->
+        <div class="col-lg-4 col-md-4">
+            <!-- code for the second game -->
+            <div class="checker white_checker2" style="display:none"> </div>
+            <div class="checker black_checker2" style="display:none"> </div>
 
-        <div class="game_options" >
-            <div id="start_div" style="display:none;">
-                <button class=".btn" id="button5" onclick="start_game_btn()">Start</button>
+
+            <div class="square2" style="display: none" id ="ht2"> </div>
+            <div class="black_background2" id="black_background2"> </div>
+
+            <div class="table2" style = "display: none" id="table2">
+
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2" style="display: none"> </div>
+
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
             </div>
 
-            <div id="cancel_div" style="display:none;">
-                <button class=".btn" id="cancelar" onclick="cancel_game_btn()"> Cancel </button>
+            <div class="game_status" id = "game_status2" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none;margin-top:22px ">
+                <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
+                <hr>
+
+                <div class="prev_state">
+                    <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+
+                </div>
+
+                <!--alternate text on player 1/2-->
+                <div class="cur_player" style="margin-left: 175px" >
+                    <img class="cur_player" id="cur_player_img_id2" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+                </div>
+
+            </div>
+
+            <div class="game_options2" >
+                <div id="start_div2" style="display:none;">
+                    <button class=".btn" id="button25" onclick="start_game_btn2()">Start</button>
+                </div>
+
+                <div id="cancel_div2" style="display:none;">
+                    <button class=".btn" id="cancelar2" onclick="cancel_game_btn()"> Cancel </button>
+                </div>
             </div>
         </div>
-
+        <!-- Chat -->
+        <div class="col-md-3" id="chat_div_id" style="display: none">
+            <div id="console_id"></div>
+            <div id="div_Chat">
+                <input type="text" id="msg_id">
+                <button class=".btn" id="btnMsg" onclick="action_chat_msg()">Send</button>
+            </div>
+        </div>
     </div>
-<!--Game 2-->
-    <div class="col-lg-4 col-md-4">
-        <!-- code for the second game -->
-        <div class="checker white_checker2" style="display:none"> </div>
-        <div class="checker black_checker2" style="display:none"> </div>
+
+    <div class="row">
+        <!--Game 1-->
+        <div class="col-lg-4 col-md-4" style="margin-top: 20px;">
+
+            <!-- These 2 are set for indexing of classes starting at 1-->
+            <div class="checker white_checker" style="display:none"> </div>
+            <div class="checker black_checker" style="display:none"> </div>
+
+            <!-- 1st game  canvas will not be used, instead a div style method to be used. First one defined below-->
+            <div class="square" style="display: none" id ="g2_ht"> </div>
+            <div class="black_background" id="g2_black_background"> </div>
+
+            <div class="score" id="g2_score">
+                <br>
+            </div>
+            <div class="table" style = "display: none" id="g2_table">
+
+                <div class="checker white_checker"></div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
+                <div class="checker white_checker"> </div>
 
 
-        <div class="square2" style="display: none" id ="ht2"> </div>
-        <div class="black_background2" id="black_background2"> </div>
-
-        <div class="table2" style = "display: none" id="table2">
-
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-            <div class="checker white_checker2"> </div>
-
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2"> </div>
-            <div class="checker black_checker2" style="display: none"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
+                <div class="checker black_checker"> </div>
 
 
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="clear_float"> </div>
 
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="square2 white_square2"> </div>
-            <div class="square2 black_square2"> </div>
-            <div class="clear_float"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="square white_square"> </div>
+                <div class="square black_square"> </div>
+                <div class="clear_float"> </div>
 
+            </div>
+
+            <div class="game_status" id = "g2_game_status" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none">
+
+                <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
+                <hr>
+
+                <div class="prev_state">
+                    <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+
+                </div>
+
+                <!--alternate text on player 1/2-->
+                <div class="cur_player" style="margin-left: 175px" >
+                    <img class="cur_player" id="g2_cur_player_img_id" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+                </div>
+
+            </div>
+
+            <div class="game_options" >
+                <div id="g2_start_div" style="display:none;">
+                    <button class=".btn" id="g2_button5" onclick="start_game_btn()">Start</button>
+                </div>
+
+                <div id="g2_cancel_div" style="display:none;">
+                    <button class=".btn" id="g2_cancelar" onclick="cancel_game_btn()"> Cancel </button>
+                </div>
+            </div>
         </div>
+        <!--Game 2-->
+        <div class="col-lg-4 col-md-4" style="margin-top: 20px;">
+            <!-- code for the second game -->
+            <div class="checker white_checker2" style="display:none"> </div>
+            <div class="checker black_checker2" style="display:none"> </div>
 
-        <div class="game_status" id = "game_status2" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none;margin-top:22px ">
-            <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
-            <hr>
 
-            <div class="prev_state">
-                <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+            <div class="square2" style="display: none" id ="g2_ht2"> </div>
+            <div class="black_background2" id="g2_black_background2"> </div>
+
+            <div class="table2" style = "display: none" id="g2_table2">
+
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+                <div class="checker white_checker2"> </div>
+
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2"> </div>
+                <div class="checker black_checker2" style="display: none"> </div>
+
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="clear_float"> </div>
+
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="square2 white_square2"> </div>
+                <div class="square2 black_square2"> </div>
+                <div class="clear_float"> </div>
 
             </div>
 
-            <!--alternate text on player 1/2-->
-            <div class="cur_player" style="margin-left: 175px" >
-                <img class="cur_player" id="cur_player_img_id2" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+            <div class="game_status" id = "g2_game_status2" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none;margin-top:22px ">
+                <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
+                <hr>
+
+                <div class="prev_state">
+                    <i class="Large material-icons" style="font-size: 50px;float: left">navigate_before</i>
+
+                </div>
+
+                <!--alternate text on player 1/2-->
+                <div class="cur_player" style="margin-left: 175px" >
+                    <img class="cur_player" id="g2_cur_player_img_id2" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
+                </div>
             </div>
 
+            <div class="game_options2" >
+                <div id="g2_start_div2" style="display:none;">
+                    <button class=".btn" id="g2_button25" onclick="start_game_btn2()">Start</button>
+                </div>
+
+                <div id="g2_cancel_div2" style="display:none;">
+                    <button class=".btn" id="g2_cancelar2" onclick="cancel_game_btn()"> Cancel </button>
+                </div>
+            </div>
         </div>
-
-        <div class="game_options2" >
-            <div id="start_div2" style="display:none;">
-                <button class=".btn" id="button25" onclick="start_game_btn2()">Start</button>
-            </div>
-
-            <div id="cancel_div2" style="display:none;">
-                <button class=".btn" id="cancelar2" onclick="cancel_game_btn()"> Cancel </button>
-            </div>
+        <!-- Game status Id -->
+        <div class="col-md-3" id="game_status_id" style="display: none">
+            <div id="console_status_id"></div>
         </div>
     </div>
-<!-- Chat -->
-    <div class="col-md-3" id="chat_div_id" style="display: none">
-        <div id="console_id"></div>
-        <div id="div_Chat">
-            <input type="text" id="msg_id">
-            <button class=".btn" id="btnMsg" onclick="action_chat_msg()">Send</button>
-        </div>
-    </div>
+
 
 </body>
 </html>
+
+<!-- Game status. Pos: right beneath game status -->

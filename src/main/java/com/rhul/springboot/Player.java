@@ -25,7 +25,6 @@ public class Player {
     public static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
 
 
-
     private final int id;
     private final String name;
     private Room room;
@@ -51,19 +50,18 @@ public class Player {
         this.session = session;
     }
 
-
     public synchronized void sendMessage(String msg){
         try{
             if(this.session.isOpen())
                 this.session.sendMessage(new TextMessage(msg));
         }catch (Exception e){
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Error countered in session send message"));
             e.printStackTrace();
         }
 
     }
 
     public Checkers initialize(){
-
 
         System.out.println("game initializer");
 
@@ -142,16 +140,12 @@ public class Player {
 
     public void show_moves(){
 
-
         if (this.checks_obj == null){
             checks_obj = CheckersGame.get_game_obj(this);
         }
 
-
         Room rm = game.get_room(room_value);
         int piece_index = index;
-        System.out.println("129");
-
 
         if (this.colour.equals("white")) {
             cur_plyr = "white";

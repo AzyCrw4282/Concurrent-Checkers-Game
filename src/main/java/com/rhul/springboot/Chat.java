@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /** -> Methods to include
  *
- * broadecast msg->for all the existing snakes send a msg
+ * broadecast msg->for all the existing snakes send a msgs
  *
  *
  */
@@ -29,6 +29,7 @@ public class Chat  {
 
         }catch (Exception e){
             e.printStackTrace();
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Broadcasting message error"));
         }
     }
 
@@ -42,6 +43,7 @@ public class Chat  {
 
         }catch (Exception e){
             e.printStackTrace();
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Global broadcast message error"));
         }
     }
 

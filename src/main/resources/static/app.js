@@ -4,7 +4,7 @@
 /*
 I have use this as reference. , though most of the code are changed.
  */
-var user;
+var user_name;
 var room_value;
 var room_action;
 var difficulty;
@@ -18,6 +18,8 @@ var player_game;//1/2
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
+var room_row_counter =0;
+var leaderbd_row_counter = 0;
 //first game
 var square_class = document.getElementsByClassName("square");
 var square_class2 = document.getElementsByClassName("square2");
@@ -84,7 +86,7 @@ $(document).ready(function(){
 
 function enterName(){
 
-    user = $("#id_name_value").val();//gets users name
+    user_name = $("#id_name_value").val();//gets users name
     // room_value = $("#rm_nm_value").val();
     // room_action = "create_room";
 
@@ -112,6 +114,10 @@ function action_chat_msg(){
 
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
     room_action = "create_room";
     /*we show the elements to create room and hide what we don't need*/
     document.getElementById('div_id_menu').style.display = "none";
@@ -124,6 +130,10 @@ function create_room(){
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
     room_action = "join_room";
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
@@ -137,32 +147,54 @@ function join_selected_room(room_id){
     enter_game_room();
 }
 
+function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
+    //apply changes  below for correct table
+    var table =document.getElementById("leaderboard_data");
+    var row = table.insertRow(leaderbd_row_counter);
+    var cell_id = row.insertCell(0);
+    cell_id.innerHTML = user_id;
+    var cell_i = row.insertCell(1);
+    cell_i.innerHTML = games_competed;
+    cell_i = row.insertCell(2);
+    cell_i.innerHTML = win_per;
+    cell_i = row.insertCell(3);
+    cell_i.innerHTML = win_streak;
+    cell_i = row.insertCell(4);
+    cell_i.innerHTML = rank;
+    // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
+    // cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
+    leaderbd_row_counter +=1;
+}
+
+
 
 function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
-    console.log("137");
     var game_room = ""+name;
     var table =document.getElementById("room_players_data");
-    var row = table.insertRow(id-1);
+    var row = table.insertRow(room_row_counter);
     var cell_id = row.insertCell(0);
     cell_id.innerHTML = id;
     var cell_i = row.insertCell(1);
     cell_i.innerHTML = name;
     cell_i = row.insertCell(2);
-    cell_i.innerHTML = num_of_players + "/4";
+    cell_i.innerHTML = num_of_players + "/8";
     cell_i = row.insertCell(3);
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
     cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
-
+    room_row_counter +=1;
 }
 
 function getDimension (){
     windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 }
-
-/*weJoinARandomRoom*/
-function action_matchmaking(){
+//Allocate user to a random room without picking any specific room. The algorithm would simple check for rooms and find the best one
+function join_matchmaking(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
     document.getElementById('btnPrinc').style.display = "none";
     document.getElementById('canvas').style.display = "block";
     document.getElementById('divChat').style.display = "none";
@@ -181,15 +213,47 @@ function action_matchmaking(){
         // game.open(); fault here
     }
 }
+/*Updates game status msges*/
+function handle_game_status(msg){
+
+
+}
+
+function show_leaderboard(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+        return
+    }
+
+    lb_div.style.display = "block";
+    lb_div.style.left = "-200px";
+    // document.getElementById('leaderboard_div_id').style.top = "-565px";
+    lb_div.style.marginTop = "10%";
+
+    var enter_chat = {"type": "req_leaderboard"};
+    start_game(enter_chat);
+
+}
 
 /*weSelectTheChat*/
 function enter_chat(){
+    chat_div = document.getElementById("chat_div_id");
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
 
-    document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('chat_div_id').style.left = "-200px";
-    document.getElementById('chat_div_id').style.top = "-565px";
-    document.getElementById('chat_div_id').style.marginLeft = "100px";
-    document.getElementById('console_id').style.height = "400px";
+    if (chat_div.style.display === "block"){
+        chat_div.style.display = "none";
+        return
+    }
+
+    chat_div.style.display = "block";
+    chat_div.style.left = "-200px";
+    chat_div.style.top = "-565px";
+    chat_div.style.marginLeft = "100px";
+    chat_div.style.height = "400px";
 
     chat =  true;
     var enter_chat = {"type": "enter_chat_lobby"};
@@ -206,12 +270,18 @@ function enter_game_room(){
     document.body.style.backgroundImage = "none";
     document.getElementById("body_id").style.backgroundColor = "#ffffff";
     document.getElementById('div_id_room_settings').style.display = "none";
+    //game 1
     document.getElementById('table').style.display = "block";
     document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('table').style.display = "block";
     document.getElementById('table2').style.display = "block";
     document.getElementById('game_status').style.display = "block";
     document.getElementById('game_status2').style.display = "block";
+    //game 2
+    document.getElementById('g2_table').style.display = "block";
+    document.getElementById('game_status_id').style.display = "block";
+    document.getElementById('g2_table2').style.display = "block";
+    document.getElementById('g2_game_status').style.display = "block";
+    document.getElementById('g2_game_status2').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
     if (room_value === undefined) {
@@ -315,6 +385,7 @@ class checkers{
 }
 
 var chatbox_logs = {};
+var gameStatus_logs = {};
 
 chatbox_logs.log = (function (msg) {
     var chatbox = document.getElementById("console_id");
@@ -330,6 +401,23 @@ chatbox_logs.log = (function (msg) {
     }
     chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
 });
+
+gameStatus_logs.log = (function (msg) {
+    if (msg === undefined) msg = "Game Status will appear below";
+    var gameStatus = document.getElementById("console_status_id");
+    var p_msg = document.createElement('p');
+    p_msg.style.wordWrap = 'break-word';
+    p_msg.innerHTML = msg;
+    gameStatus.appendChild(p_msg);
+
+    //optimise the chat box
+    while(gameStatus.childNodes.length > 20){
+        //remove to keep chat in place
+        gameStatus.removeChild(gameStatus.firstChild);//removes the top element
+    }
+    gameStatus.scrollTop = gameStatus.scrollHeight;//scrolls it to height measurement to adjust chatbox
+});
+
 
 //A game class
 class Game {
@@ -589,7 +677,8 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
         user_action = "initialize";
-        this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");
+        // this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
+           this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
 
         /*startTheConnection*/
         this.socket.onopen = () => {
@@ -637,10 +726,17 @@ class Game {
                     break;
 
                 case "room_players_data":
-
                     for (var i=0;i<packet.data.length;i++){
                         update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active);
                     }
+                    break;
+
+                case "leaderboard_resp":
+                    //method call to update the fetched rows
+                    for (var i=0;i<packet.data.length;i++){
+                        update_leaderboard(packet.data[i].user_id,packet.data[i].games_competed,packet.data[i].win_percent,packet.data[i].long_win_streak,packet.data[i].game_ranking);
+                    }
+                    console.log("leaderboard updated");
                     break;
 
                 case 'remove_road':
@@ -654,6 +750,10 @@ class Game {
 
                 case "chat":
                     chatbox_logs.log(packet.msg);
+                    break;
+
+                case "game_status_logs":
+                    gameStatus_logs.log(packet.data);
                     break;
                 case 'move_attack':
                     console.log("make the move");
@@ -769,8 +869,10 @@ class Game {
                     }
                     //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
+
+
             }
-        }
+        };
 
         /*closeTheConnection*/
         this.socket.onclose = () => {
@@ -782,7 +884,7 @@ class Game {
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
     //fix error on this
     open() { //
-        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
+        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name};
         var json_str=JSON.stringify(msg);
         this.socket.send(json_str);
 
