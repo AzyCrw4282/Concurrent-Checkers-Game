@@ -61,6 +61,23 @@ public class CheckersGame {
         }
         return rm_obj;
     }
+    //This method returns. This method prioritizes room in which there are odd players meaning when another joins a game can be started
+    //returns null, or in worst case room with even players
+    public String get_room_to_join(){
+        String rm_name = null;
+
+        for(ConcurrentHashMap.Entry<Integer,Room> entry : rooms_hm.entrySet()){
+            if (entry.getValue().getSmphore().availablePermits() % 2 == 1){
+                rm_name = entry.getValue().getRoom_name();
+                return rm_name;
+            }
+            else if(entry.getValue().getSmphore().availablePermits() % 2 == 0) {//even n players present
+                rm_name = entry.getValue().getRoom_name();
+            }
+        }
+        return rm_name;
+    }
+
 
     public static Checkers get_game_obj(Player plyr){
         int playr_id = plyr.getId();

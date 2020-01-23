@@ -24,7 +24,7 @@ public class Room {
     private boolean game_started;
 
     public Room(int id, String room_nm, Player plyr ){
-        this.room_id = id;
+        this.room_id = id;// we use player_id since its an auto incrementer
         this.room_name = room_nm;
         this.rm_owner = plyr;
         this.smphore = new Semaphore(4,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
