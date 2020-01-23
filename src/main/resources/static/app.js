@@ -53,6 +53,7 @@ var user_action;
 var user_action2;
 var modal_msg = document.getElementById("modal_message");
 var modal_btn_trigger = document.getElementById("modalBtnTrigger");
+
 $(document).ready(function(){
     //error with this function. may need to remove this
     // document.getElementById("body_id").src = "bkground.png";
@@ -199,10 +200,10 @@ function join_matchmaking(){
         lb_div.style.display = "none";
         chat_div.style.display = "none";
     }
-    document.getElementById('btnPrinc').style.display = "none";
-    document.getElementById('canvas').style.display = "block";
-    document.getElementById('divChat').style.display = "none";
-    document.getElementById('console').style.height = "90%";
+
+    // document.getElementById('canvas').style.display = "block";
+    // document.getElementById('divChat').style.display = "none";
+    // document.getElementById('console').style.height = "90%";
 
     room_action="MatchMaking";
     let msg_data = {"type" : "join_matchmaking","msg" : "N/A"};
@@ -839,6 +840,7 @@ class Game {
                         modal_msg.innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
                         modal_btn_trigger.click();
                         //join room process
+                        this.open();
 
                     }else{
                         modal_msg.innerHTML = "All rooms are full. Please create a room or manually join a room!";

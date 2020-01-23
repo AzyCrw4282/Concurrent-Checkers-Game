@@ -270,7 +270,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                         session.sendMessage(new TextMessage(mesg));
                     }
 
-
                     break;
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);
