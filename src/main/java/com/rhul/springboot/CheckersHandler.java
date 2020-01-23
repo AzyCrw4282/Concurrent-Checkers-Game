@@ -1,5 +1,7 @@
 package com.rhul.springboot;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -29,6 +31,7 @@ public class CheckersHandler extends TextWebSocketHandler {
     private WebSocketSession s;
     private Checkers checks_obj;
     private boolean joining =false;
+    private Queue matchmaking_queue = new LinkedList();
     CheckersGame game = new CheckersGame();
     DatabasePgSQL dbpgsql = new DatabasePgSQL();
     Executor executor = Executors.newFixedThreadPool(20);
@@ -53,7 +56,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                           try{
                               String msg;
                               System.out.println("waiting for lock");
-                              Lk.lock();
+
                               System.out.println("I am in");
 
                               if (game.player_ids.get()> 4){
@@ -70,7 +73,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                               System.out.println("multi threads running n: " + Thread.currentThread().getId() + " playerId: "+ player_id);
 
                              if (json.getString("room_action").equals("create_room")) {
-
+                                 Lk.lock();
 
                                  if (!game.check_room_exists(rm_val)) {
 
@@ -105,7 +108,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                              }
 
                              else if ((json.getString("room_action").equals("join_room"))) {
-
+                                 Lk.lock();
                                  System.out.println("104");
                                  if (game.check_room_exists(rm_val)) {
 
@@ -170,7 +173,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                           } catch (Exception ex) {
                               ex.printStackTrace();
-                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in joinig room"));
+                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in accessing room"));
                           }
                     };
                   executor.execute(threads_area);
@@ -257,6 +260,15 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "ping":
                     break;
 
+                case "join_matchmaking"://makes the request and adds the player to a queue and finds an empty room with permit and f/e request made
+                    matchmaking_queue.add();
+
+
+
+
+
+
+                    break;
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);
                     System.out.println("Player value " + p.getId());
@@ -282,7 +294,6 @@ public class CheckersHandler extends TextWebSocketHandler {
     }
 
     public Player get_player_obj(int id){
-
 
         for (Player p : Player.players_hm.values()){
             if (p.getId() == id){

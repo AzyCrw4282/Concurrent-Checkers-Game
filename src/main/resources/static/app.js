@@ -98,13 +98,13 @@ function enterName(){
 function action_chat_msg(){
 
     if (user_permit_val == 0){//global chat broadcast
-        var msg = user + " : " +$("#msg_id").val();
+        var msg = user_name + " : " +$("#msg_id").val();
         $("#msg_id").val("");
         let msg_data = {"type": "global_chat", "msg": msg};
         game.send_data(msg_data);//send it to b-e
     }
     else{
-        var msg = user + " : " +$("#msg_id").val();
+        var msg = user_name + " : " +$("#msg_id").val();
         $("#msg_id").val("");
         let msg_data = {"type": "game_chat", "msg": msg};
         game.send_data(msg_data);//send it to b-e
@@ -115,8 +115,10 @@ function action_chat_msg(){
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
     lb_div = document.getElementById("leaderboard_div_id");
-    if (lb_div.style.display === "block"){
+    chat_div = document.getElementById('chat_div_id');
+    if (lb_div.style.display === "block" || chat_div.style.display === "block" ){
         lb_div.style.display = "none";
+        chat_div.style.display = "none";
     }
     room_action = "create_room";
     /*we show the elements to create room and hide what we don't need*/
@@ -131,8 +133,10 @@ function create_room(){
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
     lb_div = document.getElementById("leaderboard_div_id");
-    if (lb_div.style.display === "block"){
+    chat_div = document.getElementById('chat_div_id');
+    if (lb_div.style.display === "block" || chat_div.style.display === "block" ){
         lb_div.style.display = "none";
+        chat_div.style.display = "none";
     }
     room_action = "join_room";
     document.getElementById('div_id_menu').style.display = "none";
@@ -166,8 +170,6 @@ function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
     leaderbd_row_counter +=1;
 }
 
-
-
 function update_room_players(id,name,num_of_players){
     //here should update all the rows for the fetched records
     var game_room = ""+name;
@@ -192,26 +194,20 @@ function getDimension (){
 //Allocate user to a random room without picking any specific room. The algorithm would simple check for rooms and find the best one
 function join_matchmaking(){
     lb_div = document.getElementById("leaderboard_div_id");
-    if (lb_div.style.display === "block"){
+    chat_div = document.getElementById('chat_div_id');
+    if (lb_div.style.display === "block" || chat_div.style.display === "block" ){
         lb_div.style.display = "none";
+        chat_div.style.display = "none";
     }
     document.getElementById('btnPrinc').style.display = "none";
     document.getElementById('canvas').style.display = "block";
     document.getElementById('divChat').style.display = "none";
     document.getElementById('console').style.height = "90%";
 
-    menu_option="MatchMaking";
+    room_action="MatchMaking";
+    let msg_data = {"type" : "join_matchmaking","msg" : "N/A"};
+    start_game(msg_data);
 
-    /*If we are in the chat we remove the user from the chat*/
-    if (!chat){
-        start_game()
-    }else{
-        let aux = {"type": "delete", "name": user};
-
-        $("#player-box").text("");
-        chat = false;
-        // game.open(); fault here
-    }
 }
 /*Updates game status msges*/
 function handle_game_status(msg){
