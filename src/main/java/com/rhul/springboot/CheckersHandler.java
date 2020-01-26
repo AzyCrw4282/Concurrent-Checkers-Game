@@ -109,10 +109,8 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                              else if ((json.getString("room_action").equals("join_room"))) {
                                  Lk.lock();
-                                 System.out.println("104");
                                  if (game.check_room_exists(rm_val)) {
 
-                                     System.out.println("106");
                                      rm = game.get_room(rm_val);
                                      boolean player_added = rm.add_player_to_room(plyr);
                                      joining = true;

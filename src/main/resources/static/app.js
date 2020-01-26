@@ -51,12 +51,11 @@ var the_checker = undefined;
 var the_checker2 = undefined ;
 var user_action;
 var user_action2;
-var modal_msg = document.getElementById("modal-body p");
-var modal_btn_trigger = document.getElementById("modalBtnTrigger");
 
 $(document).ready(function(){
     //error with this function. may need to remove this
     // document.getElementById("body_id").src = "bkground.png";
+
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
         getDimension();//vars here will also need to eb updated on f/e
@@ -800,7 +799,6 @@ class Game {
                     }
 
                     console.log("Move_made");
-                    // game.non_attack_move(piece_id,x_coord,y_coord);
                     break;
 
                 case "create_room_resp":
@@ -837,14 +835,14 @@ class Game {
                         //join room call
                         room_action = "join_room";
                         room_value = packet.data;
-                        modal_msg.textContent = "You have been allocated to a room. Please wait while the joining process takes place.";
-                        modal_btn_trigger.click();
+                        document.getElementById("modalBtnTrigger").click();
+                        document.getElementById("modal_message").innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
                         //join room process
                         this.open();
 
                     }else{
-                        modal_msg.innerHTML = "All rooms are full. Please create a room or manually join a room!";
-                        modal_btn_trigger.click();
+                        document.getElementById("modal_message").innerHTML =  "All rooms are full. Please create a room or manually join a room!";
+                        document.getElementById("modalBtnTrigger").click();
                     }
 
 
@@ -865,7 +863,7 @@ class Game {
                         the_checker2 = w_checker2;//to begin with
                     }
                     break;
-                case "room_permits":// Iniz here?
+                case "room_permits":
                     user_permit_val  = packet.data;
                     // console.log(user_permit_val == 4);
                     if (user_permit_val == 4 || user_permit_val == 3 ){
@@ -900,7 +898,7 @@ class Game {
     //fix error on this
     open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name};
-        var json_str=JSON.stringify(msg);
+        var json_str = JSON.stringify(msg);
         this.socket.send(json_str);
 
         setTimeout(function () {
