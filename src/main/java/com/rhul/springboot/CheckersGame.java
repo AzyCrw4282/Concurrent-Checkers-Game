@@ -72,7 +72,7 @@ public class CheckersGame {
                 return rm_name;
             }
             else if(entry.getValue().getSmphore().availablePermits() % 2 == 0) {//even n players present
-                rm_name = entry.getValue().getRoom_name();
+                rm_name = entry.getValue().getRoom_name();//won't return so can be overridden
             }
         }
         return rm_name;

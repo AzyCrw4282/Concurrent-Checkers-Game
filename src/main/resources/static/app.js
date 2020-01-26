@@ -51,7 +51,7 @@ var the_checker = undefined;
 var the_checker2 = undefined ;
 var user_action;
 var user_action2;
-var modal_msg = document.getElementById("modal_message");
+var modal_msg = document.getElementById("modal-body p");
 var modal_btn_trigger = document.getElementById("modalBtnTrigger");
 
 $(document).ready(function(){
@@ -837,7 +837,7 @@ class Game {
                         //join room call
                         room_action = "join_room";
                         room_value = packet.data;
-                        modal_msg.innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
+                        modal_msg.textContent = "You have been allocated to a room. Please wait while the joining process takes place.";
                         modal_btn_trigger.click();
                         //join room process
                         this.open();

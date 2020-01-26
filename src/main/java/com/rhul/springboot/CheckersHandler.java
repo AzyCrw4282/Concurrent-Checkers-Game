@@ -263,7 +263,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "join_matchmaking"://makes the request and adds the player to a queue and finds an empty room with permit and f/e request made
                     matchmaking_queue.add(session);
                     //find a room and send that to the f/e as the value. And player session held in queue.
-                    mesg = String.format("{\"type\": \"match\",\"data\": \"game_terminated\"}");
+                    mesg = "";
                     String rm_name = game.get_room_to_join();
                     if (rm_name != null){
                         mesg = String.format("{\"type\": \"join_matchmaking_resp\",\"data\": \"%s\"}",rm_name);
