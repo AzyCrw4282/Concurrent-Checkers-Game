@@ -7,7 +7,7 @@ I have use this as reference. , though most of the code are changed.
 var user_name;
 var room_value;
 var room_action;
-var difficulty;
+var number_of_games;
 var players= [];
 var chat = false;
 var game_started = false;
@@ -141,6 +141,7 @@ function join_a_room(){
     room_action = "join_room";
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
+    document.getElementById('n_game_selector').style.display = "none";
     // game_2.initialize_snd_game();
     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
     start_game(msg_data);
@@ -261,7 +262,7 @@ function get_document_element(element_id){
 
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
-    console.log("Room game entered");
+
     get_document_element('chat_div_id')
     get_document_element('chat_div_id').style.left = "0px";
     get_document_element('chat_div_id').style.top = "0px";
@@ -288,6 +289,16 @@ function enter_game_room(){
     if (room_value === undefined) {
         room_value = $("#rm_nm_value").val();
     }//else uses the value of selected button
+
+    if ($('#radio1').prop('checked')){
+        number_of_games = 1;
+    }else if ($('#radio2').prop('checked')){
+        number_of_games = 2;
+    }else if ($('#radio3').prop('checked')){
+        number_of_games = 4;
+    }else if ($('#radio4').prop('checked')){
+        number_of_games = 4;
+    }
 
     start_game();
 }

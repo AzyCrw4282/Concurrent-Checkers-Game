@@ -74,8 +74,14 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
     <!-- createRoom and JoinRoom-->
     <div class="col-md-4 btn-group" id="div_id_room_settings" style="display: none;">
         <div class="room_setting_componeent" style="margin-left: 203px;">
-            <p id="create_rm_name" style="font-weight: bold">Enter your room name</p>
-            <br>
+            <p id="create_rm_name" style="font-weight: bold">Select number of games and enter room name</p>
+            <div id="n_game_selector">
+                <label id="opc"  class="radio-inline"><input type="radio" id="radio1" name="optradio">1</label>
+                <label id="opc2" class="radio-inline"><input type="radio" id="radio2" name="optradio">2</label>
+                <label id="opc3" class="radio-inline"><input type="radio" id="radio3" name="optradio">3</label>
+                <label id="opc4" class="radio-inline"><input type="radio" id="radio4" name="optradio">4</label>
+                <br>
+            </div>
             <input id="rm_nm_value" placeholder="">
             <br>
             <button class="btn btn-success" id="button2" style="margin-top: 15px" onclick="enter_game_room()">New Game</button>
