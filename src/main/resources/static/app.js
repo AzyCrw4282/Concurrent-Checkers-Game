@@ -28,7 +28,6 @@ var black_checker_class = document.getElementsByClassName("black_checker");
 var square_class2 = document.getElementsByClassName("square2");
 var white_checker_class2 = document.getElementsByClassName("white_checker2");
 var black_checker_class2 = document.getElementsByClassName("black_checker2");
-
 //3 game
 var square_class_g2_1 = document.getElementsByClassName("square_g2_1");
 var white_checker_class_g2_1 = document.getElementsByClassName("white_checker_g2_1");
@@ -417,7 +416,6 @@ class checkers{
                     alert("Game not started. Please wait for the other user to join.")
                 }
             }
-
         }
 
         set_coords(){
@@ -524,12 +522,15 @@ class Game {
 
     /*initializeAllGame testing*/
     initialize_game(game_no) {
-        square_class = square_class+""+game_no;
-        block = block+""+2;
-        w_checker = w_checker+""+2;
-        b_checker = b_checker+""+2;
-        white_checker_class = white_checker_class+""+2;
-        console.log(square_class,block,w_checker,b_checker,white_checker_class)
+        // square_class = square_class+""+game_no;
+        // block = block+""+2;
+        // w_checker = w_checker+""+2;
+        // b_checker = b_checker+""+2;
+        // white_checker_class = white_checker_class+""+2;
+
+        square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
+
+        console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class);
 
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
@@ -541,21 +542,21 @@ class Game {
         // white piece
         for (var i = 1; i <= 4; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(game_no);
+            w_checker[i].set_coords();
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
-            w_checker[i].set_coords(0, 0);
+            w_checker[i].set_coords();
             block[2 * i].occupied = true;
             block[2 * i].pieceId = w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(0, 0);
+            w_checker[i].set_coords();
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
@@ -563,21 +564,21 @@ class Game {
         //black piece
         for (var i = 1; i <= 4; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
-            b_checker[i].set_coords(0, 0);
+            b_checker[i].set_coords();
             block[56 + 2 * i].occupied = true;
             block[56 + 2 * i].pieceId = b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
-            b_checker[i].set_coords(0, 0);
+            b_checker[i].set_coords();
             block[40 + 2 * i - 1].occupied = true;
             block[40 + 2 * i - 1].pieceId = b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
-            b_checker[i].set_coords(0, 0);
+            b_checker[i].set_coords();
             block[24 + 2 * i].occupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
@@ -1018,8 +1019,6 @@ class Game {
                     }
                     //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
-
-
             }
         };
 

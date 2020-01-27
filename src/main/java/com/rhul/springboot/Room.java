@@ -28,7 +28,7 @@ public class Room {
         this.room_id = id;// we use player_id since its an auto incrementer
         this.room_name = room_nm;
         this.rm_owner = plyr;
-        this.smphore = new Semaphore(n_games,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
+        this.smphore = new Semaphore(n_games*2,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
         this.n_games = n_games;
     }
 
