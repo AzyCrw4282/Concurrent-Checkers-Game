@@ -119,7 +119,7 @@ public class CheckersGame {
         for (Room rm : rooms_hm.values()){
             //for each room need the id, room name and active players. This should kind of be a string builder
             if ( rm != null){
-                sb.append(String.format("{\"game_id\": %s, \"game_name\": \"%s\",\"players_active\":\"%s\"}",rm.getRoom_id(),rm.getRoom_name(), rm.getPlayers_count()));
+                sb.append(String.format("{\"game_id\": %s, \"game_name\": \"%s\",\"players_active\":\"%s\",\"max_permits\":\"%s\"}",rm.getRoom_id(),rm.getRoom_name(), rm.getPlayers_count(),rm.getN_games()));
                 sb.append(',');
             }
             System.out.println("String vals: " + sb);

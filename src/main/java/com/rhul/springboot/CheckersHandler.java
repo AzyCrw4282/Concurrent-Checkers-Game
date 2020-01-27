@@ -65,6 +65,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                               int player_id = game.player_ids.getAndIncrement();
                               Player plyr = new Player(player_id,json.getString("plyr_name"),session);
+                              int n_games = Integer.parseInt(json.getString("n_games"));
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);
 
@@ -77,7 +78,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                                  if (!game.check_room_exists(rm_val)) {
 
-                                     rm = new Room(player_id, rm_val, plyr);
+                                     rm = new Room(player_id, rm_val, plyr,n_games);
                                      rm.add_player_to_room(plyr);
                                      plyr.setRoom(rm);
                                      plyr.setColour("white");

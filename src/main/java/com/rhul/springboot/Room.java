@@ -18,17 +18,18 @@ public class Room {
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
     private Semaphore smphore;
+    private int n_games;
     private String room_name;
     private int room_id;
     private Player rm_owner;
     private boolean game_started;
 
-    public Room(int id, String room_nm, Player plyr ){
+    public Room(int id, String room_nm, Player plyr,int n_games ){
         this.room_id = id;// we use player_id since its an auto incrementer
         this.room_name = room_nm;
         this.rm_owner = plyr;
-        this.smphore = new Semaphore(4,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
-
+        this.smphore = new Semaphore(n_games,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
+        this.n_games = n_games;
     }
 
     public void remove_player_from_room(Player playr){

@@ -168,7 +168,7 @@ function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
     leaderbd_row_counter +=1;
 }
 
-function update_room_players(id,name,num_of_players){
+function update_room_players(id,name,num_of_players,max_permits){
     //here should update all the rows for the fetched records
     var game_room = ""+name;
     var table =document.getElementById("room_players_data");
@@ -178,7 +178,7 @@ function update_room_players(id,name,num_of_players){
     var cell_i = row.insertCell(1);
     cell_i.innerHTML = name;
     cell_i = row.insertCell(2);
-    cell_i.innerHTML = num_of_players + "/8";
+    cell_i.innerHTML = num_of_players + "/"+max_permits;
     cell_i = row.insertCell(3);
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
     cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
@@ -257,7 +257,7 @@ function enter_chat(){
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
 
-    get_document_element('chat_div_id')
+    get_document_element('chat_div_id');
     get_document_element('chat_div_id').style.left = "0px";
     get_document_element('chat_div_id').style.top = "0px";
     get_document_element('chat_div_id').style.marginLeft = "0px";
@@ -750,7 +750,7 @@ class Game {
 
                 case "room_players_data":
                     for (var i=0;i<packet.data.length;i++){
-                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active);
+                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active,packet.data[i].max_permits);
                     }
                     break;
 
@@ -920,7 +920,7 @@ class Game {
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
     //fix error on this
     open() { //
-        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name};
+        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name, "n_games" : number_of_games};
         var json_str = JSON.stringify(msg);
         this.socket.send(json_str);
 
