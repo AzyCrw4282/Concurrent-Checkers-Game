@@ -214,7 +214,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                     System.out.println("Player " + p.getId());
                     Room rom = game.get_room(json.getString("room_value"));
                     int room_permits = rom.getSmphore().availablePermits() + 1;
-                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\"}", room_permits);
+                    int num_games = rom.getN_games();
+                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\",\"num_games\": \"%d\"}", room_permits,num_games);
                     System.out.println(mesg);
                     p.sendMessage(mesg);
                     break;

@@ -9,6 +9,7 @@ var room_value;
 var room_action;
 var number_of_games;
 var players= [];
+var num_games;
 var chat = false;
 var game_started = false;
 var game_started2 = false;
@@ -24,16 +25,17 @@ var leaderbd_row_counter = 0;
 var square_class = document.getElementsByClassName("square");
 var white_checker_class = document.getElementsByClassName("white_checker");
 var black_checker_class = document.getElementsByClassName("black_checker");
+
 //second game
 var square_class2 = document.getElementsByClassName("square2");
 var white_checker_class2 = document.getElementsByClassName("white_checker2");
 var black_checker_class2 = document.getElementsByClassName("black_checker2");
 //3 game
-var square_class_g2_1 = document.getElementsByClassName("square_g2_1");
+var square_class_g2_1 = document.getElementsByClassName("square3");
 var white_checker_class_g2_1 = document.getElementsByClassName("white_checker_g2_1");
 var black_checker_class_g2_1 = document.getElementsByClassName("black_checker_g2_1");
 //4 game
-var square_class_g2_2 = document.getElementsByClassName("square_g2_2");
+var square_class_g2_2 = document.getElementsByClassName("square4");
 var white_checker_class_g2_2 = document.getElementsByClassName("white_checker_g2_2");
 var black_checker_class_g2_2 = document.getElementsByClassName("black_checker_g2_2");
 
@@ -112,7 +114,7 @@ $(document).ready(function(){
     document.getElementById("msg_id").addEventListener("keydown", function(e) {
         if (!e) { var e = window.event; }
         // Enter is pressed
-        if (e.key === "Enter") { action_chat_msg(); console.log("85")}
+        if (e.key === "Enter") { action_chat_msg();}
     }, false);
 });
 
@@ -234,11 +236,6 @@ function join_matchmaking(){
     room_action="MatchMaking";
     let msg_data = {"type" : "join_matchmaking","msg" : "N/A"};
     start_game(msg_data);
-
-}
-/*Updates game status msges*/
-function handle_game_status(msg){
-
 
 }
 
@@ -418,23 +415,23 @@ class checkers{
             }
         }
 
-        set_coords(){
+        set_coords(game_no){
             var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
 
-            if (player_game == 1){
+            if (game_no == 1){
                 this.id.style.top = y + 'px';
                 this.id.style.left = x + 'px';
             }
-            else if (player_game == 2){
+            else if (game_no == 2){
                 this.id.style.top = y + 'px';
                 this.id.style.left = x+17 + 'px';
             }
-            else if (player_game == 3){
+            else if (game_no == 3){
                 this.id.style.top = y +17+ 'px';
                 this.id.style.left = x + 'px';
             }
-            else if (player_game == 4){
+            else if (game_no == 4){
                 this.id.style.top = y+17 + 'px';
                 this.id.style.left = x +17 + 'px';
             }
@@ -522,41 +519,34 @@ class Game {
 
     /*initializeAllGame testing*/
     initialize_game(game_no) {
-        // square_class = square_class+""+game_no;
-        // block = block+""+2;
-        // w_checker = w_checker+""+2;
-        // b_checker = b_checker+""+2;
-        // white_checker_class = white_checker_class+""+2;
 
         square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
-
-        console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class);
+        console.log(square_class,block,w_checker,b_checker,white_checker_class,game_no);
 
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
             block[i] = new checkers_squares(square_class[i], i);
-
         }
-        /*================initializarea white black counters =================================*/
+        /*================Initializing white black counters =================================*/
         // white piece
         for (var i = 1; i <= 4; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords();
+            w_checker[i].set_coords(game_no);
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
-            w_checker[i].set_coords();
+            w_checker[i].set_coords(game_no);
             block[2 * i].occupied = true;
             block[2 * i].pieceId = w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords();
+            w_checker[i].set_coords(game_no);
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
@@ -564,28 +554,38 @@ class Game {
         //black piece
         for (var i = 1; i <= 4; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
-            b_checker[i].set_coords();
+            b_checker[i].set_coords(game_no);
             block[56 + 2 * i].occupied = true;
             block[56 + 2 * i].pieceId = b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
-            b_checker[i].set_coords();
+            b_checker[i].set_coords(game_no);
             block[40 + 2 * i - 1].occupied = true;
             block[40 + 2 * i - 1].pieceId = b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
-            b_checker[i].set_coords();
+            b_checker[i].set_coords(game_no);
             block[24 + 2 * i].occupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
         user_action = "initialize";
         this.connect();
+        // this.reset_all_board_vals();
     }
 
+    reset_all_board_vals(){
+        square_class = undefined;
+        block = [];
+        w_checker = [];
+        b_checker = [];
+        white_checker_class = undefined;
+        black_checker_class = undefined;
+
+    }
 
     /*initializeTheGame*/
     // initialize_game() {
@@ -1011,13 +1011,15 @@ class Game {
                     break;
                 case "room_permits":
                     user_permit_val  = packet.data;
+                    num_games = packet.num_games;
                     if (user_permit_val >0){
                         //use a method to intialize the required games
                         permit_obtained = true;
                         player_game = dict_game_rm[String(user_permit_val)];
-                        game.initialize_game(player_game);
+                        for(var game_no=1;game_no<=num_games;game_no++){
+                            game.initialize_game(game_no);
+                        }
                     }
-                    //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
             }
         };
