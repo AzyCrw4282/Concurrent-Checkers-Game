@@ -200,9 +200,6 @@ function join_matchmaking(){
         chat_div.style.display = "none";
     }
 
-    // document.getElementById('canvas').style.display = "block";
-    // document.getElementById('divChat').style.display = "none";
-    // document.getElementById('console').style.height = "90%";
 
     room_action="MatchMaking";
     let msg_data = {"type" : "join_matchmaking","msg" : "N/A"};
@@ -258,26 +255,34 @@ function enter_chat(){
 
 }
 
+function get_document_element(element_id){
+    return (document.getElementById(element_id))
+}
+
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
-    document.getElementById('chat_div_id').style.left = "0px";
-    document.getElementById('chat_div_id').style.top = "0px";
-    document.getElementById('chat_div_id').style.marginLeft = "0px";
+    console.log("Room game entered");
+    get_document_element('chat_div_id')
+    get_document_element('chat_div_id').style.left = "0px";
+    get_document_element('chat_div_id').style.top = "0px";
+    get_document_element('chat_div_id').style.marginLeft = "0px";
     document.body.style.backgroundImage = "none";
-    document.getElementById("body_id").style.backgroundColor = "#ffffff";
-    document.getElementById('div_id_room_settings').style.display = "none";
+    get_document_element("body_id").style.backgroundColor = "#ffffff";
+    get_document_element('div_id_room_settings').style.display = "none";
+    get_document_element('div_id_menu').style.display = "none";
+    get_document_element('chat_div_id').style.display = "none";
     //game 1
-    document.getElementById('table').style.display = "block";
-    document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('table2').style.display = "block";
-    document.getElementById('game_status').style.display = "block";
-    document.getElementById('game_status2').style.display = "block";
+    get_document_element('table').style.display = "block";
+    get_document_element('chat_div_id').style.display = "block";
+    get_document_element('table2').style.display = "block";
+    get_document_element('game_status').style.display = "block";
+    get_document_element('game_status2').style.display = "block";
     //game 2
-    document.getElementById('g2_table').style.display = "block";
-    document.getElementById('game_status_id').style.display = "block";
-    document.getElementById('g2_table2').style.display = "block";
-    document.getElementById('g2_game_status').style.display = "block";
-    document.getElementById('g2_game_status2').style.display = "block";
+    get_document_element('g2_table').style.display = "block";
+    get_document_element('game_status_id').style.display = "block";
+    get_document_element('g2_table2').style.display = "block";
+    get_document_element('g2_game_status').style.display = "block";
+    get_document_element('g2_game_status2').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
     if (room_value === undefined) {
@@ -686,16 +691,7 @@ class Game {
                     already_opened = true;
                     this.open();
                 }
-                // else if (chat === true){
-                //     var enter_chat = {"type": "enter_chat_lobby"};
-                //     game.send_data(enter_chat);
-                //     // this.enter_chat_lobby();
-                // }
-                // else if (get_room_players === true){
-                //     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
-                //     game.send_data(msg_data);
-                // }
-                else{
+                else{//used for all other cases in which game room is not defined
                     game.send_data(msg_data);
                 }
             }
@@ -835,17 +831,14 @@ class Game {
                         //join room call
                         room_action = "join_room";
                         room_value = packet.data;
+                        enter_game_room();//join room process
                         document.getElementById("modalBtnTrigger").click();
                         document.getElementById("modal_message").innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
-                        //join room process
-                        this.open();
 
                     }else{
                         document.getElementById("modal_message").innerHTML =  "All rooms are full. Please create a room or manually join a room!";
                         document.getElementById("modalBtnTrigger").click();
                     }
-
-
                     break;
                 case "start_game_1":
                     if (packet.data === "rdy"){
@@ -865,7 +858,6 @@ class Game {
                     break;
                 case "room_permits":
                     user_permit_val  = packet.data;
-                    // console.log(user_permit_val == 4);
                     if (user_permit_val == 4 || user_permit_val == 3 ){
                         //will play the first game
                         console.log("user for first game");
@@ -907,7 +899,6 @@ class Game {
                 game.send_data(check_permits);
             }
         },3000);
-
     }
 
     enter_chat_lobby() {
