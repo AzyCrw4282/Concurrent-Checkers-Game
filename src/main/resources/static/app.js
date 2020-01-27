@@ -134,7 +134,6 @@ function action_chat_msg(){
     }
 }
 
-
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
     lb_div = document.getElementById("leaderboard_div_id");
@@ -169,8 +168,6 @@ function join_a_room(){
     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
     start_game(msg_data);
 }
-
-
 
 function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
     //apply changes  below for correct table
@@ -359,7 +356,6 @@ class checkers_squares {
             else{
                 alert("Game not started. Please wait for the other user to join.")
             }
-
         }
     }
 }

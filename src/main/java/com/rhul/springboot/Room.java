@@ -35,7 +35,6 @@ public class Room {
     public void remove_player_from_room(Player playr){
         players_hm.remove(playr.getId());
         smphore.release();
-
     }
 
     public boolean add_player_to_room(Player playr) {
@@ -45,14 +44,10 @@ public class Room {
                 playr.sendMessage(msg);
             }
             else {
-
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
-                    for (Player p : players_hm.values()) {
-                        System.out.println("players in room :" + p.getId());
-                    }
-                    apply_game_status(this,playr.getName(), playr.getId());
+                    apply_game_status(this,playr.getName(),players_count.get());
                     return true;
                 }
             }
@@ -61,6 +56,22 @@ public class Room {
             e.printStackTrace();
             BugsnagConfig.bugsnag().notify(new RuntimeException("Error with semaphore permits acquiring"));
             return  false;
+        }
+    }
+
+    //Method to update game_status on the player's that are present in the room
+    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){
+
+        for (Player plyr : players_hm.values()){
+            try {
+                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/%d) active players\"}",plyr_nm,players_active,rm.n_games*2);
+                plyr.sendMessage(new_msg);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying game status"));
+                remove_player_from_room(plyr);
+            }
         }
     }
 
@@ -95,19 +106,5 @@ public class Room {
         }
     }
 
-    //Method to update game_status on the player's that are present in the room
-    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){
 
-        for (Player plyr : players_hm.values()){
-            try {
-                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/8) active players\"}",plyr_nm,players_active);
-                plyr.sendMessage(new_msg);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying game status"));
-                remove_player_from_room(plyr);
-            }
-        }
-    }
 }

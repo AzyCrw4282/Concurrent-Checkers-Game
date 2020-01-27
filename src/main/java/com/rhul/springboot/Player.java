@@ -24,7 +24,6 @@ public class Player {
 
     public static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
 
-
     private final int id;
     private final String name;
     private Room room;
