@@ -22,13 +22,22 @@ var room_row_counter =0;
 var leaderbd_row_counter = 0;
 //first game
 var square_class = document.getElementsByClassName("square");
-var square_class2 = document.getElementsByClassName("square2");
 var white_checker_class = document.getElementsByClassName("white_checker");
 var black_checker_class = document.getElementsByClassName("black_checker");
+//second game
+var square_class2 = document.getElementsByClassName("square2");
 var white_checker_class2 = document.getElementsByClassName("white_checker2");
 var black_checker_class2 = document.getElementsByClassName("black_checker2");
 
-//second game
+//3 game
+var square_class_g2_1 = document.getElementsByClassName("square_g2_1");
+var white_checker_class_g2_1 = document.getElementsByClassName("white_checker_g2_1");
+var black_checker_class_g2_1 = document.getElementsByClassName("black_checker_g2_1");
+//4 game
+var square_class_g2_2 = document.getElementsByClassName("square_g2_2");
+var white_checker_class_g2_2 = document.getElementsByClassName("white_checker_g2_2");
+var black_checker_class_g2_2 = document.getElementsByClassName("black_checker_g2_2");
+
 var moveSound = document.getElementById("moveSound");
 var winSound = document.getElementById("winSound");
 var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -41,16 +50,40 @@ var moveDeviation2 = 7;
 var cur_big_screen = 1;//takes in the curr pos of the screen
 
 //appended 2 represents the 2nd game, whilst without it is tfor the first game
+//4 game representation
 var block = [];
 var w_checker = [];
 var b_checker = [];
+var the_checker = undefined;
+
 var block2 = [];
 var w_checker2 = [];
 var b_checker2 = [];
-var the_checker = undefined;
 var the_checker2 = undefined ;
+
+var block3 = [];
+var w_checker3 = [];
+var b_checker3 = [];
+var the_checker3 = undefined ;
+
+var block4 = [];
+var w_checker4 = [];
+var b_checker4 = [];
+var the_checker4 = undefined ;
 var user_action;
-var user_action2;
+
+//maps player to a game
+var dict_game_rm = {
+    "1" : 1, "2" : 1, "3" : 2, "4" : 2, "5" : 3, "6" : 3, "7" : 4, "8" : 4,
+};
+
+var game_dict = {
+    "1" : square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,
+    "2" : square_class2,block2,w_checker2,b_checker2,white_checker_class2,black_checker_class2,
+    "3" : square_class_g2_1,block3,w_checker3,b_checker3,white_checker_class_g2_1,black_checker_class_g2_1,
+    "4" : square_class_g2_2,block4,w_checker4,b_checker4,white_checker_class_g2_2,black_checker_class_g2_2
+
+};
 
 $(document).ready(function(){
     //error with this function. may need to remove this
@@ -386,18 +419,42 @@ class checkers{
             }
 
         }
-        set_coords(X,Y){
+
+        set_coords(){
             var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            this.id.style.top = y + 'px';
-            this.id.style.left = x + 'px';
+
+            if (player_game == 1){
+                this.id.style.top = y + 'px';
+                this.id.style.left = x + 'px';
+            }
+            else if (player_game == 2){
+                this.id.style.top = y + 'px';
+                this.id.style.left = x+17 + 'px';
+            }
+            else if (player_game == 3){
+                this.id.style.top = y +17+ 'px';
+                this.id.style.left = x + 'px';
+            }
+            else if (player_game == 4){
+                this.id.style.top = y+17 + 'px';
+                this.id.style.left = x +17 + 'px';
+            }
         }
-        set_second_game_coords(X,Y){
-            var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-            var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            this.id.style.top = y + 'px';
-            this.id.style.left = x+17 + 'px';
-         }
+
+
+        // set_coords(X,Y){
+        //     var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+        //     var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+        //     this.id.style.top = y + 'px';
+        //     this.id.style.left = x + 'px';
+        // }
+        // set_second_game_coords(X,Y){
+        //     var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+        //     var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+        //     this.id.style.top = y + 'px';
+        //     this.id.style.left = x+17 + 'px';
+        //  }
         move_coords(X,Y,game_no){
             // var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             // var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
@@ -421,7 +478,7 @@ var gameStatus_logs = {};
 
 chatbox_logs.log = (function (msg) {
     var chatbox = document.getElementById("console_id");
-    var p_msg = document.createElement('p');
+    var p_msg = document.createElement('h4');
     p_msg.style.wordWrap = 'break-word';
     p_msg.innerHTML = msg;
     chatbox.appendChild(p_msg);
@@ -437,7 +494,7 @@ chatbox_logs.log = (function (msg) {
 gameStatus_logs.log = (function (msg) {
     if (msg === undefined) msg = "Game Status will appear below";
     var gameStatus = document.getElementById("console_status_id");
-    var p_msg = document.createElement('p');
+    var p_msg = document.createElement('h4');
     p_msg.style.wordWrap = 'break-word';
     p_msg.innerHTML = msg;
     gameStatus.appendChild(p_msg);
@@ -465,8 +522,14 @@ class Game {
 
     }
 
-    /*initializeTheGame*/
-    initialize_game() {
+    /*initializeAllGame testing*/
+    initialize_game(game_no) {
+        square_class = square_class+""+game_no;
+        block = block+""+2;
+        w_checker = w_checker+""+2;
+        b_checker = b_checker+""+2;
+        white_checker_class = white_checker_class+""+2;
+        console.log(square_class,block,w_checker,b_checker,white_checker_class)
 
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
@@ -475,11 +538,10 @@ class Game {
 
         }
         /*================initializarea white black counters =================================*/
-        // white Ladies
+        // white piece
         for (var i = 1; i <= 4; i++) {
-
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(0, 0);
+            w_checker[i].set_coords(game_no);
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
@@ -498,7 +560,7 @@ class Game {
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
-        //black Ladies
+        //black piece
         for (var i = 1; i <= 4; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
             b_checker[i].set_coords(0, 0);
@@ -523,62 +585,121 @@ class Game {
         this.connect();
     }
 
-    initialize_second_game(){
 
-        /*===============initializingThePlayingFields =================================*/
-        for (var i = 1; i <= 64; i++)
-        {
-            block2[i] = new checkers_squares(square_class2[i], i);
-
-        }
-        /*================initializarea white black counters =================================*/
-        // white Ladies
-        for (var i = 1; i <= 4; i++) {
-            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
-            w_checker2[i].set_second_game_coords(0, 0);
-            block2[2 * i - 1].occupied = true;
-            block2[2 * i - 1].pieceId = w_checker2[i];
-        }
-
-        for (var i = 5; i <= 8; i++) {
-            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i,i);
-            w_checker2[i].set_second_game_coords(0, 0);
-            block2[2 * i].occupied = true;
-            block2[2 * i].pieceId = w_checker2[i];
-        }
-
-        for (var i = 9; i <= 12; i++) {
-            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
-            w_checker2[i].set_second_game_coords(0, 0);
-            block2[2 * i - 1].occupied = true;
-            block2[2 * i - 1].pieceId = w_checker2[i];
-        }
-
-        //black Ladies
-        for (var i = 1; i <= 4; i++) {
-            b_checker2[i] = new checkers(black_checker_class2[i], "black", 56 + 2 * i,i);
-            b_checker2[i].set_second_game_coords(0, 0);
-            block2[56 + 2 * i].occupied = true;
-            block2[56 + 2 * i].pieceId = b_checker2[i];
-        }
-
-        for (var i = 5; i <= 8; i++) {
-            b_checker2[i] = new checkers(black_checker_class2[i], "black", 40 + 2 * i - 1,i);
-            b_checker2[i].set_second_game_coords(0, 0);
-            block2[40 + 2 * i - 1].occupied = true;
-            block2[40 + 2 * i - 1].pieceId = b_checker2[i];
-        }
-
-        for (var i = 9; i <= 12; i++) {
-            b_checker2[i] = new checkers(black_checker_class2[i], "black", 24 + 2 * i,i);
-            b_checker2[i].set_second_game_coords(0, 0);
-            block2[24 + 2 * i].occupied = true;
-            block2[24 + 2 * i].pieceId = b_checker2[i];
-        }
-        user_action2 = "initialize";
-        this.connect();
-
-    }
+    /*initializeTheGame*/
+    // initialize_game() {
+    //
+    //     /*===============initializingThePlayingFields =================================*/
+    //     for (var i = 1; i <= 64; i++)
+    //     {
+    //         block[i] = new checkers_squares(square_class[i], i);
+    //
+    //     }
+    //     /*================initializarea white black counters =================================*/
+    //     // white piece
+    //     for (var i = 1; i <= 4; i++) {
+    //
+    //         w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
+    //         w_checker[i].set_coords(0, 0);
+    //         block[2 * i - 1].occupied = true;
+    //         block[2 * i - 1].pieceId = w_checker[i];
+    //     }
+    //
+    //     for (var i = 5; i <= 8; i++) {
+    //         w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
+    //         w_checker[i].set_coords(0, 0);
+    //         block[2 * i].occupied = true;
+    //         block[2 * i].pieceId = w_checker[i];
+    //     }
+    //
+    //     for (var i = 9; i <= 12; i++) {
+    //         w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
+    //         w_checker[i].set_coords(0, 0);
+    //         block[2 * i - 1].occupied = true;
+    //         block[2 * i - 1].pieceId = w_checker[i];
+    //     }
+    //
+    //     //black piece
+    //     for (var i = 1; i <= 4; i++) {
+    //         b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
+    //         b_checker[i].set_coords(0, 0);
+    //         block[56 + 2 * i].occupied = true;
+    //         block[56 + 2 * i].pieceId = b_checker[i];
+    //     }
+    //
+    //     for (var i = 5; i <= 8; i++) {
+    //         b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
+    //         b_checker[i].set_coords(0, 0);
+    //         block[40 + 2 * i - 1].occupied = true;
+    //         block[40 + 2 * i - 1].pieceId = b_checker[i];
+    //     }
+    //
+    //     for (var i = 9; i <= 12; i++) {
+    //         b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
+    //         b_checker[i].set_coords(0, 0);
+    //         block[24 + 2 * i].occupied = true;
+    //         block[24 + 2 * i].pieceId = b_checker[i];
+    //     }
+    //     user_action = "initialize";
+    //     this.connect();
+    // }
+    //
+    // initialize_second_game(){
+    //
+    //     /*===============initializingThePlayingFields =================================*/
+    //     for (var i = 1; i <= 64; i++)
+    //     {
+    //         block2[i] = new checkers_squares(square_class2[i], i);
+    //
+    //     }
+    //     /*================initializarea white black counters =================================*/
+    //     // white piece
+    //     for (var i = 1; i <= 4; i++) {
+    //         w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
+    //         w_checker2[i].set_second_game_coords(0, 0);
+    //         block2[2 * i - 1].occupied = true;
+    //         block2[2 * i - 1].pieceId = w_checker2[i];
+    //     }
+    //
+    //     for (var i = 5; i <= 8; i++) {
+    //         w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i,i);
+    //         w_checker2[i].set_second_game_coords(0, 0);
+    //         block2[2 * i].occupied = true;
+    //         block2[2 * i].pieceId = w_checker2[i];
+    //     }
+    //
+    //     for (var i = 9; i <= 12; i++) {
+    //         w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
+    //         w_checker2[i].set_second_game_coords(0, 0);
+    //         block2[2 * i - 1].occupied = true;
+    //         block2[2 * i - 1].pieceId = w_checker2[i];
+    //     }
+    //
+    //     //black piece
+    //     for (var i = 1; i <= 4; i++) {
+    //         b_checker2[i] = new checkers(black_checker_class2[i], "black", 56 + 2 * i,i);
+    //         b_checker2[i].set_second_game_coords(0, 0);
+    //         block2[56 + 2 * i].occupied = true;
+    //         block2[56 + 2 * i].pieceId = b_checker2[i];
+    //     }
+    //
+    //     for (var i = 5; i <= 8; i++) {
+    //         b_checker2[i] = new checkers(black_checker_class2[i], "black", 40 + 2 * i - 1,i);
+    //         b_checker2[i].set_second_game_coords(0, 0);
+    //         block2[40 + 2 * i - 1].occupied = true;
+    //         block2[40 + 2 * i - 1].pieceId = b_checker2[i];
+    //     }
+    //
+    //     for (var i = 9; i <= 12; i++) {
+    //         b_checker2[i] = new checkers(black_checker_class2[i], "black", 24 + 2 * i,i);
+    //         b_checker2[i].set_second_game_coords(0, 0);
+    //         block2[24 + 2 * i].occupied = true;
+    //         block2[24 + 2 * i].pieceId = b_checker2[i];
+    //     }
+    //     user_action2 = "initialize";
+    //     this.connect();
+    //
+    // }
 
     //No corrds changes in b/e only display changes in f/e
     adjust_screen_size(move_length,move_dev){
@@ -889,19 +1010,11 @@ class Game {
                     break;
                 case "room_permits":
                     user_permit_val  = packet.data;
-                    if (user_permit_val == 4 || user_permit_val == 3 ){
-                        //will play the first game
-                        console.log("user for first game");
+                    if (user_permit_val >0){
+                        //use a method to intialize the required games
                         permit_obtained = true;
-                        game.initialize_game();
-                        game2.initialize_second_game();//used for testing only
-                        player_game = 1;
-                    }
-                    else if (user_permit_val == 2 || user_permit_val == 1){
-                        console.log("user for second game");
-                        game.initialize_game();//to see game 1
-                        game2.initialize_second_game();
-                        player_game = 2;
+                        player_game = dict_game_rm[String(user_permit_val)];
+                        game.initialize_game(player_game);
                     }
                     //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
