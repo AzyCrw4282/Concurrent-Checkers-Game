@@ -273,17 +273,17 @@ function enter_game_room(){
     get_document_element('div_id_menu').style.display = "none";
     get_document_element('chat_div_id').style.display = "none";
     //game 1
-    get_document_element('table').style.display = "block";
-    get_document_element('chat_div_id').style.display = "block";
-    get_document_element('table2').style.display = "block";
-    get_document_element('game_status').style.display = "block";
-    get_document_element('game_status2').style.display = "block";
+    // get_document_element('table').style.display = "block";
+    // get_document_element('chat_div_id').style.display = "block";
+    // get_document_element('table2').style.display = "block";
+    // get_document_element('game_status').style.display = "block";
+    // get_document_element('game_status2').style.display = "block";
     //game 2
-    get_document_element('g2_table').style.display = "block";
-    get_document_element('game_status_id').style.display = "block";
-    get_document_element('g2_table2').style.display = "block";
-    get_document_element('g2_game_status').style.display = "block";
-    get_document_element('g2_game_status2').style.display = "block";
+    // get_document_element('g2_table').style.display = "block";
+    // get_document_element('game_status_id').style.display = "block";
+    // get_document_element('g2_table2').style.display = "block";
+    // get_document_element('g2_game_status').style.display = "block";
+    // get_document_element('g2_game_status2').style.display = "block";
 
     /*weGetTheValues​​toCreateTheRoom*/
     if (room_value === undefined) {
@@ -291,16 +291,39 @@ function enter_game_room(){
     }//else uses the value of selected button
 
     if ($('#radio1').prop('checked')){
-        number_of_games = 1;
+        number_of_games ="1";
     }else if ($('#radio2').prop('checked')){
-        number_of_games = 2;
+        number_of_games = "2";
     }else if ($('#radio3').prop('checked')){
-        number_of_games = 4;
+        number_of_games = "3";
     }else if ($('#radio4').prop('checked')){
-        number_of_games = 4;
+        number_of_games = "4";
+    }
+    show_number_of_games(number_of_games);
+    start_game();
+}
+
+function show_number_of_games(n_of_games) {
+    switch (n_of_games) {
+        case "4":
+            get_document_element('g2_table2').style.display = "block";
+            get_document_element('g2_game_status2').style.display = "block";
+        case "3":
+            get_document_element('g2_table').style.display = "block";
+            get_document_element('g2_game_status').style.display = "block";
+        case "2":
+            get_document_element('table2').style.display = "block";
+            get_document_element('game_status2').style.display = "block";
+        case "1":
+            get_document_element('table').style.display = "block";
+            get_document_element('game_status').style.display = "block";
+
+    get_document_element('chat_div_id').style.display = "block";
+    get_document_element('game_status_id').style.display = "block";
+
+
     }
 
-    start_game();
 }
 //displayed when 2 users exists for nw
 function start_game_btn(){
