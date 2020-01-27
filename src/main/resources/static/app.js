@@ -428,11 +428,11 @@ class checkers{
                 this.id.style.left = x+17 + 'px';
             }
             else if (game_no == 3){
-                this.id.style.top = y +17+ 'px';
+                this.id.style.top = y +14+ 'px';
                 this.id.style.left = x + 'px';
             }
             else if (game_no == 4){
-                this.id.style.top = y+17 + 'px';
+                this.id.style.top = y+14 + 'px';
                 this.id.style.left = x +17 + 'px';
             }
         }
