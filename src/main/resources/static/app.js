@@ -78,13 +78,13 @@ var dict_game_rm = {
     "1" : 1, "2" : 1, "3" : 2, "4" : 2, "5" : 3, "6" : 3, "7" : 4, "8" : 4,
 };
 
-var game_dict = {
-    "1" : square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,
-    "2" : square_class2,block2,w_checker2,b_checker2,white_checker_class2,black_checker_class2,
-    "3" : square_class_g2_1,block3,w_checker3,b_checker3,white_checker_class_g2_1,black_checker_class_g2_1,
-    "4" : square_class_g2_2,block4,w_checker4,b_checker4,white_checker_class_g2_2,black_checker_class_g2_2
-
-};
+// var game_dict = {
+//     "1" : [square_class,block,w_checker,b_checker,white_checker_class,black_checker_class],
+//     "2" : [square_class2,block2,w_checker2,b_checker2,white_checker_class2,black_checker_class2],
+//     "3" : [square_class_g2_1,block3,w_checker3,b_checker3,white_checker_class_g2_1,black_checker_class_g2_1],
+//     "4" : [square_class_g2_2,block4,w_checker4,b_checker4,white_checker_class_g2_2,black_checker_class_g2_2]
+//
+// };
 
 $(document).ready(function(){
     //error with this function. may need to remove this
@@ -517,12 +517,52 @@ class Game {
 
     }
 
+    set_game_data(game_num){
+
+        if (game_num == 1){
+            square_class =square_class;
+            block = block;
+            w_checker = w_checker;
+            b_checker = b_checker;
+            white_checker_class = white_checker_class;
+            black_checker_class =black_checker_class;
+        }
+
+        else if (game_num == 2){
+            square_class =square_class2;
+            block = block2;
+            w_checker = w_checker2;
+            b_checker = b_checker2;
+            white_checker_class = white_checker_class2;
+            black_checker_class =black_checker_class2;
+        }
+        else if (game_num == 3){
+            square_class =square_class_g2_1;
+            block = block3;
+            w_checker = w_checker3;
+            b_checker = b_checker3;
+            white_checker_class = white_checker_class_g2_1;
+            black_checker_class =black_checker_class_g2_1;
+        }
+        else if (game_num == 4){
+            square_class =square_class_g2_2;
+            block = block4;
+            w_checker = w_checker4;
+            b_checker = b_checker4;
+            white_checker_class = white_checker_class_g2_2;
+            black_checker_class =black_checker_class_g2_2;
+        }
+    }
+
     /*initializeAllGame testing*/
     initialize_game(game_no) {
 
-        square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
-        console.log(square_class,block,w_checker,b_checker,white_checker_class,game_no);
+        //Multiple return values doesnt work in js as expected :)
+        // console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
+        // square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
 
+        this.set_game_data(game_no);
+        console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
@@ -574,16 +614,6 @@ class Game {
         }
         user_action = "initialize";
         this.connect();
-        // this.reset_all_board_vals();
-    }
-
-    reset_all_board_vals(){
-        square_class = undefined;
-        block = [];
-        w_checker = [];
-        b_checker = [];
-        white_checker_class = undefined;
-        black_checker_class = undefined;
 
     }
 
