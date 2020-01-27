@@ -2,7 +2,7 @@
  * @author Azky & calincojo (Used this as reference for the front-end implementation https://codepen.io/calincojo/pen/wBQqYm)
  */
 /*
-I have use this as reference. , though most of the code are changed.
+I have use this as reference, though most of the code are changed.
  */
 var user_name;
 var room_value;
@@ -87,9 +87,6 @@ $(document).ready(function(){
 function enterName(){
 
     user_name = $("#id_name_value").val();//gets users name
-    // room_value = $("#rm_nm_value").val();
-    // room_action = "create_room";
-
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('div_id_menu').style.display = "block";
 
@@ -253,12 +250,9 @@ function enter_chat(){
     var enter_chat = {"type": "enter_chat_lobby"};
     start_game(enter_chat);
 
-
 }
 
-function get_document_element(element_id){
-    return (document.getElementById(element_id))
-}
+
 
 function enter_game_room(){
     /*we show the canvas and we worship the rest of the elements*/
@@ -321,7 +315,6 @@ function show_number_of_games(n_of_games) {
     get_document_element('chat_div_id').style.display = "block";
     get_document_element('game_status_id').style.display = "block";
 
-
     }
 
 }
@@ -340,6 +333,10 @@ function start_game_btn2(){
     game_started2 = true;
     document.getElementById('start_div2').style.display = "none";
     game.send_data(msg);
+}
+
+function get_document_element(element_id){
+    return (document.getElementById(element_id))
 }
 
 class checkers_squares {
