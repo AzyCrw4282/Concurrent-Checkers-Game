@@ -222,10 +222,8 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "get_room_players":
                     if (game.player_ids.get() > 1){ //not shows if its the first player in the game
-//                        Player player_obj = (Player) session.getAttributes().get(game_attribute);
                         System.out.println("Player obj " + session);//try to use session
                         game.get_rooms_data(session);
-
                     }
                     break;
 
@@ -256,9 +254,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Checkers.move_deviation = move_dev;
                     break;
 
-                case "ping":
-                    break;
-
                 case "join_matchmaking"://makes the request and adds the player to a queue and finds an empty room with permit and f/e request made
                     matchmaking_queue.add(session);
                     //find a room and send that to the f/e as the value. And player session held in queue.
@@ -268,7 +263,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                         mesg = String.format("{\"type\": \"join_matchmaking_resp\",\"data\": \"%s\"}",rm_name);
                         session.sendMessage(new TextMessage(mesg));
                     }
-
                     break;
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);
@@ -283,6 +277,8 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "req_leaderboard":
                     dbpgsql.fetch_all_rows(session);
+                    break;
+                case "ping":
                     break;
             }
 
