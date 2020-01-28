@@ -1,5 +1,9 @@
 package com.rhul.springboot;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.net.URISyntaxException;
 import java.sql.*;
 
@@ -8,59 +12,52 @@ import java.sql.*;
  *
  * Used as a proxy between playing updating and to reach the database.
  */
+@Getter
+@Setter
+@NoArgsConstructor
 public class LeaderBoard {
-    private final Player plyr_obj;
-    private final String player_name;//The primary key to identify fields
+    private String player_name;//The primary key to identify fields
     //can use this class to fetch user data and show that on the user status, and game screen
     //e.g. player. cn;
     private static Connection cn;
+    private String plyr_name;
+    private int games_competed;
+    private String win_perc;
+    private int long_win_streak;
+    private String game_ranking;
     private static DatabasePgSQL db = new DatabasePgSQL();
-    public LeaderBoard(Player plyr,String player_name){
-        this.plyr_obj = plyr;
+    public LeaderBoard(String player_name){
         this.player_name = player_name;
-
     }
 
-    public void check_if_usr_exists(String plyr_id) throws URISyntaxException, SQLException {
-        String queryCheck = "SELECT 1* from leaderboard WHERE user = " + plyr_id;
-        Statement st = cn.createStatement();
-        ResultSet rs = st.executeQuery(queryCheck);
+    public boolean check_if_usr_exists() throws URISyntaxException, SQLException {
+        String queryCheck = "SELECT * from messages WHERE msgid = ?";
+        PreparedStatement ps = cn.prepareStatement(queryCheck);
+        ps.setString(1, this.player_name);
+        ResultSet resultSet = ps.executeQuery();
 
         // if this ID already exists, we quit
-        if(rs.absolute(1)) {
+        if(resultSet.absolute(1)) {
+            //if exists update the values
+            plyr_name = resultSet.getString(1);
+            games_competed = Integer.parseInt(resultSet.getString(2));
+            win_perc = resultSet.getString(3);
+            long_win_streak = Integer.parseInt(resultSet.getString(4));
+            game_ranking =resultSet.getString(5);
             cn.close();
-            return;
+            return true;
         }
         else{
-            //if it doesnt exist
-
+            return false;
         }
 
+    }
+
+    public  void update_rank(){
 
     }
 
-    public void get_rank(){
-
-
-    }
-
-    public void get_games_competed(){
-
-    }
-
-    public void get_win_percent(){
-
-    }
-
-    public void get_long_win_streak(){
-
-    }
-
-    public void update_rank(){
-
-    }
-
-    public void update_games_completed(){
+    public  void update_games_completed(){
 
     }
 

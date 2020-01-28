@@ -27,7 +27,6 @@ public class DatabasePgSQL {
     public static void fetch_all_rows(WebSocketSession session) throws SQLException, IOException, URISyntaxException {
         cn = create_connection();
         Statement stmt = cn.createStatement();
-//        stmt.executeUpdate("SELECT * FROM leaderboard LIMIT 10");
         ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard ORDER BY gamescompeted DESC LIMIT 10");
         System.out.println("line 31 "+ rs);
         StringBuilder sb = new StringBuilder();

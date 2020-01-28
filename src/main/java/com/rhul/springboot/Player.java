@@ -40,6 +40,7 @@ public class Player {
     private String room_value;
     private String colour;
     private String cur_plyr;
+    private LeaderBoard leaderbd;
 
     CheckersGame game = new CheckersGame();
 
@@ -47,6 +48,7 @@ public class Player {
         this.id = id;
         this.name = name;
         this.session = session;
+        this.leaderbd = new LeaderBoard(name);
     }
 
     public synchronized void sendMessage(String msg){

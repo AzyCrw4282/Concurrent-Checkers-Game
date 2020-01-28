@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.lang.reflect.Array;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+
 /** This class handles all board related functionalities. An instance is user for each game, so 2 players use 1 game.
  * Some of the algorithms that check and performs checker move has been taken and adpted from the repo of the mentioned author.
  * @author Azky & Elise(From github)
@@ -466,9 +469,23 @@ public class Checkers {
         return true;
     }
 
-    public void declare_winner(){
-        //if declare winner is called then update the leaderboard- current player is the winner
+    public void declare_winner() throws URISyntaxException, SQLException {
+        //Todo - send f/e to update user. Update the lederboard table.
+        boolean new_user = plyr.getLeaderbd().check_if_usr_exists();
+        if (new_user){
+            plyr.getLeaderbd().update_games_completed();
+            plyr.getLeaderbd().update_win_percent();
+            plyr.getLeaderbd().update_long_win_streak();
+            plyr.getLeaderbd().update_games_completed();
 
+        }
+        else{
+
+
+
+
+
+        }
 
     }
 
