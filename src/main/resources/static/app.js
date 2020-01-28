@@ -2,13 +2,14 @@
  * @author Azky & calincojo (Used this as reference for the front-end implementation https://codepen.io/calincojo/pen/wBQqYm)
  */
 /*
-I have use this as reference. , though most of the code are changed.
+I have use this as reference, though most of the code are changed.
  */
-var user;
+var user_name;
 var room_value;
 var room_action;
-var difficulty;
+var number_of_games;
 var players= [];
+var num_games;
 var chat = false;
 var game_started = false;
 var game_started2 = false;
@@ -18,16 +19,26 @@ var player_game;//1/2
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
-var row_counter =0;
+var room_row_counter =0;
+var leaderbd_row_counter = 0;
 //first game
 var square_class = document.getElementsByClassName("square");
-var square_class2 = document.getElementsByClassName("square2");
 var white_checker_class = document.getElementsByClassName("white_checker");
 var black_checker_class = document.getElementsByClassName("black_checker");
-var white_checker_class2 = document.getElementsByClassName("white_checker2");
-var black_checker_class2 = document.getElementsByClassName("black_checker2");
 
 //second game
+var square_class2 = document.getElementsByClassName("square2");
+var white_checker_class2 = document.getElementsByClassName("white_checker2");
+var black_checker_class2 = document.getElementsByClassName("black_checker2");
+//3 game
+var square_class_g2_1 = document.getElementsByClassName("square3");
+var white_checker_class_g2_1 = document.getElementsByClassName("white_checker_g2_1");
+var black_checker_class_g2_1 = document.getElementsByClassName("black_checker_g2_1");
+//4 game
+var square_class_g2_2 = document.getElementsByClassName("square4");
+var white_checker_class_g2_2 = document.getElementsByClassName("white_checker_g2_2");
+var black_checker_class_g2_2 = document.getElementsByClassName("black_checker_g2_2");
+
 var moveSound = document.getElementById("moveSound");
 var winSound = document.getElementById("winSound");
 var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
@@ -40,21 +51,37 @@ var moveDeviation2 = 7;
 var cur_big_screen = 1;//takes in the curr pos of the screen
 
 //appended 2 represents the 2nd game, whilst without it is tfor the first game
+//4 game representation
 var block = [];
 var w_checker = [];
 var b_checker = [];
+var the_checker = undefined;
+
 var block2 = [];
 var w_checker2 = [];
 var b_checker2 = [];
-var the_checker = undefined;
 var the_checker2 = undefined ;
-var user_action;
-var user_action2;
 
+var block3 = [];
+var w_checker3 = [];
+var b_checker3 = [];
+var the_checker3 = undefined ;
+
+var block4 = [];
+var w_checker4 = [];
+var b_checker4 = [];
+var the_checker4 = undefined ;
+var user_action;
+
+//maps player to a game
+var dict_game_rm = {
+    "1" : 1, "2" : 1, "3" : 2, "4" : 2, "5" : 3, "6" : 3, "7" : 4, "8" : 4,
+};
 
 $(document).ready(function(){
     //error with this function. may need to remove this
     // document.getElementById("body_id").src = "bkground.png";
+
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
         getDimension();//vars here will also need to eb updated on f/e
@@ -79,16 +106,13 @@ $(document).ready(function(){
     document.getElementById("msg_id").addEventListener("keydown", function(e) {
         if (!e) { var e = window.event; }
         // Enter is pressed
-        if (e.key === "Enter") { action_chat_msg(); console.log("85")}
+        if (e.key === "Enter") { action_chat_msg();}
     }, false);
 });
 
 function enterName(){
 
-    user = $("#id_name_value").val();//gets users name
-    // room_value = $("#rm_nm_value").val();
-    // room_action = "create_room";
-
+    user_name = $("#id_name_value").val();//gets users name
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('div_id_menu').style.display = "block";
 
@@ -97,22 +121,27 @@ function enterName(){
 function action_chat_msg(){
 
     if (user_permit_val == 0){//global chat broadcast
-        var msg = user + " : " +$("#msg_id").val();
+        var msg = user_name + " : " +$("#msg_id").val();
         $("#msg_id").val("");
         let msg_data = {"type": "global_chat", "msg": msg};
         game.send_data(msg_data);//send it to b-e
     }
     else{
-        var msg = user + " : " +$("#msg_id").val();
+        var msg = user_name + " : " +$("#msg_id").val();
         $("#msg_id").val("");
         let msg_data = {"type": "game_chat", "msg": msg};
         game.send_data(msg_data);//send it to b-e
     }
 }
 
-
 /*When pressing create room we are asked to enter room name and room type*/
 function create_room(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    chat_div = document.getElementById('chat_div_id');
+    if (lb_div.style.display === "block" || chat_div.style.display === "block" ){
+        lb_div.style.display = "none";
+        chat_div.style.display = "none";
+    }
     room_action = "create_room";
     /*we show the elements to create room and hide what we don't need*/
     document.getElementById('div_id_menu').style.display = "none";
@@ -125,101 +154,171 @@ function create_room(){
 
 /*When we join the room we are asked for the name of the room*/
 function join_a_room(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    chat_div = document.getElementById('chat_div_id');
+    if (lb_div.style.display === "block" || chat_div.style.display === "block" ){
+        lb_div.style.display = "none";
+        chat_div.style.display = "none";
+    }
     room_action = "join_room";
     document.getElementById('div_id_menu').style.display = "none";
     document.getElementById('div_id_room_settings').style.display = "block";
+    document.getElementById('n_game_selector').style.display = "none";
     // game_2.initialize_snd_game();
     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
     start_game(msg_data);
 }
 
-function join_selected_room(room_id){
-    room_value = room_id;
-    enter_game_room();
+function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
+    //apply changes  below for correct table
+    var table =document.getElementById("leaderboard_data");
+    var row = table.insertRow(leaderbd_row_counter);
+    var cell_id = row.insertCell(0);
+    cell_id.innerHTML = user_id;
+    var cell_i = row.insertCell(1);
+    cell_i.innerHTML = games_competed;
+    cell_i = row.insertCell(2);
+    cell_i.innerHTML = win_per;
+    cell_i = row.insertCell(3);
+    cell_i.innerHTML = win_streak;
+    cell_i = row.insertCell(4);
+    cell_i.innerHTML = rank;
+    // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
+    // cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
+    leaderbd_row_counter +=1;
 }
 
-
-function update_room_players(id,name,num_of_players){
+function update_room_players(id,name,num_of_players,max_permits){
     //here should update all the rows for the fetched records
-    console.log("144");
     var game_room = ""+name;
     var table =document.getElementById("room_players_data");
-    var row = table.insertRow(row_counter);
+    var row = table.insertRow(room_row_counter);
     var cell_id = row.insertCell(0);
     cell_id.innerHTML = id;
     var cell_i = row.insertCell(1);
     cell_i.innerHTML = name;
     cell_i = row.insertCell(2);
-    cell_i.innerHTML = num_of_players + "/4";
+    cell_i.innerHTML = num_of_players + "/"+(parseInt(max_permits)*2);
     cell_i = row.insertCell(3);
     // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
-    cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
-    row_counter +=1;
+    cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\',\''+max_permits+'\')">Join</button>';
+    room_row_counter +=1;
 }
 
 function getDimension (){
     windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 }
-
-/*weJoinARandomRoom*/
-function action_matchmaking(){
-    document.getElementById('btnPrinc').style.display = "none";
-    document.getElementById('canvas').style.display = "block";
-    document.getElementById('divChat').style.display = "none";
-    document.getElementById('console').style.height = "90%";
-
-    menu_option="MatchMaking";
-
-    /*If we are in the chat we remove the user from the chat*/
-    if (!chat){
-        start_game()
-    }else{
-        let aux = {"type": "delete", "name": user};
-
-        $("#player-box").text("");
-        chat = false;
-        // game.open(); fault here
+//Allocate user to a random room without picking any specific room. The algorithm would simple check for rooms and find the best one
+function join_matchmaking(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    chat_div = document.getElementById('chat_div_id');
+    if (lb_div.style.display === "block" || chat_div.style.display === "block" ){
+        lb_div.style.display = "none";
+        chat_div.style.display = "none";
     }
+    room_action="MatchMaking";
+    let msg_data = {"type" : "join_matchmaking","msg" : "N/A"};
+    start_game(msg_data);
+
+}
+
+function show_leaderboard(){
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+        return
+    }
+
+    lb_div.style.display = "block";
+    lb_div.style.left = "-200px";
+    // document.getElementById('leaderboard_div_id').style.top = "-565px";
+    lb_div.style.marginTop = "10%";
+
+    var enter_chat = {"type": "req_leaderboard"};
+    start_game(enter_chat);
+
 }
 
 /*weSelectTheChat*/
 function enter_chat(){
+    chat_div = document.getElementById("chat_div_id");
+    lb_div = document.getElementById("leaderboard_div_id");
+    if (lb_div.style.display === "block"){
+        lb_div.style.display = "none";
+    }
 
-    document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('chat_div_id').style.left = "-200px";
-    document.getElementById('chat_div_id').style.top = "-565px";
-    document.getElementById('chat_div_id').style.marginLeft = "100px";
-    document.getElementById('console_id').style.height = "400px";
+    if (chat_div.style.display === "block"){
+        chat_div.style.display = "none";
+        return
+    }
+
+    chat_div.style.display = "block";
+    chat_div.style.left = "-200px";
+    chat_div.style.top = "-565px";
+    chat_div.style.marginLeft = "100px";
+    chat_div.style.height = "400px";
 
     chat =  true;
     var enter_chat = {"type": "enter_chat_lobby"};
     start_game(enter_chat);
+}
 
-
+function join_selected_room(room_nm,max_permits){
+    room_value = room_nm;
+    number_of_games = parseInt(max_permits).toString();
+    enter_game_room();
 }
 
 function enter_game_room(){
-    /*we show the canvas and we worship the rest of the elements*/
-    document.getElementById('chat_div_id').style.left = "0px";
-    document.getElementById('chat_div_id').style.top = "0px";
-    document.getElementById('chat_div_id').style.marginLeft = "0px";
+    get_document_element('chat_div_id');
+    get_document_element('chat_div_id').style.left = "0px";
+    get_document_element('chat_div_id').style.top = "0px";
+    get_document_element('chat_div_id').style.marginLeft = "0px";
     document.body.style.backgroundImage = "none";
-    document.getElementById("body_id").style.backgroundColor = "#ffffff";
-    document.getElementById('div_id_room_settings').style.display = "none";
-    document.getElementById('table').style.display = "block";
-    document.getElementById('chat_div_id').style.display = "block";
-    document.getElementById('table').style.display = "block";
-    document.getElementById('table2').style.display = "block";
-    document.getElementById('game_status').style.display = "block";
-    document.getElementById('game_status2').style.display = "block";
+    get_document_element("body_id").style.backgroundColor = "#ffffff";
+    get_document_element('div_id_room_settings').style.display = "none";
+    get_document_element('div_id_menu').style.display = "none";
+    get_document_element('chat_div_id').style.display = "none";
 
     /*weGetTheValues​​toCreateTheRoom*/
     if (room_value === undefined) {
         room_value = $("#rm_nm_value").val();
-    }//else uses the value of selected button
+    }
 
+    if ($('#radio1').prop('checked')){
+        number_of_games ="1";
+    }else if ($('#radio2').prop('checked')){
+        number_of_games = "2";
+    }else if ($('#radio3').prop('checked')){
+        number_of_games = "3";
+    }else if ($('#radio4').prop('checked')){
+        number_of_games = "4";
+    }
+    show_number_of_games(number_of_games);
     start_game();
+}
+
+function show_number_of_games(n_of_games) {
+    switch (n_of_games) {
+        case "4":
+            get_document_element('g2_table2').style.display = "block";
+            get_document_element('g2_game_status2').style.display = "block";
+        case "3":
+            get_document_element('g2_table').style.display = "block";
+            get_document_element('g2_game_status').style.display = "block";
+        case "2":
+            get_document_element('table2').style.display = "block";
+            get_document_element('game_status2').style.display = "block";
+        case "1":
+            get_document_element('table').style.display = "block";
+            get_document_element('game_status').style.display = "block";
+
+    get_document_element('chat_div_id').style.display = "block";
+    get_document_element('game_status_id').style.display = "block";
+
+    }
+
 }
 //displayed when 2 users exists for nw
 function start_game_btn(){
@@ -238,6 +337,10 @@ function start_game_btn2(){
     game.send_data(msg);
 }
 
+function get_document_element(element_id){
+    return (document.getElementById(element_id))
+}
+
 class checkers_squares {
     constructor(square, index) {
         this.id = square;
@@ -253,7 +356,6 @@ class checkers_squares {
             else{
                 alert("Game not started. Please wait for the other user to join.")
             }
-
         }
     }
 }
@@ -283,20 +385,43 @@ class checkers{
                     alert("Game not started. Please wait for the other user to join.")
                 }
             }
+        }
 
-        }
-        set_coords(X,Y){
+        set_coords(game_no){
             var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            this.id.style.top = y + 'px';
-            this.id.style.left = x + 'px';
+
+            if (game_no == 1){
+                this.id.style.top = y + 'px';
+                this.id.style.left = x + 'px';
+            }
+            else if (game_no == 2){
+                this.id.style.top = y + 'px';
+                this.id.style.left = x+17 + 'px';
+            }
+            else if (game_no == 3){
+                this.id.style.top = y + 'px';
+                this.id.style.left = x + 'px';
+            }
+            else if (game_no == 4){
+                this.id.style.top = y + 'px';
+                this.id.style.left = x +17 + 'px';
+            }
         }
-        set_second_game_coords(X,Y){
-            var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-            var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            this.id.style.top = y + 'px';
-            this.id.style.left = x+17 + 'px';
-         }
+
+
+        // set_coords(X,Y){
+        //     var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+        //     var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+        //     this.id.style.top = y + 'px';
+        //     this.id.style.left = x + 'px';
+        // }
+        // set_second_game_coords(X,Y){
+        //     var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+        //     var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+        //     this.id.style.top = y + 'px';
+        //     this.id.style.left = x+17 + 'px';
+        //  }
         move_coords(X,Y,game_no){
             // var x = (this.coordX - 1  ) * moveLength + moveDeviation;
             // var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
@@ -316,10 +441,11 @@ class checkers{
 }
 
 var chatbox_logs = {};
+var gameStatus_logs = {};
 
 chatbox_logs.log = (function (msg) {
     var chatbox = document.getElementById("console_id");
-    var p_msg = document.createElement('p');
+    var p_msg = document.createElement('h4');
     p_msg.style.wordWrap = 'break-word';
     p_msg.innerHTML = msg;
     chatbox.appendChild(p_msg);
@@ -331,6 +457,23 @@ chatbox_logs.log = (function (msg) {
     }
     chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
 });
+
+gameStatus_logs.log = (function (msg) {
+    if (msg === undefined) msg = "Game Status will appear below";
+    var gameStatus = document.getElementById("console_status_id");
+    var p_msg = document.createElement('h4');
+    p_msg.style.wordWrap = 'break-word';
+    p_msg.innerHTML = msg;
+    gameStatus.appendChild(p_msg);
+
+    //optimise the chat box
+    while(gameStatus.childNodes.length > 20){
+        //remove to keep chat in place
+        gameStatus.removeChild(gameStatus.firstChild);//removes the top element
+    }
+    gameStatus.scrollTop = gameStatus.scrollHeight;//scrolls it to height measurement to adjust chatbox
+});
+
 
 //A game class
 class Game {
@@ -346,120 +489,106 @@ class Game {
 
     }
 
-    /*initializeTheGame*/
-    initialize_game() {
+    set_game_data(game_num){
 
+        if (game_num == 1){
+            square_class =square_class;
+            block = block;
+            w_checker = w_checker;
+            b_checker = b_checker;
+            white_checker_class = white_checker_class;
+            black_checker_class =black_checker_class;
+        }
+
+        else if (game_num == 2){
+            square_class =square_class2;
+            block = block2;
+            w_checker = w_checker2;
+            b_checker = b_checker2;
+            white_checker_class = white_checker_class2;
+            black_checker_class =black_checker_class2;
+        }
+        else if (game_num == 3){
+            square_class =square_class_g2_1;
+            block = block3;
+            w_checker = w_checker3;
+            b_checker = b_checker3;
+            white_checker_class = white_checker_class_g2_1;
+            black_checker_class =black_checker_class_g2_1;
+        }
+        else if (game_num == 4){
+            square_class =square_class_g2_2;
+            block = block4;
+            w_checker = w_checker4;
+            b_checker = b_checker4;
+            white_checker_class = white_checker_class_g2_2;
+            black_checker_class =black_checker_class_g2_2;
+        }
+    }
+
+    /*initializeAllGame testing*/
+    initialize_game(game_no) {
+
+        //Multiple return values doesnt work in js as expected :)
+        // console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
+        // square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
+
+        this.set_game_data(game_no);
+        console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
             block[i] = new checkers_squares(square_class[i], i);
-
         }
-        /*================initializarea white black counters =================================*/
-        // white Ladies
+        /*================Initializing white black counters =================================*/
+        // white piece
         for (var i = 1; i <= 4; i++) {
-
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(0, 0);
+            w_checker[i].set_coords(game_no);
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
-            w_checker[i].set_coords(0, 0);
+            w_checker[i].set_coords(game_no);
             block[2 * i].occupied = true;
             block[2 * i].pieceId = w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(0, 0);
+            w_checker[i].set_coords(game_no);
             block[2 * i - 1].occupied = true;
             block[2 * i - 1].pieceId = w_checker[i];
         }
 
-        //black Ladies
+        //black piece
         for (var i = 1; i <= 4; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
-            b_checker[i].set_coords(0, 0);
+            b_checker[i].set_coords(game_no);
             block[56 + 2 * i].occupied = true;
             block[56 + 2 * i].pieceId = b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
-            b_checker[i].set_coords(0, 0);
+            b_checker[i].set_coords(game_no);
             block[40 + 2 * i - 1].occupied = true;
             block[40 + 2 * i - 1].pieceId = b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
-            b_checker[i].set_coords(0, 0);
+            b_checker[i].set_coords(game_no);
             block[24 + 2 * i].occupied = true;
             block[24 + 2 * i].pieceId = b_checker[i];
         }
         user_action = "initialize";
         this.connect();
-    }
-
-    initialize_second_game(){
-
-        /*===============initializingThePlayingFields =================================*/
-        for (var i = 1; i <= 64; i++)
-        {
-            block2[i] = new checkers_squares(square_class2[i], i);
-
-        }
-        /*================initializarea white black counters =================================*/
-        // white Ladies
-        for (var i = 1; i <= 4; i++) {
-            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
-            w_checker2[i].set_second_game_coords(0, 0);
-            block2[2 * i - 1].occupied = true;
-            block2[2 * i - 1].pieceId = w_checker2[i];
-        }
-
-        for (var i = 5; i <= 8; i++) {
-            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i,i);
-            w_checker2[i].set_second_game_coords(0, 0);
-            block2[2 * i].occupied = true;
-            block2[2 * i].pieceId = w_checker2[i];
-        }
-
-        for (var i = 9; i <= 12; i++) {
-            w_checker2[i] = new checkers(white_checker_class2[i], "white", 2 * i - 1,i);
-            w_checker2[i].set_second_game_coords(0, 0);
-            block2[2 * i - 1].occupied = true;
-            block2[2 * i - 1].pieceId = w_checker2[i];
-        }
-
-        //black Ladies
-        for (var i = 1; i <= 4; i++) {
-            b_checker2[i] = new checkers(black_checker_class2[i], "black", 56 + 2 * i,i);
-            b_checker2[i].set_second_game_coords(0, 0);
-            block2[56 + 2 * i].occupied = true;
-            block2[56 + 2 * i].pieceId = b_checker2[i];
-        }
-
-        for (var i = 5; i <= 8; i++) {
-            b_checker2[i] = new checkers(black_checker_class2[i], "black", 40 + 2 * i - 1,i);
-            b_checker2[i].set_second_game_coords(0, 0);
-            block2[40 + 2 * i - 1].occupied = true;
-            block2[40 + 2 * i - 1].pieceId = b_checker2[i];
-        }
-
-        for (var i = 9; i <= 12; i++) {
-            b_checker2[i] = new checkers(black_checker_class2[i], "black", 24 + 2 * i,i);
-            b_checker2[i].set_second_game_coords(0, 0);
-            block2[24 + 2 * i].occupied = true;
-            block2[24 + 2 * i].pieceId = b_checker2[i];
-        }
-        user_action2 = "initialize";
-        this.connect();
 
     }
+
 
     //No corrds changes in b/e only display changes in f/e
     adjust_screen_size(move_length,move_dev){
@@ -590,8 +719,8 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
         user_action = "initialize";
-        this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
-        //        this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");https://springboot21.herokuapp.com/
+        // this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
+           this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
 
         /*startTheConnection*/
         this.socket.onopen = () => {
@@ -603,16 +732,7 @@ class Game {
                     already_opened = true;
                     this.open();
                 }
-                // else if (chat === true){
-                //     var enter_chat = {"type": "enter_chat_lobby"};
-                //     game.send_data(enter_chat);
-                //     // this.enter_chat_lobby();
-                // }
-                // else if (get_room_players === true){
-                //     let msg_data = {"type" : "get_room_players","msg" : "N/A"};
-                //     game.send_data(msg_data);
-                // }
-                else{
+                else{//used for all other cases in which game room is not defined
                     game.send_data(msg_data);
                 }
             }
@@ -625,6 +745,7 @@ class Game {
             //handles message received from b/e. need work on this
             switch (packet.type) {
                 /*removeAPlayerFromTheRoom*/
+
                 case 'result_move':
                     if (packet.data === "possible"){
                         console.log("move possible")
@@ -639,10 +760,17 @@ class Game {
                     break;
 
                 case "room_players_data":
-
                     for (var i=0;i<packet.data.length;i++){
-                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active);
+                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active,packet.data[i].max_permits);
                     }
+                    break;
+
+                case "leaderboard_resp":
+                    //method call to update the fetched rows
+                    for (var i=0;i<packet.data.length;i++){
+                        update_leaderboard(packet.data[i].user_id,packet.data[i].games_competed,packet.data[i].win_percent,packet.data[i].long_win_streak,packet.data[i].game_ranking);
+                    }
+                    console.log("leaderboard updated");
                     break;
 
                 case 'remove_road':
@@ -656,6 +784,9 @@ class Game {
 
                 case "chat":
                     chatbox_logs.log(packet.msg);
+                    break;
+                case "game_status_logs":
+                    gameStatus_logs.log(packet.data);
                     break;
                 case 'move_attack':
                     console.log("make the move");
@@ -705,7 +836,6 @@ class Game {
                     }
 
                     console.log("Move_made");
-                    // game.non_attack_move(piece_id,x_coord,y_coord);
                     break;
 
                 case "create_room_resp":
@@ -736,6 +866,21 @@ class Game {
                         console.log(packet.data);
                     }
                     break;
+                case "join_matchmaking_resp":
+                    //modal update to user
+                    if (packet.data !== null){
+                        //join room call
+                        room_action = "join_room";
+                        room_value = packet.data;
+                        enter_game_room();//join room process
+                        document.getElementById("modalBtnTrigger").click();
+                        document.getElementById("modal_message").innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
+
+                    }else{
+                        document.getElementById("modal_message").innerHTML =  "All rooms are full. Please create a room or manually join a room!";
+                        document.getElementById("modalBtnTrigger").click();
+                    }
+                    break;
                 case "start_game_1":
                     if (packet.data === "rdy"){
                         game_started = true;
@@ -752,27 +897,20 @@ class Game {
                         the_checker2 = w_checker2;//to begin with
                     }
                     break;
-                case "room_permits":// Iniz here?
+                case "room_permits":
                     user_permit_val  = packet.data;
-                    // console.log(user_permit_val == 4);
-                    if (user_permit_val == 4 || user_permit_val == 3 ){
-                        //will play the first game
-                        console.log("user for first game");
+                    num_games = packet.num_games;
+                    if (user_permit_val >0){
+                        //use a method to intialize the required games
                         permit_obtained = true;
-                        game.initialize_game();
-                        game2.initialize_second_game();//used for testing only
-                        player_game = 1;
+                        player_game = dict_game_rm[String(user_permit_val)];
+                        for(var game_no=1;game_no<=num_games;game_no++){
+                            game.initialize_game(game_no);
+                        }
                     }
-                    else if (user_permit_val == 2 || user_permit_val == 1){
-                        console.log("user for second game");
-                        game.initialize_game();//to see game 1
-                        game2.initialize_second_game();
-                        player_game = 2;
-                    }
-                    //after this then i can perform the initialization, whether game obj, game2 obj
                     break;
             }
-        }
+        };
 
         /*closeTheConnection*/
         this.socket.onclose = () => {
@@ -784,8 +922,8 @@ class Game {
     /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
     //fix error on this
     open() { //
-        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "difficulty_lvl" : difficulty};
-        var json_str=JSON.stringify(msg);
+        var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name, "n_games" : number_of_games};
+        var json_str = JSON.stringify(msg);
         this.socket.send(json_str);
 
         setTimeout(function () {
@@ -794,7 +932,6 @@ class Game {
                 game.send_data(check_permits);
             }
         },3000);
-
     }
 
     enter_chat_lobby() {

@@ -47,6 +47,16 @@ which most have been adapted and changes to fit my game.
     border-radius: 2%;
     font-family: myFont2;
 }
+
+#game_status_id{
+    border: 2px solid #383838;
+    height: 480px;
+    width: 400px;
+    /*margin-left: 3%;*/
+    border-radius: 2%;
+    font-family: myFont2;
+}
+
 #console_id{
     overflow-y: scroll;
     height: 90%;
@@ -114,16 +124,16 @@ body , html{
     margin : 0 0;
     padding: 0  0;
 }
-.square, .square2{
+.square, .square2, .square3, .square4{
     float: left;
     width: 80px;
     height: 80px;
 }
 
-.white_square, .white_square2{
+.white_square, .white_square2, .white_square3_g2_1, .white_square_g2_2{
     background-color:#F0D2B4;
 }
-.black_square, .black_square2{
+.black_square, .black_square2, .black_square3_g2_1, .black_square_g2_2{
     background-color :#BA7A3A;
 }
 .clear_float{
@@ -174,7 +184,7 @@ body , html{
 
 }
 
-.white_checker,.white_checker2{
+.white_checker,.white_checker2,.white_checker_g2_1,.white_checker_g2_2{
     background: #fffcff;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
@@ -182,7 +192,7 @@ body , html{
     transition: 0.3s ease-in-out;
 }
 
-.black_checker,.black_checker2{
+.black_checker,.black_checker2,.black_checker_g2_1,.black_checker_g2_2{
     background: #00001F;
     -webkit-transition: 0.3s ease-in-out;
     -moz-transition: 0.3s ease-in-out;
@@ -211,11 +221,7 @@ hr {
         height: 400px;
     }
 
-    .square{
-        width: 50px;
-        height: 50px;
-    }
-    .square2{
+    .square,.square2,.square3,.square4{
         width: 50px;
         height: 50px;
     }

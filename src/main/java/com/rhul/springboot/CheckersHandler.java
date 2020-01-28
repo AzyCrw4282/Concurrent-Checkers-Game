@@ -1,11 +1,14 @@
 package com.rhul.springboot;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import org.json.JSONException;//should be fixed
+
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -28,12 +31,12 @@ public class CheckersHandler extends TextWebSocketHandler {
     private WebSocketSession s;
     private Checkers checks_obj;
     private boolean joining =false;
+    private Queue matchmaking_queue = new LinkedList();
     CheckersGame game = new CheckersGame();
+    DatabasePgSQL dbpgsql = new DatabasePgSQL();
     Executor executor = Executors.newFixedThreadPool(20);
     String cur_plyr = null;
     int piece_index = 0;
-    @Autowired
-//    Bugsnag bugsnag = new Bugsnag("58b3b400437ffde6119c14c6f0b358a8", true);
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -45,9 +48,7 @@ public class CheckersHandler extends TextWebSocketHandler {
             System.out.println("------------------------------------");
             System.out.println("string from f/e "+ json);
 
-
             switch (type){
-
 
                 case "user":
 
@@ -55,7 +56,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                           try{
                               String msg;
                               System.out.println("waiting for lock");
-                              Lk.lock();
+
                               System.out.println("I am in");
 
                               if (game.player_ids.get()> 4){
@@ -63,7 +64,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                               }
 
                               int player_id = game.player_ids.getAndIncrement();
-                              Player plyr = new Player(player_id,"player",session);
+                              Player plyr = new Player(player_id,json.getString("plyr_name"),session);
+                              int n_games = Integer.parseInt(json.getString("n_games"));
                               plyr.setCur_thread(Thread.currentThread());
                               session.getAttributes().put(game_attribute,plyr);
 
@@ -72,11 +74,11 @@ public class CheckersHandler extends TextWebSocketHandler {
                               System.out.println("multi threads running n: " + Thread.currentThread().getId() + " playerId: "+ player_id);
 
                              if (json.getString("room_action").equals("create_room")) {
-
+                                 Lk.lock();
 
                                  if (!game.check_room_exists(rm_val)) {
 
-                                     rm = new Room(player_id, rm_val, plyr);
+                                     rm = new Room(player_id, rm_val, plyr,n_games);
                                      rm.add_player_to_room(plyr);
                                      plyr.setRoom(rm);
                                      plyr.setColour("white");
@@ -107,11 +109,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                              }
 
                              else if ((json.getString("room_action").equals("join_room"))) {
-
-                                 System.out.println("104");
+                                 Lk.lock();
                                  if (game.check_room_exists(rm_val)) {
 
-                                     System.out.println("106");
                                      rm = game.get_room(rm_val);
                                      boolean player_added = rm.add_player_to_room(plyr);
                                      joining = true;
@@ -172,7 +172,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                           } catch (Exception ex) {
                               ex.printStackTrace();
-                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in joinig room"));
+                              BugsnagConfig.bugsnag().notify(new RuntimeException("Error encountered in accessing room"));
                           }
                     };
                   executor.execute(threads_area);
@@ -214,18 +214,16 @@ public class CheckersHandler extends TextWebSocketHandler {
                     System.out.println("Player " + p.getId());
                     Room rom = game.get_room(json.getString("room_value"));
                     int room_permits = rom.getSmphore().availablePermits() + 1;
-                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\"}", room_permits);
+                    int num_games = rom.getN_games();
+                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\",\"num_games\": \"%d\"}", room_permits,num_games);
                     System.out.println(mesg);
                     p.sendMessage(mesg);
                     break;
 
-
                 case "get_room_players":
                     if (game.player_ids.get() > 1){ //not shows if its the first player in the game
-//                        Player player_obj = (Player) session.getAttributes().get(game_attribute);
                         System.out.println("Player obj " + session);//try to use session
                         game.get_rooms_data(session);
-
                     }
                     break;
 
@@ -256,10 +254,16 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Checkers.move_deviation = move_dev;
                     break;
 
-                case "ping":
-
+                case "join_matchmaking"://makes the request and adds the player to a queue and finds an empty room with permit and f/e request made
+                    matchmaking_queue.add(session);
+                    //find a room and send that to the f/e as the value. And player session held in queue.
+                    mesg = "";
+                    String rm_name = game.get_room_to_join();
+                    if (rm_name != null){
+                        mesg = String.format("{\"type\": \"join_matchmaking_resp\",\"data\": \"%s\"}",rm_name);
+                        session.sendMessage(new TextMessage(mesg));
+                    }
                     break;
-
                 case "game_finish":
                     p = (Player) session.getAttributes().get(game_attribute);
                     System.out.println("Player value " + p.getId());
@@ -269,6 +273,12 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
                 case "update_player_id":
                     game.player_ids.set(1);
+                    break;
+
+                case "req_leaderboard":
+                    dbpgsql.fetch_all_rows(session);
+                    break;
+                case "ping":
                     break;
             }
 
@@ -282,7 +292,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
     public Player get_player_obj(int id){
 
-
         for (Player p : Player.players_hm.values()){
             if (p.getId() == id){
                 return p;
@@ -291,8 +300,6 @@ public class CheckersHandler extends TextWebSocketHandler {
         return null;
 
     }
-
-
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
