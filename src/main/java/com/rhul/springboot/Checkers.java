@@ -469,24 +469,29 @@ public class Checkers {
         return true;
     }
 
-    public void declare_winner() throws URISyntaxException, SQLException {
+    public void declare_winner(){
         //Todo - send f/e to update user. Update the lederboard table.
-        boolean new_user = plyr.getLeaderbd().check_if_usr_exists();
-        if (new_user){
-            plyr.getLeaderbd().update_games_completed();
-            plyr.getLeaderbd().update_win_percent();
-            plyr.getLeaderbd().update_long_win_streak();
-            plyr.getLeaderbd().update_games_completed();
-
+        try{
+            boolean existing_user = plyr.getLeaderbd().check_if_usr_exists();
+            if (existing_user){
+                update_leaderbd_cmds();
+            }
+            else{//new user
+                if (plyr.getLeaderbd().create_new_user()){
+                    update_leaderbd_cmds();
+                }
+            }
+        }catch (SQLException e){
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Error in declaring a winner. Likely to do with database update."));
+            e.printStackTrace();
         }
-        else{
+    }
 
-
-
-
-
-        }
-
+    public void update_leaderbd_cmds(){
+        plyr.getLeaderbd().update_games_competed();
+        plyr.getLeaderbd().update_win_percent();
+        plyr.getLeaderbd().update_long_win_streak();
+        plyr.getLeaderbd().update_rank();
     }
 
     public void apply_front_changes(Room rm,int square, String type,Checkers piece) {

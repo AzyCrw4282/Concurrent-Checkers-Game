@@ -54,12 +54,5 @@ public class PostgresDbTest {
 //        assertTrue("Insert and fetch data validity",expected_out != "");//check something has been fetched
 
     }
-//        stmt.executeUpdate("CREATE TABLE ticks (tick timestamp )");
-//        stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-//        ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-
-
-
 
 }
