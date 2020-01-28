@@ -123,13 +123,6 @@ public class Checkers {
         this.alive = alive;
     }
 
-
-
-
-
-
-
-
     public synchronized boolean show_moves(Checkers piece,Room rm){
         System.out.println("prev selected piece: " + selected_piece);
 
@@ -312,7 +305,6 @@ public class Checkers {
                 show_moves(the_checker[selected_piece],null);
             }
             else{
-
                 change_turns(the_checker);
                 boolean game_over = check_if_lost(the_checker);
                 if (game_over){
@@ -323,7 +315,6 @@ public class Checkers {
         }
         return true;
     }
-
 
     public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm){
         if (piece.coordY != top_limit){
@@ -359,7 +350,6 @@ public class Checkers {
         }
 
     }
-
 
     public boolean attack_move(Checkers piece, Room rm){
 
@@ -445,14 +435,12 @@ public class Checkers {
 
     }
 
-
     public  void eliminate_check(int index,Room rm) {
         if (index > 0 && index < 65){
             Checkers piece = cs.block[index].getPieceId();
             System.out.println("Eliminate Id " + piece + " index: " +index);
             piece.setAlive(false);
             cs.block[index].setOccupied(false);
-
             apply_front_changes(rm,piece.getId(),"eliminate_piece",null);
 
         }
@@ -465,7 +453,6 @@ public class Checkers {
         else{
             the_checker = w_checkers;
         }
-
 
     }
 
@@ -480,12 +467,10 @@ public class Checkers {
     }
 
     public void declare_winner(){
+        //if declare winner is called then update the leaderboard- current player is the winner
+
 
     }
-
-
-
-
 
     public void apply_front_changes(Room rm,int square, String type,Checkers piece) {
         System.out.println("f/e change requested. Type : "+ type);

@@ -67,8 +67,6 @@ public class Player {
         CheckersSquare checks_sqr = new CheckersSquare();
         checks_obj = new Checkers(this, checks_sqr);
 
-
-
         for (int i = 1; i <= 64; i++) {
             checks_sqr.block[i] = new CheckersSquare(i);
         }
