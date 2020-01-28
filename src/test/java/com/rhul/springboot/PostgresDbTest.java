@@ -44,6 +44,7 @@ public class PostgresDbTest {
                 " longwinstreak INTEGER, " +
                 " gamerank VARCHAR(255), " +
                 " gameslost INTEGER, " +
+                " curwinstreak INTEGER, " +
                 " PRIMARY KEY ( userid ))";
         stmt.executeUpdate(sql);
 //        stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) NOT NULL,gamesCompeted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");

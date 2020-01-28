@@ -24,6 +24,8 @@ public class LeaderBoard {
     private String win_perc;
     private int long_win_streak;
     private String game_ranking;
+    private String games_lost;
+    private String cur_win_streak;
     private static DatabasePgSQL db = new DatabasePgSQL();
     private static Connection cn;
     public LeaderBoard(String player_name) throws URISyntaxException, SQLException {
@@ -44,7 +46,9 @@ public class LeaderBoard {
             games_competed = Integer.parseInt(resultSet.getString(2));
             win_perc = resultSet.getString(3);
             long_win_streak = Integer.parseInt(resultSet.getString(4));
-            game_ranking =resultSet.getString(5);
+            game_ranking = resultSet.getString(5);
+            games_lost = resultSet.getString(6);
+            cur_win_streak = resultSet.getString(7);
             cn.close();
             return true;
         }
@@ -62,7 +66,6 @@ public class LeaderBoard {
         else return false;
     }
 
-    //uses n games completed to set the rank of the suer
     /*
     <20 - newbie
     <50 - Hero
@@ -93,7 +96,7 @@ public class LeaderBoard {
         }
 
     }
-    //incremetns the game completed by 1
+
     public void update_games_competed() throws SQLException {
         this.games_competed +=1;
         String queryCheck = "UPDATE leaderboard SET games_competed = ? WHERE userid = ?;";
@@ -104,13 +107,24 @@ public class LeaderBoard {
 
     }
 
-    public void update_win_percent(){
-
+    public void update_win_percent() throws SQLException {
+        int calc_win_percent = (Integer.parseInt(String.valueOf(games_competed)) - Integer.parseInt(games_lost))/((Integer.parseInt(String.valueOf(games_competed))));
+        String queryCheck = "UPDATE leaderboard SET winperc = ? WHERE userid = ?;";
+        PreparedStatement ps = cn.prepareStatement(queryCheck);
+        ps.setString(1, String.valueOf(calc_win_percent));
+        ps.setString(2,this.player_name);
+        ps.executeQuery();
 
     }
 
-    public void update_long_win_streak(){
-
+    public void update_long_win_streak() throws SQLException {
+        int cur_streak = Integer.parseInt(String.valueOf(cur_win_streak)+1);
+        if (cur_streak>(Integer.parseInt(String.valueOf(long_win_streak)))){
+            String queryCheck = "UPDATE leaderboard SET longwinstreak = ? WHERE userid = ?;";
+            PreparedStatement ps = cn.prepareStatement(queryCheck);
+            ps.setString(1, String.valueOf(cur_streak));
+            ps.setString(2,this.player_name);
+            ps.executeQuery();
+        }
     }
-
 }
