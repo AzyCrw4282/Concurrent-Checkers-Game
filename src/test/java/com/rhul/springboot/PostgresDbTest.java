@@ -43,13 +43,14 @@ public class PostgresDbTest {
                 " winperc VARCHAR(255), " +
                 " longwinstreak INTEGER, " +
                 " gamerank VARCHAR(255), " +
+                " gameslost INTEGER, " +
                 " PRIMARY KEY ( userid ))";
         stmt.executeUpdate(sql);
 //        stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) NOT NULL,gamesCompeted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");
-        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('Meking',28,'57%',7,'Hero')");
-        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('user4334',52,'63%',9,'Veteran')");
-        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('tryingBe',183,'57%',15,'Grand Master')");
-        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('UltimatePlayer',5,'40%',2,'Newbie')");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('Meking',28,'57%',7,'Hero',12)");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('user4334',52,'63%',9,'Veteran',20)");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('tryingBe',183,'57%',15,'Grand Master',85)");
+        stmt.executeUpdate("INSERT INTO leaderboard VALUES ('UltimatePlayer',5,'40%',2,'Newbie',3)");
 
 //        assertTrue("Insert and fetch data validity",expected_out != "");//check something has been fetched
 

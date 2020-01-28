@@ -94,12 +94,18 @@ public class LeaderBoard {
 
     }
     //incremetns the game completed by 1
-    public void update_games_competed(){
-
+    public void update_games_competed() throws SQLException {
+        this.games_competed +=1;
+        String queryCheck = "UPDATE leaderboard SET games_competed = ? WHERE userid = ?;";
+        PreparedStatement ps = cn.prepareStatement(queryCheck);
+        ps.setString(1, String.valueOf(this.games_competed));
+        ps.setString(2,this.player_name);
+        ps.executeQuery();
 
     }
 
     public void update_win_percent(){
+
 
     }
 

@@ -487,11 +487,12 @@ public class Checkers {
         }
     }
 
-    public void update_leaderbd_cmds(){
+    public void update_leaderbd_cmds() throws SQLException {
+        plyr.getLeaderbd().update_rank();
         plyr.getLeaderbd().update_games_competed();
         plyr.getLeaderbd().update_win_percent();
         plyr.getLeaderbd().update_long_win_streak();
-        plyr.getLeaderbd().update_rank();
+
     }
 
     public void apply_front_changes(Room rm,int square, String type,Checkers piece) {

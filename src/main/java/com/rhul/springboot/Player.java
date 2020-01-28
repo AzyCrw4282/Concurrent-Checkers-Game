@@ -4,6 +4,8 @@ import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
 
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,7 +46,7 @@ public class Player {
 
     CheckersGame game = new CheckersGame();
 
-    public Player(int id, String name, WebSocketSession session){
+    public Player(int id, String name, WebSocketSession session) throws URISyntaxException, SQLException {
         this.id = id;
         this.name = name;
         this.session = session;
