@@ -3,6 +3,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.jni.Time;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,7 @@ public class Room {
 
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
+    private Map<String, Boolean> room_games_status= new HashMap<String, Boolean>();
     private Semaphore smphore;
     private int n_games;
     private String room_name;
@@ -48,6 +51,7 @@ public class Room {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
                     apply_game_status(this,playr.getName(),players_count.get());
+                    check_game_to_start();
                     return true;
                 }
             }
@@ -58,6 +62,9 @@ public class Room {
             return  false;
         }
     }
+    //if it's an odd player and within less than n games start the game response
+    public synchronized  void
+
 
     //Method to update game_status on the player's that are present in the room
     public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){

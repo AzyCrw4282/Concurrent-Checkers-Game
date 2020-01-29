@@ -94,8 +94,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      msg = String.format("{\"type\": \"create_room_resp\",\"data\":\"Ok\",\"player_id\":\"%d\"}",player_id);
                                      plyr.sendMessage(msg);
                                      System.out.println("Create room user done");
-
-
                                  } else {
 
                                      msg = "{\"type\": \"create_room_resp\",\"data\":\"already_exists\"}";
@@ -122,7 +120,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      Player.players_hm.put(player_id, plyr);
 
                                      if (semaphore_permits + 1 == 3 || semaphore_permits + 1 == 1 ){
-
                                          CheckersGame.player_game_hm.put(plyr,plyr.initialize());
                                          plyr.setColour("black");
                                          plyr.setRoom_value(rm_val);
@@ -298,7 +295,6 @@ public class CheckersHandler extends TextWebSocketHandler {
             }
         }
         return null;
-
     }
 
     @Override

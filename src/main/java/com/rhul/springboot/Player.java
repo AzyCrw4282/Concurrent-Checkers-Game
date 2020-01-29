@@ -128,7 +128,6 @@ public class Player {
 
     public void update_game(){
 
-
         if (show_moves_req){
             this.show_moves();
             show_moves_req = false;
@@ -184,8 +183,5 @@ public class Player {
             String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
             this.sendMessage(mesg);
         }
-
-
     }
-
 }
