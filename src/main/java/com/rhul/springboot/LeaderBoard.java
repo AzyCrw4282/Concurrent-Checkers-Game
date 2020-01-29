@@ -7,18 +7,15 @@ import lombok.Setter;
 import java.net.URISyntaxException;
 import java.sql.*;
 
-/**This class is responsible for maintaining the users in the leaderboard. Held in a db in docker
+/**This class is responsible for maintaining user record in the leaderboard. Held in a remote db in heroku
  * @Author Azky Mubarack
  *
- * Used as a proxy between playing updating and to reach the database.
  */
 @Getter
 @Setter
 @NoArgsConstructor
 public class LeaderBoard {
-    private String player_name;//The primary key to identify fields
-    //can use this class to fetch user data and show that on the user status, and game screen
-    //e.g. player. cn;
+    private String player_name;//The primary key to identify fields    //can use this class to fetch user data and show that on the user status, and game screen
     private String plyr_name;
     private int games_competed;
     private String win_perc;
@@ -26,11 +23,12 @@ public class LeaderBoard {
     private String game_ranking;
     private String games_lost;
     private String cur_win_streak;
-    private static DatabasePgSQL db = new DatabasePgSQL();
+//    private static DatabasePgSQL db = new DatabasePgSQL();
     private static Connection cn;
+
     public LeaderBoard(String player_name) throws URISyntaxException, SQLException {
         this.player_name = player_name;
-        cn = db.create_connection();
+        cn = DatabasePgSQL.create_connection();
     }
 
     public boolean check_if_usr_exists() throws SQLException {
@@ -39,9 +37,8 @@ public class LeaderBoard {
         ps.setString(1, this.player_name);
         ResultSet resultSet = ps.executeQuery();
 
-        // if this ID already exists, we quit
+        // if this ID already exists, save the data
         if(resultSet.absolute(1)) {
-            //if exists update the values
             plyr_name = resultSet.getString(1);
             games_competed = Integer.parseInt(resultSet.getString(2));
             win_perc = resultSet.getString(3);
@@ -55,10 +52,9 @@ public class LeaderBoard {
         else{
             return false;
         }
-
     }
+
     public boolean create_new_user() throws SQLException {
-        Statement stmt = cn.createStatement();
         String query = ("INSERT INTO leaderboard VALUES (?,0,'0%',0,'Newbie')");
         PreparedStatement ps = cn.prepareStatement(query);
         ps.setString(1,this.player_name);
@@ -86,15 +82,14 @@ public class LeaderBoard {
         else{
             game_ranking = "Grandmaster";
         }
-        //validating that new ranking is differnt to the old one
-        if (!prev_game_ranking.equals(game_ranking)){
+
+        if (!prev_game_ranking.equals(game_ranking)){ //check that new ranking is different to the old one
             String queryCheck = "UPDATE leaderboard SET gamerank = ? WHERE userid = ?;";
             PreparedStatement ps = cn.prepareStatement(queryCheck);
             ps.setString(1, this.game_ranking);
             ps.setString(2,this.player_name);
             ps.executeQuery();
         }
-
     }
 
     public void update_games_competed() throws SQLException {

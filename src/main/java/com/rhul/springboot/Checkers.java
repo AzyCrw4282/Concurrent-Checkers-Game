@@ -351,7 +351,6 @@ public class Checkers {
             direction = 0;
             return direction;
         }
-
     }
 
     public boolean attack_move(Checkers piece, Room rm){
@@ -468,9 +467,8 @@ public class Checkers {
         }
         return true;
     }
-
+    //Todo - send f/e to update user. Update the lederboard table.
     public void declare_winner(){
-        //Todo - send f/e to update user. Update the lederboard table.
         try{
             boolean existing_user = plyr.getLeaderbd().check_if_usr_exists();
             if (existing_user){
