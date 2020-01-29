@@ -320,20 +320,13 @@ function show_number_of_games(n_of_games) {
     }
 
 }
-//displayed when 2 users exists for nw
-function start_game_btn(){
+
+//Displayed when 2 users exists for nw
+function start_game_btn(game_no){
     console.log("game has been started");
-    var msg = {"type" : "start_game", "room_value": room_value,"player_id" : player_id};//main user triggers this btn
+    var msg = {"type" : "start_game", "room_value": room_value,"player_id" : player_id,"game_no" : game_no};//main user triggers this btn
     game_started = true;
     document.getElementById('start_div').style.display = "none";
-    game.send_data(msg);
-}
-
-function start_game_btn2(){
-    console.log(" 2 game has been started");
-    var msg = {"type" : "start_game2", "room_value": room_value,"player_id" : player_id};//main user triggers this btn
-    game_started2 = true;
-    document.getElementById('start_div2').style.display = "none";
     game.send_data(msg);
 }
 
@@ -845,27 +838,21 @@ class Game {
                     }
                     break;
 
-                case "player_joined"://start btn displayed for owner of the game. x-> shown joined player
-                    if (packet.data === "successful"){
-                        player_id = packet.player_id;
-                        document.getElementById("start_div").style.display = "block";
-                        console.log("530");
+                case "player_joined":
+                    console.log("game number ",packet.data);
+                    var game_no = packet.data;
+                    var game_div_id;
+
+                    if (game_no < 2){
+                        game_div_id = "start_div";
+                    }else if (game_no > 2){
+                        game_div_id = "start_div2";
                     }
-                    else{
-                        console.log(packet.data);
-                    }
+
+                    var game_id = game_div_id + game_no;
+                    document.getElementById(game_id).style.display = "block";
                     break;
-                case "player_joined2"://start btn displayed for owner of the game. x-> shown joined player
-                    if (packet.data === "successful"){
-                        player_id = packet.player_id;
-                        if (player_id == 4){
-                            document.getElementById("start_div2").style.display = "block";
-                        }
-                    }
-                    else{
-                        console.log(packet.data);
-                    }
-                    break;
+
                 case "join_matchmaking_resp":
                     //modal update to user
                     if (packet.data !== null){
@@ -881,7 +868,8 @@ class Game {
                         document.getElementById("modalBtnTrigger").click();
                     }
                     break;
-                case "start_game_1":
+
+                case "start_game":
                     if (packet.data === "rdy"){
                         game_started = true;
                         console.log("Game 1 is rdy to start");
@@ -889,14 +877,7 @@ class Game {
                         the_checker = w_checker;//to begin with
                     }
                     break;
-                case "start_game_2":
-                    if (packet.data === "rdy_2"){
-                        game_started2 = true;
-                        console.log("Game 2 is rdy to start");
-                        document.getElementById("start_div").style.display = "none";
-                        the_checker2 = w_checker2;//to begin with
-                    }
-                    break;
+
                 case "room_permits":
                     user_permit_val  = packet.data;
                     num_games = packet.num_games;

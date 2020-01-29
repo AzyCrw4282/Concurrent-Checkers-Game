@@ -61,7 +61,6 @@ public class Player {
             BugsnagConfig.bugsnag().notify(new RuntimeException("Error countered in session send message"));
             e.printStackTrace();
         }
-
     }
 
     public Checkers initialize(){

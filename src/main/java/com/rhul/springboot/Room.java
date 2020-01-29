@@ -19,7 +19,7 @@ public class Room {
 
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
-    private Map<String, Boolean> room_games_status= new HashMap<String, Boolean>();
+    private Map<String, Boolean> room_games_status;
     private Semaphore smphore;
     private int n_games;
     private String room_name;
@@ -33,6 +33,7 @@ public class Room {
         this.rm_owner = plyr;
         this.smphore = new Semaphore(n_games*2,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
         this.n_games = n_games;
+        this.room_games_status = new HashMap<String, Boolean>();
     }
 
     public void remove_player_from_room(Player playr){
@@ -51,7 +52,7 @@ public class Room {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
                     apply_game_status(this,playr.getName(),players_count.get());
-                    check_game_to_start();
+                    game_ready_to_start(playr.getId(),"player_joined");
                     return true;
                 }
             }
@@ -62,9 +63,20 @@ public class Room {
             return  false;
         }
     }
-    //if it's an odd player and within less than n games start the game response
-    public synchronized  void
 
+    //if it's an odd player and within less than n games start the game response
+    public synchronized void game_ready_to_start(int plyr_id,String type){
+        //2,4,6,8 -> all joining players
+        if (plyr_id % 2 == 0){
+            room_games_status.put(String.valueOf(plyr_id/2),true);
+            for (Player plyr : players_hm.values()){
+                if (plyr.getId() == plyr_id && plyr.getId()-1 == plyr_id ){//player or the opponenet
+                    String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\"}",type,plyr_id);
+                    plyr.sendMessage(new_msg);
+                }
+            }
+        }
+    }
 
     //Method to update game_status on the player's that are present in the room
     public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){
