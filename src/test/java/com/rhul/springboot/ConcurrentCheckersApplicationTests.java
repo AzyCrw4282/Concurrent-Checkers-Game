@@ -45,7 +45,7 @@ public class ConcurrentCheckersApplicationTests {
     public void test_connection() throws Exception {
         System.out.println("----------------------------Testing connection-------------------");
         WebSocketTest Wsc = new WebSocketTest();
-        Wsc.connect("ws://127.0.0.1:8080/springboot");//specifies a handler at given url
+        Wsc.connect("ws://127.0.0.1:8080/springboot");//--TBC for when deployed to heroku
         System.out.println("Successfully connected");
         Wsc.disconnect();
     }
