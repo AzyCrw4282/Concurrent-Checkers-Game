@@ -107,63 +107,35 @@ public class CheckersHandler extends TextWebSocketHandler {
                              else if ((json.getString("room_action").equals("join_room"))) {
                                  Lk.lock();
                                  if (game.check_room_exists(rm_val)) {
-
                                      rm = game.get_room(rm_val);
                                      boolean player_added = rm.add_player_to_room(plyr);
                                      joining = true;
                                      game.add_player(plyr);
 
-                                     int semaphore_permits = rm.getSmphore().availablePermits();
+                                     int player_permit= rm.getSmphore().availablePermits()+1;
                                      plyr.setRoom_value(rm_val);
                                      Player.players_hm.put(player_id, plyr);
 
-
-
-
-
-
-
-
-//Very bad code. Implemented earlier as a hard coded solutuon to check if the logic works.
-//                                     if (semaphore_permits + 1 == 3 || semaphore_permits + 1 == 1 ){
-//                                         CheckersGame.player_game_hm.put(plyr,plyr.initialize());
-//                                         plyr.setColour("black");
-//                                         plyr.setRoom_value(rm_val);
-//                                         plyr.start_game_thread();
-//                                         System.out.println(" game 1/2 opponent ready 120");
-//                                     }
-//                                     else if(semaphore_permits + 1 == 2){
-//                                         plyr.setRoom_value(rm_val);
-//                                         plyr.setColour("white");
-//                                         plyr.start_game_thread();
-//                                     }
-//                                     else if (semaphore_permits == 0) {
-//                                         msg = "{\"type\": \"join_room_resp\",\"data\":\"game_full\"}";
-//                                         plyr.sendMessage(msg);
-//                                         rm.setGame_started(true);
-//                                     }
-//
-//                                     if (semaphore_permits > 0 & (!rm.isGame_started())) {
-//
-//                                         rm.setGame_started(true);
-//                                         System.out.println("136 joining player rdy");
-//                                     }
-//
-//                                     if (player_added && player_id < 3) {
-//                                         msg = String.format("{\"type\": \"player_joined\",\"data\":\"successful\",\"player_id\":\"%d\"}",player_id);
-//                                         plyr.setRoom(rm);
-//                                         plyr.sendMessage(msg);
-//                                     }
-//                                     else if (player_added && player_id > 2){
-//                                         System.out.println("last player added 149");
-//                                         msg = String.format("{\"type\": \"player_joined2\",\"data\":\"successful\",\"player_id\":\"%d\"}",player_id);
-//                                         plyr.setRoom(rm);
-//                                         plyr.sendMessage(msg);
-//                                     }
-//                                     else {
-//                                         msg = "{\"type\": \"player_joined\",\"data\":\"not_successful\"}";
-//                                         plyr.sendMessage(msg);
-//                                     }
+                                     if (player_permit % 2 == 0){//joining opponent
+                                         CheckersGame.player_game_hm.put(plyr,plyr.initialize());
+                                         plyr.setColour("black");
+                                         plyr.setRoom_value(rm_val);
+                                         plyr.setRoom(rm);
+                                         plyr.start_game_thread();
+                                         System.out.println(" game 1/2 opponent ready 120");
+                                     }
+                                     else if(player_permit % 2 == 1){//first player on the game
+                                         plyr.setRoom_value(rm_val);
+                                         plyr.setRoom(rm);
+                                         plyr.setColour("white");
+                                         plyr.start_game_thread();
+                                     }
+                                     else{
+                                         msg = "{\"type\": \"join_room_resp\",\"data\":\"game_full\"}";
+                                         plyr.sendMessage(msg);
+                                         rm.setGame_started(true);
+                                         return;
+                                     }
 
                                  } else {
                                      msg = "{\"type\": \"join_room_resp\",\"data\":\"not_successful\"}";

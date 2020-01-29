@@ -68,7 +68,7 @@ public class Room {
     public synchronized void game_ready_to_start(int plyr_id,String type){
         //2,4,6,8 -> all joining players
         if (plyr_id % 2 == 0){
-            room_games_status.put(String.valueOf(plyr_id/2),true);
+            if (type == "start_game") room_games_status.put(String.valueOf(plyr_id/2),true);
             for (Player plyr : players_hm.values()){
                 if (plyr.getId() == plyr_id && plyr.getId()-1 == plyr_id ){//player or the opponenet
                     String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\"}",type,plyr_id);

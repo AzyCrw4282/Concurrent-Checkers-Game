@@ -870,12 +870,10 @@ class Game {
                     break;
 
                 case "start_game":
-                    if (packet.data === "rdy"){
-                        game_started = true;
-                        console.log("Game 1 is rdy to start");
-                        document.getElementById("start_div").style.display = "none";
-                        the_checker = w_checker;//to begin with
-                    }
+                    console.log("Start game call received");
+                    game_started = true;
+                    document.getElementById("start_div").style.display = "none";
+                    the_checker = w_checker;//to begin with
                     break;
 
                 case "room_permits":
