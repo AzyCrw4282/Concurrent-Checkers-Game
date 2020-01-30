@@ -103,7 +103,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                                  System.out.println("create room lock released");
 
                              }
-
                              else if ((json.getString("room_action").equals("join_room"))) {
                                  Lk.lock();
                                  if (game.check_room_exists(rm_val)) {
@@ -116,7 +115,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      plyr.setRoom_value(rm_val);
                                      Player.players_hm.put(player_id, plyr);
 
-                                     if (player_permit % 2 == 0){//joining opponent
+                                     if (player_permit % 2 == 0 && player_added){//Joining opponent
                                          CheckersGame.player_game_hm.put(plyr,plyr.initialize());
                                          plyr.setColour("black");
                                          plyr.setRoom_value(rm_val);
@@ -124,7 +123,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                          plyr.start_game_thread();
                                          System.out.println(" game 1/2 opponent ready 120");
                                      }
-                                     else if(player_permit % 2 == 1){//first player on the game
+                                     else if(player_permit % 2 == 1 & player_added){//first player of the game
                                          plyr.setRoom_value(rm_val);
                                          plyr.setRoom(rm);
                                          plyr.setColour("white");
@@ -167,8 +166,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                     break;
 
                 case "start_game":
-                    plyr = get_player_obj(json.getInt("player_id"));
-                    int game_no = json.getInt("game_no");
+                    plyr = get_player_obj(json.getInt("player_id"));//this may need to be changed. But after the fixed version
+                    int game_no = json.getInt("game_no");//use this as long term
+                    System.out.println(game_no+" 171 check here "+Math.round((plyr.getId()/2)));
                     Room rm = game.get_room(json.getString("room_value"));
                     rm.game_ready_to_start(plyr.getId(),"start_game");
                     break;

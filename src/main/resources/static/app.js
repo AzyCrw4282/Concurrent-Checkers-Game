@@ -1,9 +1,7 @@
 /**JS code handles all front-end functionality and communicating with server via web-sockets.
  * @author Azky & calincojo (Used this as reference for the front-end implementation https://codepen.io/calincojo/pen/wBQqYm)
  */
-/*
-I have use this as reference, though most of the code are changed.
- */
+
 var user_name;
 var room_value;
 var room_action;
@@ -322,11 +320,11 @@ function show_number_of_games(n_of_games) {
 }
 
 //Displayed when 2 users exists for nw
-function start_game_btn(game_no){
-    console.log("game has been started");
+function start_game_btn(game_no,tag_id){
+    console.log("game has been started", tag_id,game_no);
     var msg = {"type" : "start_game", "room_value": room_value,"player_id" : player_id,"game_no" : game_no};//main user triggers this btn
     game_started = true;
-    document.getElementById('start_div').style.display = "none";
+    document.getElementById(tag_id).style.display = "none";
     game.send_data(msg);
 }
 
@@ -827,7 +825,6 @@ class Game {
                         the_checker2[piece_id].move_coords(x_coord,y_coord,game_move);
                         game2.change_turn_game_2();
                     }
-
                     console.log("Move_made");
                     break;
 
@@ -840,17 +837,17 @@ class Game {
 
                 case "player_joined":
                     console.log("game number ",packet.data);
-                    var game_no = packet.data;
+                    var game_num = packet.data;
                     var game_div_id;
 
-                    if (game_no < 2){
+                    if (game_num < 2){
                         game_div_id = "start_div";
-                    }else if (game_no > 2){
+                    }else if (game_num > 2){
                         game_div_id = "start_div2";
                     }
 
-                    var game_id = game_div_id + game_no;
-                    document.getElementById(game_id).style.display = "block";
+                    var game_id = game_div_id + game_num;
+                    document.getElementById(game_id).style.display = "block";//displays the start button
                     break;
 
                 case "join_matchmaking_resp":
@@ -872,7 +869,7 @@ class Game {
                 case "start_game":
                     console.log("Start game call received");
                     game_started = true;
-                    document.getElementById("start_div").style.display = "none";
+                    // document.getElementById("start_div").style.display = "none";
                     the_checker = w_checker;//to begin with
                     break;
 
