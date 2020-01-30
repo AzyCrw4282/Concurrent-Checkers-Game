@@ -321,10 +321,10 @@ function show_number_of_games(n_of_games) {
 
 //Displayed when 2 users exists for nw
 function start_game_btn(game_no,tag_id){
-    console.log("game has been started", tag_id,game_no);
+    console.log("game has been started", tag_id, game_no);
     var msg = {"type" : "start_game", "room_value": room_value,"player_id" : player_id,"game_no" : game_no};//main user triggers this btn
     game_started = true;
-    document.getElementById(tag_id).style.display = "none";
+    document.getElementById(tag_id.toString()).style.display = "none";
     game.send_data(msg);
 }
 
@@ -525,7 +525,7 @@ class Game {
         // square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
 
         this.set_game_data(game_no);
-        console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
+        // console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
@@ -836,18 +836,19 @@ class Game {
                     break;
 
                 case "player_joined":
-                    console.log("game number ",packet.data);
                     var game_num = packet.data;
+                    player_id = packet.plyr_id;
                     var game_div_id;
 
-                    if (game_num < 2){
+                    if (game_num <= 2){
                         game_div_id = "start_div";
                     }else if (game_num > 2){
-                        game_div_id = "start_div2";
+                        game_div_id = "start_div2_";
                     }
 
                     var game_id = game_div_id + game_num;
-                    document.getElementById(game_id).style.display = "block";//displays the start button
+                    console.log(game_num,game_id);
+                    document.getElementById(game_id.toString()).style.display = "block";//displays the start button
                     break;
 
                 case "join_matchmaking_resp":

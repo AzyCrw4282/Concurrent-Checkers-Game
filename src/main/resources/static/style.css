@@ -210,6 +210,12 @@ body , html{
     display: none;
 }
 
+.game_options {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
+
 hr {
     border-top: 1px solid #cc000b;
 }
