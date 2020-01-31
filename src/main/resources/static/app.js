@@ -55,22 +55,22 @@ var cur_checker = undefined;
 var block = [];
 var w_checker = [];
 var b_checker = [];
-var the_checker1 = undefined;
+var the_checker1 = w_checker;
 
 var block2 = [];
 var w_checker2 = [];
 var b_checker2 = [];
-var the_checker2 = undefined ;
+var the_checker2 = w_checker2 ;
 
 var block3 = [];
 var w_checker3 = [];
 var b_checker3 = [];
-var the_checker3 = undefined ;
+var the_checker3 = w_checker3 ;
 
 var block4 = [];
 var w_checker4 = [];
 var b_checker4 = [];
-var the_checker4 = undefined ;
+var the_checker4 = w_checker4 ;
 var user_action;
 
 //maps player to a game
@@ -488,6 +488,7 @@ class Game {
             b_checker = b_checker;
             white_checker_class = white_checker_class;
             black_checker_class =black_checker_class;
+
         }
 
         else if (game_num == 2){
@@ -518,10 +519,6 @@ class Game {
 
     /*initializeAllGame testing*/
     initialize_game(game_no) {
-
-        //Multiple return values doesnt work in js as expected :)
-        // console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
-        // square_class,block,w_checker,b_checker,white_checker_class,black_checker_class = game_dict[game_no];
 
         this.set_game_data(game_no);
         // console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
@@ -585,10 +582,8 @@ class Game {
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
         //once notifified, f/e changes applied
-
-
     }
-
+    //need to achieve dynamic behaviour with this
     update_the_checker(game_num){
         if (game_num == 1) cur_checker = the_checker1;
         if (game_num == 2) cur_checker = the_checker2;
@@ -597,18 +592,20 @@ class Game {
 
     }
 
-    change_turns(cur_checker){
-        if (cur_checker === w_checker){
+    change_turns(cur_checker){//may be these arent applying the global val isntead local change
+        console.log(cur_checker);
+        console.log(w_checker);
+        if (cur_checker == w_checker){
+            console.log("602");
             cur_checker = b_checker;
             document.getElementById("cur_player_img_id").src = "black_checker.jpg"
         }
-        else if (cur_checker ===  b_checker){
+        else if (cur_checker ==  b_checker){
+            console.log("607");
             cur_checker = w_checker;
             document.getElementById("cur_player_img_id").src = "white_checker.png"
         }
-        else{
-            cur_checker = w_checker
-        }
+        return cur_checker
     }
 
     show_moves(index,colour)
@@ -693,8 +690,6 @@ class Game {
         if (index > 0){
             if (index > 0) cur_block[index].id.style.background = "#007010";
         }
-
-
     }
 
     non_attack_move(id,x,y){
@@ -732,8 +727,6 @@ class Game {
             console.log("packet received from B/E :", packet);
             //handles message received from b/e. need work on this
             switch (packet.type) {
-                /*removeAPlayerFromTheRoom*/
-
                 case 'result_move':
                     if (packet.data === "possible"){
                         console.log("move possible")
@@ -760,8 +753,8 @@ class Game {
                     console.log("make the move");
                     var index = packet.data;
                     var game_move = packet.game_no;
-                    game.move_attack(index,game_move);
-                    game.change_turns(cur_checker);
+                    this.move_attack(index,game_move);
+                    this.change_turns(cur_checker);
                     break;
 
                 case 'eliminate_piece':
@@ -769,9 +762,7 @@ class Game {
                     let elim_piece_id = packet.data;
                     var game_num= packet.game_no;
                     console.log(elim_piece_id);
-                    this.update_the_checker(game_num);
                     cur_checker[elim_piece_id].id.style.display = "none";
-                    //make the move on game player and then update it on the other players
                     break;
 
                 case 'non_attack_move':// p - the_checker enabled one f/e and nt the other and hence undefined
@@ -780,20 +771,8 @@ class Game {
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
                     var game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
-                    this.update_the_checker(game_no);
                     cur_checker[piece_id].move_coords(x_coord,y_coord,game_no);
-                    console.log(cur_checker);
-                    game.change_turns(cur_checker);
-
-                    // if (game_move == 1){
-                    //     the_checker[piece_id].move_coords(x_coord,y_coord,game_move);
-                    //     game.change_turns();
-                    // }
-                    // else if(game_move == 2){
-                    //     the_checker2[piece_id].move_coords(x_coord,y_coord,game_move);
-                    //     game2.change_turn_game_2();
-                    // }
-                    console.log("Move_made");
+                    cur_checker =  this.change_turns(cur_checker);
                     break;
 
                 case "create_room_resp":
