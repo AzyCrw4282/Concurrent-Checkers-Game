@@ -379,7 +379,7 @@ class checkers_squares {
                 game.make_move(index);
             }
             else if (game_started2 && player_game == 2){
-                game2.make_move(index);
+                game.make_move(index);
             }
             else{
                 alert("Game not started. Please wait for the other user to join.")
@@ -403,14 +403,15 @@ class checkers{
             this.coordY = square/8 ;
         }
         this.id.onclick = function () {
+            console.log(game_started,player_game)
             if (game_started && player_game == 1) {
                 game.show_moves(index, colour);
             }
             else if(game_started2 && player_game == 2){
-                game2.show_moves(index, colour);
+                game.show_moves(index, colour);
             }
             else{
-                alert("Game not started. Please wait for the other user to join.")
+                alert("You are not playing that game.")
             }
         }
     }
@@ -781,9 +782,9 @@ class Game {
                 case 'eliminate_piece':
                     console.log("Piece elimination");
                     let elim_piece_id = packet.data;
-                    var game_move = packet.game_no;
+                    var game_num= packet.game_no;
                     console.log(elim_piece_id);
-                    this.update_the_checker(game_no);
+                    this.update_the_checker(game_num);
                     the_checker[elim_piece_id].id.style.display = "none";
                     //make the move on game player and then update it on the other players
                     break;
@@ -850,8 +851,9 @@ class Game {
                 case "start_game":
                     console.log("Start game call received");
                     document.getElementById("modalBtnTrigger").click();
-                    document.getElementById("modal_message").innerHTML =  "Your Game Is Ready To Start!!!";
+                    document.getElementById("modal_message").innerHTML =  "Your Game Is Ready To Start!!!";//Both players can confirm here
                     the_checker = w_checker;//to begin with
+                    game_started = true;
                     break;
 
                 case "room_permits":

@@ -126,6 +126,7 @@ public class Player {
     }
 
     public void update_game(){
+
         if (show_moves_req){
             this.show_moves();
             show_moves_req = false;

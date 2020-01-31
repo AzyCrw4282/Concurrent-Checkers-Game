@@ -78,7 +78,7 @@ public class CheckersGame {
         return rm_name;
     }
 
-
+    //one game obj for 2 players
     public static Checkers get_game_obj(Player plyr){
         int playr_id = plyr.getId();
 

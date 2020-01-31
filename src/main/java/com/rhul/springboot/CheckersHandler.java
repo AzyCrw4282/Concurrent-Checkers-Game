@@ -111,7 +111,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      joining = true;
                                      game.add_player(plyr);
 
-                                     int player_permit= rm.getSmphore().availablePermits()+1;
+                                     int player_permit= player_id;
                                      plyr.setRoom_value(rm_val);
                                      Player.players_hm.put(player_id, plyr);
 
@@ -168,7 +168,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                 case "start_game":
                     plyr = get_player_obj(json.getInt("player_id"));//this may need to be changed. But after the fixed version
                     int game_no = json.getInt("game_no");//use this as long term
-                    System.out.println(game_no+" 171 check here "+Math.round((plyr.getId()/2)));
                     Room rm = game.get_room(json.getString("room_value"));
                     rm.game_ready_to_start(plyr.getId(),"start_game");
                     break;
@@ -179,7 +178,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     Room rom = game.get_room(json.getString("room_value"));
                     int room_permits = rom.getSmphore().availablePermits() + 1;
                     int num_games = rom.getN_games();
-                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\",\"num_games\": \"%d\"}", room_permits,num_games);
+                    String mesg = String.format("{\"type\": \"room_permits\",\"data\": \"%d\",\"num_games\": \"%d\"}", p.getId(),num_games);
                     System.out.println(mesg);
                     p.sendMessage(mesg);
                     break;

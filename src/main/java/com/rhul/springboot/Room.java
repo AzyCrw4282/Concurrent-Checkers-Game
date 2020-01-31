@@ -70,7 +70,7 @@ public class Room {
         if (plyr_id % 2 == 0){
             if (type == "start_game") room_games_status.put(String.valueOf(Math.round(plyr_id/2)),true);
             for (Player plyr : players_hm.values()){
-                if (plyr.getId() == plyr_id | plyr.getId()-1 == plyr_id ){//player or the opponent
+                if (plyr.getId() == plyr_id | plyr.getId()+1 == plyr_id ){//player or the opponent
                     String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\",\"plyr_id\": \"%d\"}",type,Math.round(plyr_id/2),plyr_id);
                     plyr.sendMessage(new_msg);
                 }
@@ -110,7 +110,7 @@ public class Room {
                 }
 
 
-//                if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
+                //                if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
 //                    System.out.println("plyer id: " + plyr.getId());
 //                    try {
 //                        String new_msg = msg + ",\"game_no\":\"1\"}";
