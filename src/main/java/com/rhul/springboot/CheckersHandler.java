@@ -57,9 +57,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                               String msg;
                               System.out.println("waiting for lock");
 
-                              if (game.player_ids.get()> 8){
-                                  game.player_ids.set(1);
-                              }
+//                              if (game.player_ids.get()> 8){
+//                                  game.player_ids.set(1);
+//                              }
 
                               int player_id = game.player_ids.getAndIncrement();
                               Player plyr = new Player(player_id,json.getString("plyr_name"),session);
@@ -75,17 +75,17 @@ public class CheckersHandler extends TextWebSocketHandler {
                                  Lk.lock();
 
                                  if (!game.check_room_exists(rm_val)) {
-
                                      rm = new Room(player_id, rm_val, plyr,n_games);
                                      rm.add_player_to_room(plyr);
                                      plyr.setRoom(rm);
                                      plyr.setColour("white");
                                      Player.players_hm.put(player_id, plyr);
 
-                                     if (rm.getSmphore().availablePermits()+1==4){
+                                     if (player_id != 0){//Any number
                                          plyr.setRoom_value(rm_val);
                                          plyr.start_game_thread();
                                      }
+
                                      game.add_rooms(rm);
                                      game.add_player(plyr);
                                      int room_permits = rm.getSmphore().availablePermits();
@@ -93,10 +93,8 @@ public class CheckersHandler extends TextWebSocketHandler {
                                      plyr.sendMessage(msg);
                                      System.out.println("Create room user done");
                                  } else {
-
                                      msg = "{\"type\": \"create_room_resp\",\"data\":\"already_exists\"}";
                                      plyr.sendMessage(msg);
-
                                      return;
                                  }
                                  Lk.unlock();

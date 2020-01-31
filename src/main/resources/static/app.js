@@ -10,7 +10,6 @@ var players= [];
 var num_games;
 var chat = false;
 var game_started = false;
-var game_started2 = false;
 var get_room_players =false;
 var user_permit_val = 0;//add 1 to get the value held by the user
 var player_game = undefined;//1/2
@@ -378,7 +377,7 @@ class checkers_squares {
             if (game_started && player_game == 1) {
                 game.make_move(index);
             }
-            else if (game_started2 && player_game == 2){
+            else if (game_started && player_game == 2){
                 game.make_move(index);
             }
             else{
@@ -407,7 +406,7 @@ class checkers{
             if (game_started && player_game == 1) {
                 game.show_moves(index, colour);
             }
-            else if(game_started2 && player_game == 2){
+            else if(game_started && player_game == 2){
                 game.show_moves(index, colour);
             }
             else{
@@ -437,7 +436,6 @@ class checkers{
             this.id.style.left = x +17 + 'px';
         }
     }
-
 
     move_coords(X,Y,game_no){
 
@@ -679,8 +677,10 @@ class Game {
             if (upLeft > 0) block4[upLeft].id.style.background = "#BA7A3A";
         }
     }
-
+//for each always uodate the block value
     apply_road(index,cur_game){
+        console.log(index,cur_game,block,block2,block3,block4);
+        this.set_game_data(cur_game);
         if (index > 0 && cur_game == 1){
             block[index].id.style.background = "#704923";
         }
@@ -696,6 +696,7 @@ class Game {
     }
 
     move_attack(index,game_no){
+        this.set_game_data(game_no);
         if (index > 0 && game_no == 1 ){
             if (index > 0) block[index].id.style.background = "#007010";
         }
@@ -728,7 +729,7 @@ class Game {
         this.socket.onopen = () => {
             if (!already_opened) {
                 console.log('Info: WebSocket connection opened.');// weSendTheUserToTheServer
-                // already_opened = true;
+                // already_opened = true
                 if (room_value !== undefined ){ //before entering game room this would stay undefined
                     console.log("580", room_value);
                     already_opened = true;
@@ -755,12 +756,11 @@ class Game {
                     break;
 
                 case 'apply_road':
-                    console.log(packet.data);
                     var parsed_val = parseInt(packet.data);
                     var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
                     game.apply_road(parsed_val,game_move);
+                    console.log("apply road :",packet.data, game_move);
                     break;
-
 
                 case 'remove_road':
                     var up_left = packet.up_left;
@@ -813,7 +813,7 @@ class Game {
                 case "create_room_resp":
                     if (packet.data === "Ok") {
                         player_id = packet.player_id;
-                        console.log("room created");
+                        console.log("room created", player_id);
                     }
                     break;
 

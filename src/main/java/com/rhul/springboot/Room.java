@@ -52,7 +52,7 @@ public class Room {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
                     apply_game_status(this,playr.getName(),players_count.get());
-                    game_ready_to_start(playr.getId(),"player_joined");
+                    game_ready_to_start(playr.getId(),"player_joined");//error here for player_did
                     return true;
                 }
             }
@@ -71,7 +71,7 @@ public class Room {
             if (type == "start_game") room_games_status.put(String.valueOf(Math.round(plyr_id/2)),true);
             for (Player plyr : players_hm.values()){
                 if (plyr.getId() == plyr_id | plyr.getId()+1 == plyr_id ){//player or the opponent
-                    String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\",\"plyr_id\": \"%d\"}",type,Math.round(plyr_id/2),plyr_id);
+                    String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\",\"plyr_id\": \"%d\"}",type,Math.round(plyr_id/2),plyr.getId());
                     plyr.sendMessage(new_msg);
                 }
             }
@@ -98,9 +98,9 @@ public class Room {
 
         if (msg.length() >0){
             for (Player plyr : rm.getPlayers_hm().values()){
-                System.out.println("plyer id: " + plyr.getId());
+                System.out.println("plyer id: " + plyr.getId() +" " + Math.round(plyr.getId()/2.0));
                 try {
-                    String new_msg = msg + String.format(",\"game_no\":\"%d\"}",Math.round(plyr.getId()/2));
+                    String new_msg = msg + String.format(",\"game_no\":\"%d\"}",Math.round(plyr.getId()/2.0));
                     plyr.sendMessage(new_msg);
 
                 } catch (Exception e) {
