@@ -51,6 +51,7 @@ var cur_big_screen = 1;//takes in the curr pos of the screen
 //4 game representation
 var cur_block = [];
 var cur_checker = undefined;
+
 var block = [];
 var w_checker = [];
 var b_checker = [];
@@ -590,9 +591,9 @@ class Game {
 
     update_the_checker(game_num){
         if (game_num == 1) cur_checker = the_checker1;
-        if (game_num == 1) cur_checker = the_checker2;
-        if (game_num == 1) cur_checker = the_checker3;
-        if (game_num == 1) cur_checker = the_checker4;
+        if (game_num == 2) cur_checker = the_checker2;
+        if (game_num == 3) cur_checker = the_checker3;
+        if (game_num == 4) cur_checker = the_checker4;
 
     }
 
@@ -681,7 +682,6 @@ class Game {
     }
 //for each always uodate the block value
     apply_road(index,cur_game){
-        console.log(index,cur_game,block,block2,block3,block4);
         this.set_game_data(cur_game);
         if (index > 0){
             cur_block[index].id.style.background = "#704923";
@@ -782,6 +782,7 @@ class Game {
                     var game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
                     this.update_the_checker(game_no);
                     cur_checker[piece_id].move_coords(x_coord,y_coord,game_no);
+                    console.log(cur_checker);
                     game.change_turns(cur_checker);
 
                     // if (game_move == 1){
@@ -837,7 +838,9 @@ class Game {
                     console.log("Start game call received");
                     document.getElementById("modalBtnTrigger").click();
                     document.getElementById("modal_message").innerHTML =  "Your Game Is Ready To Start!!!";//Both players can confirm here
-                    cur_checker = w_checker;//to begin with
+                    var game_number = packet.data;
+                    this.update_the_checker(game_number);
+                    console.log("842",cur_checker);
                     game_started = true;
                     break;
 
