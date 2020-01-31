@@ -13,7 +13,7 @@ var game_started = false;
 var game_started2 = false;
 var get_room_players =false;
 var user_permit_val = 0;//add 1 to get the value held by the user
-var player_game;//1/2
+var player_game = undefined;//1/2
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
@@ -321,7 +321,6 @@ function show_number_of_games(n_of_games) {
 
 }
 
-//Displayed when 2 users exists for nw
 function start_game_btn(game_no,tag_id){
     console.log("game has been started", tag_id, game_no);
     var msg = {"type" : "start_game", "room_value": room_value,"player_id" : player_id,"game_no" : game_no};//main user triggers this btn
@@ -334,104 +333,6 @@ function get_document_element(element_id){
     return (document.getElementById(element_id))
 }
 
-class checkers_squares {
-    constructor(square, index) {
-        this.id = square;
-        this.occupied = false;
-        this.piece_id = undefined;
-        this.id.onclick = function () {
-            if (game_started && player_game == 1) {
-                game.make_move(index);
-            }
-            else if (game_started2 && player_game == 2){
-                game2.make_move(index);
-            }
-            else{
-                alert("Game not started. Please wait for the other user to join.")
-            }
-        }
-    }
-}
-
-class checkers{
-        constructor (piece,colour,square,index){
-            this.id = piece;
-            this.color = colour;
-            this.index = index;
-
-            if(square%8){
-                this.coordX= square%8;
-                this.coordY = Math.floor(square/8) + 1 ;
-            }
-            else{
-                this.coordX = 8;
-                this.coordY = square/8 ;
-            }
-            this.id.onclick = function () {
-                if (game_started && player_game == 1) {
-                    game.show_moves(index, colour);
-                }
-                else if(game_started2 && player_game == 2){
-                    game2.show_moves(index, colour);
-                }
-                else{
-                    alert("Game not started. Please wait for the other user to join.")
-                }
-            }
-        }
-
-        set_coords(game_no){
-            var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-            var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-
-            if (game_no == 1){
-                this.id.style.top = y + 'px';
-                this.id.style.left = x + 'px';
-            }
-            else if (game_no == 2){
-                this.id.style.top = y + 'px';
-                this.id.style.left = x+17 + 'px';
-            }
-            else if (game_no == 3){
-                this.id.style.top = y + 'px';
-                this.id.style.left = x + 'px';
-            }
-            else if (game_no == 4){
-                this.id.style.top = y + 'px';
-                this.id.style.left = x +17 + 'px';
-            }
-        }
-
-
-        // set_coords(X,Y){
-        //     var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-        //     var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-        //     this.id.style.top = y + 'px';
-        //     this.id.style.left = x + 'px';
-        // }
-        // set_second_game_coords(X,Y){
-        //     var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-        //     var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-        //     this.id.style.top = y + 'px';
-        //     this.id.style.left = x+17 + 'px';
-        //  }
-        move_coords(X,Y,game_no){
-            // var x = (this.coordX - 1  ) * moveLength + moveDeviation;
-            // var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
-            // console.log("Here we go", X,Y,x,y,this.id);
-            if (game_no == 1){
-                console.log("game no 1 move ");
-                this.id.style.top = Y + 'px';
-                this.id.styl2e.left = X + 'px';
-            }
-            else if (game_no == 2){
-                console.log("Game no 2 move")
-                this.id.style.top = Y + 'px';
-                let new_x = parseInt(X) + 17;
-                this.id.style.left = new_x + 'px';
-            }
-        }
-}
 
 var chatbox_logs = {};
 var gameStatus_logs = {};
@@ -468,6 +369,100 @@ gameStatus_logs.log = (function (msg) {
 });
 
 
+class checkers_squares {
+    constructor(square, index) {
+        this.id = square;
+        this.occupied = false;
+        this.piece_id = undefined;
+        this.id.onclick = function () {
+            if (game_started && player_game == 1) {
+                game.make_move(index);
+            }
+            else if (game_started2 && player_game == 2){
+                game2.make_move(index);
+            }
+            else{
+                alert("Game not started. Please wait for the other user to join.")
+            }
+        }
+    }
+}
+
+class checkers{
+    constructor (piece,colour,square,index){
+        this.id = piece;
+        this.color = colour;
+        this.index = index;
+
+        if(square%8){
+            this.coordX= square%8;
+            this.coordY = Math.floor(square/8) + 1 ;
+        }
+        else{
+            this.coordX = 8;
+            this.coordY = square/8 ;
+        }
+        this.id.onclick = function () {
+            if (game_started && player_game == 1) {
+                game.show_moves(index, colour);
+            }
+            else if(game_started2 && player_game == 2){
+                game2.show_moves(index, colour);
+            }
+            else{
+                alert("Game not started. Please wait for the other user to join.")
+            }
+        }
+    }
+
+    set_coords(game_no){
+        var x = (this.coordX - 1  ) * moveLength + moveDeviation;
+        var y = (this.coordY - 1 ) * moveLength  + moveDeviation;
+
+        if (game_no == 1){
+            this.id.style.top = y + 'px';
+            this.id.style.left = x + 'px';
+        }
+        else if (game_no == 2){
+            this.id.style.top = y + 'px';
+            this.id.style.left = x+17 + 'px';
+        }
+        else if (game_no == 3){
+            this.id.style.top = y + 'px';
+            this.id.style.left = x + 'px';
+        }
+        else if (game_no == 4){
+            this.id.style.top = y + 'px';
+            this.id.style.left = x +17 + 'px';
+        }
+    }
+
+
+    move_coords(X,Y,game_no){
+
+        if (game_no == 1){
+            console.log("game no 1 move ");
+            this.id.style.top = Y + 'px';
+            this.id.style.left = X + 'px';
+        }
+        else if (game_no == 2){
+            console.log("Game no 2 move");
+            this.id.style.top = Y + 'px';
+            let new_x = parseInt(X) + 17;
+            this.id.style.left = new_x + 'px';
+        }
+        else if (game_no == 3){
+            this.id.style.top = Y + 'px';
+            this.id.style.left = X + 'px';
+        }
+        else if (game_no == 4){
+            this.id.style.top = Y + 'px';
+            let new_x = parseInt(X) + 17;
+            this.id.style.left = new_x + 'px';
+        }
+    }
+}
+
 //A game class
 class Game {
     send_data(data){
@@ -482,7 +477,7 @@ class Game {
 
     }
 
-    set_game_data(game_num){
+    set_game_data(game_num) {
 
         if (game_num == 1){
             square_class =square_class;
@@ -582,7 +577,6 @@ class Game {
 
     }
 
-
     //No corrds changes in b/e only display changes in f/e
     adjust_screen_size(move_length,move_dev){
         var str = {"type" : "adjust_screen_size","move_length" : move_length ,"move_dev" : move_dev};
@@ -593,12 +587,20 @@ class Game {
 
     }
 
-    change_turns(){
-        if (the_checker === w_checker){
+    update_the_checker(game_num){
+        if (game_num == 1) the_checker = the_checker;
+        if (game_num == 1) the_checker = the_checker2;
+        if (game_num == 1) the_checker = the_checker3;
+        if (game_num == 1) the_checker = the_checker4;
+
+    }
+
+    change_turns(cur_checker){
+        if (cur_checker === w_checker){
             the_checker = b_checker;
             document.getElementById("cur_player_img_id").src = "black_checker.jpg"
         }
-        else if (the_checker ===  b_checker){
+        else if (cur_checker ===  b_checker){
             the_checker = w_checker;
             document.getElementById("cur_player_img_id").src = "white_checker.png"
         }
@@ -607,24 +609,8 @@ class Game {
         }
     }
 
-    change_turn_game_2(){
-        if (the_checker2 === w_checker2){
-            the_checker2 = b_checker2;
-            document.getElementById("cur_player_img_id2").src = "black_checker.jpg"
-        }
-        else if (the_checker2 ===  b_checker2){
-            the_checker2 = w_checker2;
-            document.getElementById("cur_player_img_id2").src = "white_checker.png"
-        }
-        else{
-            the_checker2 = w_checker2
-        }
-    }
-
-
     show_moves(index,colour)
     {
-
         //To be improved
         //Allows for user click validations
         // if (player_game === 1){
@@ -645,7 +631,6 @@ class Game {
         //         return false;
         //     }
         // }
-
         console.log("square selected index, ", index );
         user_action = "show_moves";
         var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_colour" : colour};
@@ -659,7 +644,6 @@ class Game {
     //send msg to b/e when these methods are triggered. so wont need the game loop, i.e. no bad performance
     make_move(index){
         console.log("square clicked");
-        // var str = {"type" : "make_move","index" : index};
         user_action = "make_move";
         var str = {"type" : "make_move","room_action" : "N/A","room_value" : room_value,"sqr_index" : index,"player_id":player_id};
         var json_str = JSON.stringify(str);
@@ -681,14 +665,32 @@ class Game {
             if (upRight > 0) block2[upRight].id.style.background = "#BA7A3A";
             if (upLeft > 0) block2[upLeft].id.style.background = "#BA7A3A";
         }
+        else if (cur_game == 3){
+            if (downRight > 0) block3[downRight].id.style.background = "#BA7A3A";
+            if (downLeft > 0) block3[downLeft].id.style.background = "#BA7A3A";
+            if (upRight > 0) block3[upRight].id.style.background = "#BA7A3A";
+            if (upLeft > 0) block3[upLeft].id.style.background = "#BA7A3A";
+        }
+        else if (cur_game == 4){
+            if (downRight > 0) block4[downRight].id.style.background = "#BA7A3A";
+            if (downLeft > 0) block4[downLeft].id.style.background = "#BA7A3A";
+            if (upRight > 0) block4[upRight].id.style.background = "#BA7A3A";
+            if (upLeft > 0) block4[upLeft].id.style.background = "#BA7A3A";
+        }
     }
 
     apply_road(index,cur_game){
-        if (index > 0 && cur_game == 1 ){
+        if (index > 0 && cur_game == 1){
             block[index].id.style.background = "#704923";
         }
         else if (index >0 && cur_game == 2){
             block2[index].id.style.background = "#704923";
+        }
+        else if (index >0 && cur_game == 3){
+            block3[index].id.style.background = "#704923";
+        }
+        else if (index >0 && cur_game == 4){
+            block4[index].id.style.background = "#704923";
         }
     }
 
@@ -698,6 +700,12 @@ class Game {
         }
         else if (index >0 & game_no == 2){
             if (index > 0) block2[index].id.style.background = "#007010";
+        }
+        else if (index >0 & game_no == 3){
+            if (index > 0) block3[index].id.style.background = "#007010";
+        }
+        else if (index >0 & game_no == 4){
+            if (index > 0) block4[index].id.style.background = "#007010";
         }
 
     }
@@ -752,19 +760,6 @@ class Game {
                     game.apply_road(parsed_val,game_move);
                     break;
 
-                case "room_players_data":
-                    for (var i=0;i<packet.data.length;i++){
-                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active,packet.data[i].max_permits);
-                    }
-                    break;
-
-                case "leaderboard_resp":
-                    //method call to update the fetched rows
-                    for (var i=0;i<packet.data.length;i++){
-                        update_leaderboard(packet.data[i].user_id,packet.data[i].games_competed,packet.data[i].win_percent,packet.data[i].long_win_streak,packet.data[i].game_ranking);
-                    }
-                    console.log("leaderboard updated");
-                    break;
 
                 case 'remove_road':
                     var up_left = packet.up_left;
@@ -775,25 +770,12 @@ class Game {
                     game.remove_road(up_left,up_right,down_left,down_right,game_move);
                     break;
 
-                case "chat":
-                    chatbox_logs.log(packet.msg);
-                    break;
-                case "game_status_logs":
-                    gameStatus_logs.log(packet.data);
-                    break;
                 case 'move_attack':
                     console.log("make the move");
                     var index = packet.data;
                     var game_move = packet.game_no;
                     game.move_attack(index,game_move);
-                    //once move made, set the other players turn
-                    if (game_move == 1){
-                        game.change_turns();
-                    }
-                    else if(game_move == 2){
-                        game2.change_turn_game_2();
-                    }
-                    // game.change_turns();
+                    game.change_turns(the_checker);
                     break;
 
                 case 'eliminate_piece':
@@ -801,14 +783,9 @@ class Game {
                     let elim_piece_id = packet.data;
                     var game_move = packet.game_no;
                     console.log(elim_piece_id);
-
-                    if (game_move == 1){
-                        the_checker[elim_piece_id].id.style.display = "none";
-                        //make the move on game player and then update it on the other players
-                    }
-                    else if (game_move == 2){
-                        the_checker2[elim_piece_id].id.style.display = "none";
-                    }
+                    this.update_the_checker(game_no);
+                    the_checker[elim_piece_id].id.style.display = "none";
+                    //make the move on game player and then update it on the other players
                     break;
 
                 case 'non_attack_move':// p - the_checker enabled one f/e and nt the other and hence undefined
@@ -816,17 +793,19 @@ class Game {
                     var piece_id = packet.id;
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
-                    var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
+                    var game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
+                    this.update_the_checker(game_no);
+                    the_checker[piece_id].move_coords(x_coord,y_coord,game_no);
+                    game.change_turns(the_checker);
 
-                    //wrong approach
-                    if (game_move == 1){
-                        the_checker[piece_id].move_coords(x_coord,y_coord,game_move);
-                        game.change_turns();
-                    }
-                    else if(game_move == 2){
-                        the_checker2[piece_id].move_coords(x_coord,y_coord,game_move);
-                        game2.change_turn_game_2();
-                    }
+                    // if (game_move == 1){
+                    //     the_checker[piece_id].move_coords(x_coord,y_coord,game_move);
+                    //     game.change_turns();
+                    // }
+                    // else if(game_move == 2){
+                    //     the_checker2[piece_id].move_coords(x_coord,y_coord,game_move);
+                    //     game2.change_turn_game_2();
+                    // }
                     console.log("Move_made");
                     break;
 
@@ -854,7 +833,6 @@ class Game {
                     break;
 
                 case "join_matchmaking_resp":
-                    //modal update to user
                     if (packet.data !== null){
                         //join room call
                         room_action = "join_room";
@@ -864,15 +842,15 @@ class Game {
                         document.getElementById("modal_message").innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
 
                     }else{
-                        document.getElementById("modal_message").innerHTML =  "All rooms are full. Please create a room or manually join a room!";
                         document.getElementById("modalBtnTrigger").click();
+                        document.getElementById("modal_message").innerHTML =  "All rooms are full. Please create a room or manually join a room!";
                     }
                     break;
 
                 case "start_game":
                     console.log("Start game call received");
-                    game_started = true;
-                    // document.getElementById("start_div").style.display = "none";
+                    document.getElementById("modalBtnTrigger").click();
+                    document.getElementById("modal_message").innerHTML =  "Your Game Is Ready To Start!!!";
                     the_checker = w_checker;//to begin with
                     break;
 
@@ -887,6 +865,27 @@ class Game {
                             game.initialize_game(game_no);
                         }
                     }
+                    break;
+
+                case "room_players_data":
+                    for (var i=0;i<packet.data.length;i++){
+                        update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active,packet.data[i].max_permits);
+                    }
+                    break;
+
+                case "leaderboard_resp":
+                    //method call to update the fetched rows
+                    for (var i=0;i<packet.data.length;i++){
+                        update_leaderboard(packet.data[i].user_id,packet.data[i].games_competed,packet.data[i].win_percent,packet.data[i].long_win_streak,packet.data[i].game_ranking);
+                    }
+                    console.log("leaderboard updated");
+                    break;
+
+                case "chat":
+                    chatbox_logs.log(packet.msg);
+                    break;
+                case "game_status_logs":
+                    gameStatus_logs.log(packet.data);
                     break;
             }
         };
@@ -924,7 +923,6 @@ class Game {
 
 // multiple objects for multiple games
 let game = new Game();
-let game2 = new Game();
 
 function start_game(msg){
     game.connect(msg);
