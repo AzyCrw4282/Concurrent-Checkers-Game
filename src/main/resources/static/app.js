@@ -49,10 +49,12 @@ var cur_big_screen = 1;//takes in the curr pos of the screen
 
 //appended 2 represents the 2nd game, whilst without it is tfor the first game
 //4 game representation
+var cur_block = [];
+var cur_checker = undefined;
 var block = [];
 var w_checker = [];
 var b_checker = [];
-var the_checker = undefined;
+var the_checker1 = undefined;
 
 var block2 = [];
 var w_checker2 = [];
@@ -480,7 +482,7 @@ class Game {
 
         if (game_num == 1){
             square_class =square_class;
-            block = block;
+            cur_block = block;
             w_checker = w_checker;
             b_checker = b_checker;
             white_checker_class = white_checker_class;
@@ -489,7 +491,7 @@ class Game {
 
         else if (game_num == 2){
             square_class =square_class2;
-            block = block2;
+            cur_block = block2;
             w_checker = w_checker2;
             b_checker = b_checker2;
             white_checker_class = white_checker_class2;
@@ -497,7 +499,7 @@ class Game {
         }
         else if (game_num == 3){
             square_class =square_class_g2_1;
-            block = block3;
+            cur_block = block3;
             w_checker = w_checker3;
             b_checker = b_checker3;
             white_checker_class = white_checker_class_g2_1;
@@ -505,7 +507,7 @@ class Game {
         }
         else if (game_num == 4){
             square_class =square_class_g2_2;
-            block = block4;
+            cur_block = block4;
             w_checker = w_checker4;
             b_checker = b_checker4;
             white_checker_class = white_checker_class_g2_2;
@@ -525,51 +527,51 @@ class Game {
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
-            block[i] = new checkers_squares(square_class[i], i);
+            cur_block[i] = new checkers_squares(square_class[i], i);
         }
         /*================Initializing white black counters =================================*/
         // white piece
         for (var i = 1; i <= 4; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
             w_checker[i].set_coords(game_no);
-            block[2 * i - 1].occupied = true;
-            block[2 * i - 1].pieceId = w_checker[i];
+            cur_block[2 * i - 1].occupied = true;
+            cur_block[2 * i - 1].pieceId = w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
             w_checker[i].set_coords(game_no);
-            block[2 * i].occupied = true;
-            block[2 * i].pieceId = w_checker[i];
+            cur_block[2 * i].occupied = true;
+            cur_block[2 * i].pieceId = w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
             w_checker[i].set_coords(game_no);
-            block[2 * i - 1].occupied = true;
-            block[2 * i - 1].pieceId = w_checker[i];
+            cur_block[2 * i - 1].occupied = true;
+            cur_block[2 * i - 1].pieceId = w_checker[i];
         }
 
         //black piece
         for (var i = 1; i <= 4; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
             b_checker[i].set_coords(game_no);
-            block[56 + 2 * i].occupied = true;
-            block[56 + 2 * i].pieceId = b_checker[i];
+            cur_block[56 + 2 * i].occupied = true;
+            cur_block[56 + 2 * i].pieceId = b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
             b_checker[i].set_coords(game_no);
-            block[40 + 2 * i - 1].occupied = true;
-            block[40 + 2 * i - 1].pieceId = b_checker[i];
+            cur_block[40 + 2 * i - 1].occupied = true;
+            cur_block[40 + 2 * i - 1].pieceId = b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
             b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
             b_checker[i].set_coords(game_no);
-            block[24 + 2 * i].occupied = true;
-            block[24 + 2 * i].pieceId = b_checker[i];
+            cur_block[24 + 2 * i].occupied = true;
+            cur_block[24 + 2 * i].pieceId = b_checker[i];
         }
         user_action = "initialize";
         this.connect();
@@ -587,24 +589,24 @@ class Game {
     }
 
     update_the_checker(game_num){
-        if (game_num == 1) the_checker = the_checker;
-        if (game_num == 1) the_checker = the_checker2;
-        if (game_num == 1) the_checker = the_checker3;
-        if (game_num == 1) the_checker = the_checker4;
+        if (game_num == 1) cur_checker = the_checker1;
+        if (game_num == 1) cur_checker = the_checker2;
+        if (game_num == 1) cur_checker = the_checker3;
+        if (game_num == 1) cur_checker = the_checker4;
 
     }
 
     change_turns(cur_checker){
         if (cur_checker === w_checker){
-            the_checker = b_checker;
+            cur_checker = b_checker;
             document.getElementById("cur_player_img_id").src = "black_checker.jpg"
         }
         else if (cur_checker ===  b_checker){
-            the_checker = w_checker;
+            cur_checker = w_checker;
             document.getElementById("cur_player_img_id").src = "white_checker.png"
         }
         else{
-            the_checker = w_checker
+            cur_checker = w_checker
         }
     }
 
@@ -681,34 +683,17 @@ class Game {
     apply_road(index,cur_game){
         console.log(index,cur_game,block,block2,block3,block4);
         this.set_game_data(cur_game);
-        if (index > 0 && cur_game == 1){
-            block[index].id.style.background = "#704923";
-        }
-        else if (index >0 && cur_game == 2){
-            block2[index].id.style.background = "#704923";
-        }
-        else if (index >0 && cur_game == 3){
-            block3[index].id.style.background = "#704923";
-        }
-        else if (index >0 && cur_game == 4){
-            block4[index].id.style.background = "#704923";
+        if (index > 0){
+            cur_block[index].id.style.background = "#704923";
         }
     }
 
     move_attack(index,game_no){
         this.set_game_data(game_no);
-        if (index > 0 && game_no == 1 ){
-            if (index > 0) block[index].id.style.background = "#007010";
+        if (index > 0){
+            if (index > 0) cur_block[index].id.style.background = "#007010";
         }
-        else if (index >0 & game_no == 2){
-            if (index > 0) block2[index].id.style.background = "#007010";
-        }
-        else if (index >0 & game_no == 3){
-            if (index > 0) block3[index].id.style.background = "#007010";
-        }
-        else if (index >0 & game_no == 4){
-            if (index > 0) block4[index].id.style.background = "#007010";
-        }
+
 
     }
 
@@ -776,7 +761,7 @@ class Game {
                     var index = packet.data;
                     var game_move = packet.game_no;
                     game.move_attack(index,game_move);
-                    game.change_turns(the_checker);
+                    game.change_turns(cur_checker);
                     break;
 
                 case 'eliminate_piece':
@@ -785,7 +770,7 @@ class Game {
                     var game_num= packet.game_no;
                     console.log(elim_piece_id);
                     this.update_the_checker(game_num);
-                    the_checker[elim_piece_id].id.style.display = "none";
+                    cur_checker[elim_piece_id].id.style.display = "none";
                     //make the move on game player and then update it on the other players
                     break;
 
@@ -796,8 +781,8 @@ class Game {
                     var y_coord = packet.Y;
                     var game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
                     this.update_the_checker(game_no);
-                    the_checker[piece_id].move_coords(x_coord,y_coord,game_no);
-                    game.change_turns(the_checker);
+                    cur_checker[piece_id].move_coords(x_coord,y_coord,game_no);
+                    game.change_turns(cur_checker);
 
                     // if (game_move == 1){
                     //     the_checker[piece_id].move_coords(x_coord,y_coord,game_move);
@@ -852,7 +837,7 @@ class Game {
                     console.log("Start game call received");
                     document.getElementById("modalBtnTrigger").click();
                     document.getElementById("modal_message").innerHTML =  "Your Game Is Ready To Start!!!";//Both players can confirm here
-                    the_checker = w_checker;//to begin with
+                    cur_checker = w_checker;//to begin with
                     game_started = true;
                     break;
 
