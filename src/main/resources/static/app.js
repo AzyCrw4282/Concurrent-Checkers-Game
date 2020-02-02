@@ -55,7 +55,7 @@ var cur_b_checker = [];
 var cur_square_class = undefined;
 var cur_w_checker_class = undefined;
 var cur_b_checker_class = undefined;
-var the_cur_checker = undefined;
+var the_cur_checker = {cur:undefined};
 
 var block = [];
 var w_checker = [];
@@ -586,12 +586,13 @@ class Game {
     }
     //need to achieve dynamic behaviour with this
     update_the_checker(game_num,return_checker){
-        if (game_num == 1) the_cur_checker = the_checker1;
-        if (game_num == 2) the_cur_checker = the_checker2;
-        if (game_num == 3) the_cur_checker = the_checker3;
-        if (game_num == 4) the_cur_checker = the_checker4;
+        console.log(the_checker1,the_checker2,the_checker3,the_checker4);//latter values remains white and not changing it
+        if (game_num == 1) the_cur_checker.cur = the_checker1;
+        if (game_num == 2) the_cur_checker.cur = the_checker2;
+        if (game_num == 3) the_cur_checker.cur = the_checker3;
+        if (game_num == 4) the_cur_checker.cur = the_checker4;
 
-        if (return_checker) return (the_cur_checker);
+        if (return_checker) return (the_cur_checker.cur);
     }
 
     change_turns(game_num){
@@ -599,15 +600,14 @@ class Game {
         the_cur_checker = this.update_the_checker(game_num,true);
         if (the_cur_checker == w_checker){
             console.log("602");
-            the_cur_checker = b_checker;
+            the_cur_checker.cur = b_checker;
             document.getElementById("cur_player_img_id").src = "black_checker.jpg"
         }
         else if (the_cur_checker ==  b_checker){
             console.log("607");
-            the_cur_checker = w_checker;
+            the_cur_checker.cur = w_checker;
             document.getElementById("cur_player_img_id").src = "white_checker.png"
         }
-        return the_cur_checker
     }
 
     show_moves(index,colour)
@@ -767,8 +767,8 @@ class Game {
                     var game_num = packet.game_no;
                     this.set_game_data(game_num);
                     this.update_the_checker(game_num,false);
-                    the_cur_checker[elim_piece_id].id.style.display = "none";
-                    the_cur_checker =  this.change_turns(game_num);
+                    the_cur_checker.cur[elim_piece_id].id.style.display = "none";
+                    this.change_turns(game_num);
                     break;
 
                 case 'non_attack_move':// p - the_checker enabled one f/e and nt the other and hence undefined
@@ -777,12 +777,11 @@ class Game {
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
                     game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
-                    console.log(the_cur_checker);
+                    console.log(the_cur_checker.cur);
                     this.update_the_checker(game_no,false);
-                    console.log(the_cur_checker);
-                    the_cur_checker[piece_id].move_coords(x_coord,y_coord,game_no);
-                    the_cur_checker =  this.change_turns(game_no);
-                    console.log(the_cur_checker);
+                    console.log(the_cur_checker.cur);
+                    the_cur_checker.cur[piece_id].move_coords(x_coord,y_coord,game_no);
+                    this.change_turns(game_no);
                     break;
 
                 case "create_room_resp":
