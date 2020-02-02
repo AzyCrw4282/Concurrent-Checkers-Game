@@ -98,14 +98,15 @@ public class Room {
 
         if (msg.length() >0){
             for (Player plyr : rm.getPlayers_hm().values()){
-                System.out.println("plyer id: " + plyr.getId() +" " + Math.round(plyr.getId()/2.0));
+                int game_number = (int) Math.round(plyr.getId()/2.0);
+                System.out.println("plyer id: " + plyr.getId() +" Game num: " +game_number);
                 try {
-                    String new_msg = msg + String.format(",\"game_no\":\"%d\"}",Math.round(plyr.getId()/2.0));
+                    String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
                     plyr.sendMessage(new_msg);
 
                 } catch (Exception e) {
                     e.printStackTrace();
-                    BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 1"));
+                    BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game number "+ game_number));
                     remove_player_from_room(plyr);
                 }
 
