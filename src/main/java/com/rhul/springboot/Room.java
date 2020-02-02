@@ -51,7 +51,7 @@ public class Room {
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
-                    apply_game_status(this,playr.getName(),players_count.get());
+                    apply_game_status(this,playr.getName(),players_count.get(),false,null);
                     game_ready_to_start(playr.getId(),"player_joined");//error here for player_did
                     return true;
                 }
@@ -79,12 +79,18 @@ public class Room {
     }
 
     //Method to update game_status on the player's that are present in the room
-    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){
-
-        for (Player plyr : players_hm.values()){
+    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type){
+        String new_msg = "";
+        for (Player plyr : rm.players_hm.values()){
             try {
-                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/%d) active players\"}",plyr_nm,players_active,rm.n_games*2);
-                plyr.sendMessage(new_msg);
+                if (!move_msg){
+                    new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/%d) active players\"}",plyr_nm,players_active,rm.n_games*2);
+                    plyr.sendMessage(new_msg);
+                }
+                else if (move_msg && !type.equals("remove_road")){
+                    new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s has performed a %s \"}",plyr_nm,type);
+                    plyr.sendMessage(new_msg);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -103,7 +109,6 @@ public class Room {
                 try {
                     String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
                     plyr.sendMessage(new_msg);
-//                    apply_game_status(rm,);
 
                 } catch (Exception e) {
                     e.printStackTrace();

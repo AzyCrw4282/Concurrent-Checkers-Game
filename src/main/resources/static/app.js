@@ -363,7 +363,8 @@ gameStatus_logs.log = (function (msg) {
     var gameStatus = document.getElementById("console_status_id");
     var p_msg = document.createElement('h4');
     p_msg.style.wordWrap = 'break-word';
-    p_msg.innerHTML = msg;
+    var parsed_msg = msg.replace(/_/g, ' ');
+    p_msg.innerHTML = parsed_msg;
     gameStatus.appendChild(p_msg);
 
     //optimise the chat box
@@ -794,7 +795,7 @@ class Game {
                     }
                     break;
 
-                case 'apply_road':
+                case 'Looking_For_Moves':
                     var parsed_val = parseInt(packet.data);
                     var game_move = packet.game_no; //so 1 /2 and elow upodate it as necesary
                     this.set_game_data(game_move);
@@ -812,7 +813,7 @@ class Game {
                     game.remove_road(up_left,up_right,down_left,down_right,game_move);
                     break;
 
-                case 'move_attack':
+                case 'Move_Attack':
                     console.log("make the move");
                     var index = packet.data;
                     game_move = packet.game_no;
@@ -820,7 +821,7 @@ class Game {
                     this.move_attack(index,game_move);
                     break;
 
-                case 'eliminate_piece':
+                case 'Eliminate_Piece':
                     console.log("Piece elimination");
                     let elim_piece_id = packet.data;
                     var game_num = packet.game_no;
@@ -830,7 +831,7 @@ class Game {
                     this.change_turns(game_num);
                     break;
 
-                case 'non_attack_move':// p - the_checker enabled one f/e and nt the other and hence undefined
+                case 'Non_Attack_Move':// p - the_checker enabled one f/e and nt the other and hence undefined
                     console.log("non-attack move");
                     var piece_id = packet.id;
                     var x_coord = packet.X;
