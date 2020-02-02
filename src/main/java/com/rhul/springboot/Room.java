@@ -103,6 +103,7 @@ public class Room {
                 try {
                     String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
                     plyr.sendMessage(new_msg);
+//                    apply_game_status(rm,);
 
                 } catch (Exception e) {
                     e.printStackTrace();
