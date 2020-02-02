@@ -133,9 +133,6 @@ public class Checkers {
         attack_possible = false;
 
 
-
-
-
         if(selected_piece > 0){
             apply_front_changes(rm,0,"remove_road",null);
         }else if (piece.id > 0){
@@ -325,7 +322,7 @@ public class Checkers {
                 int value = piece.occupiedSquare + moveDirection;
                 java.lang.String sdfg = "";
 
-                apply_front_changes(rm,value,"apply_road",null);
+                apply_front_changes(rm,value,"Looking_For_Moves",null);
                 theDirection = piece.occupiedSquare + moveDirection;
             }
             else{
@@ -344,14 +341,13 @@ public class Checkers {
         if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && cs.block[piece.occupiedSquare + squareMove].isOccupied() && cs.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !cs.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
             attack_possible = true;
             direction = (piece.occupiedSquare + squareMove * 2);
-            apply_front_changes(rm,direction,"move_attack",null);
+            apply_front_changes(rm,direction,"Move_Attack",null);
             return direction;
         }
         else{
             direction = 0;
             return direction;
         }
-
     }
 
     public boolean attack_move(Checkers piece, Room rm){
@@ -415,7 +411,7 @@ public class Checkers {
     public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Room rm,Checkers piece){
         if (cur_player.equals("white")){
             w_checkers[selected_piece].changeCoordinates(X,Y);
-            apply_front_changes(rm,0,"non_attack_move",w_checkers[selected_piece]);
+            apply_front_changes(rm,0,"Non_Attack_Move",w_checkers[selected_piece]);
             w_checkers[selected_piece].setCoordinates(0,0);
             cs.block[w_checkers[selected_piece].occupiedSquare].setOccupied(false);
             cs.block[w_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);
@@ -426,7 +422,7 @@ public class Checkers {
         else if (cur_player.equals("black")){
             System.out.println("sdfsd "+ X + " "+ Y);
             b_checkers[selected_piece].changeCoordinates(X,Y);
-            apply_front_changes(rm,0,"non_attack_move",b_checkers[selected_piece]);
+            apply_front_changes(rm,0,"Non_Attack_Move",b_checkers[selected_piece]);
             b_checkers[selected_piece].setCoordinates(0,0);
             cs.block[b_checkers[selected_piece].occupiedSquare].setOccupied(false);
             cs.block[b_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);
@@ -444,7 +440,7 @@ public class Checkers {
             System.out.println("Eliminate Id " + piece + " index: " +index);
             piece.setAlive(false);
             cs.block[index].setOccupied(false);
-            apply_front_changes(rm,piece.getId(),"eliminate_piece",null);
+            apply_front_changes(rm,piece.getId(),"Eliminate_Piece",null);
 
         }
     }
@@ -468,24 +464,29 @@ public class Checkers {
         }
         return true;
     }
-
-    public void declare_winner() throws URISyntaxException, SQLException {
-        //Todo - send f/e to update user. Update the lederboard table.
-        boolean new_user = plyr.getLeaderbd().check_if_usr_exists();
-        if (new_user){
-            plyr.getLeaderbd().update_games_completed();
-            plyr.getLeaderbd().update_win_percent();
-            plyr.getLeaderbd().update_long_win_streak();
-            plyr.getLeaderbd().update_games_completed();
-
+    //Todo - send f/e to update user. Update the lederboard table.
+    public void declare_winner(){
+        try{
+            boolean existing_user = plyr.getLeaderbd().check_if_usr_exists();
+            if (existing_user){
+                update_leaderbd_cmds();
+            }
+            else{//new user
+                if (plyr.getLeaderbd().create_new_user()){
+                    update_leaderbd_cmds();
+                }
+            }
+        }catch (SQLException e){
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Error in declaring a winner. Likely to do with database update."));
+            e.printStackTrace();
         }
-        else{
+    }
 
-
-
-
-
-        }
+    public void update_leaderbd_cmds() throws SQLException {
+        plyr.getLeaderbd().update_rank();
+        plyr.getLeaderbd().update_games_competed();
+        plyr.getLeaderbd().update_win_percent();
+        plyr.getLeaderbd().update_long_win_streak();
 
     }
 
@@ -493,24 +494,25 @@ public class Checkers {
         System.out.println("f/e change requested. Type : "+ type);
         String msg = "";
         switch (type) {
-            case "apply_road":
-                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"", square);
+            case "Looking_For_Moves":
+                msg = String.format("{\"type\": \"Looking_For_Moves\",\"data\":\"%s\"", square);
                 break;
             case "remove_road":
                 msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"", up_left,up_right,down_left,down_right);
                 break;
-            case "eliminate_piece":
-                msg = String.format("{\"type\": \"eliminate_piece\",\"data\":\"%d\"", square);
+            case "Eliminate_Piece":
+                msg = String.format("{\"type\": \"Eliminate_Piece\",\"data\":\"%d\"", square);
                 break;
-            case "move_attack":
-                msg = String.format("{\"type\": \"move_attack\",\"data\":\"%d\"", square);
+            case "Move_Attack":
+                msg = String.format("{\"type\": \"Move_Attack\",\"data\":\"%d\"", square);
                 break;
-            case "non_attack_move":
-                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
+            case "Non_Attack_Move":
+                msg = String.format("{\"type\": \"Non_Attack_Move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
                 System.out.println(msg + " " + piece.getCoordX() + " " + piece.getCoordY());
                 break;
         }
         rm.apply_to_room_users(msg,rm,plyr);
+        rm.apply_game_status(rm,this.plyr.getName(),0,true,type);
     }
 
 }

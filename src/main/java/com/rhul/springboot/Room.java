@@ -3,6 +3,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.tomcat.jni.Time;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +19,7 @@ public class Room {
 
     private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
+    private Map<String, Boolean> room_games_status;
     private Semaphore smphore;
     private int n_games;
     private String room_name;
@@ -30,6 +33,7 @@ public class Room {
         this.rm_owner = plyr;
         this.smphore = new Semaphore(n_games*2,true);//this will be set to max of 8. Need to achive dynamic on handler to get this working
         this.n_games = n_games;
+        this.room_games_status = new HashMap<String, Boolean>();
     }
 
     public void remove_player_from_room(Player playr){
@@ -47,7 +51,8 @@ public class Room {
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     players_hm.put(playr.getId(), playr);
                     players_count.getAndIncrement();
-                    apply_game_status(this,playr.getName(),players_count.get());
+                    apply_game_status(this,playr.getName(),players_count.get(),false,null);
+                    game_ready_to_start(playr.getId(),"player_joined");//error here for player_did
                     return true;
                 }
             }
@@ -59,13 +64,33 @@ public class Room {
         }
     }
 
-    //Method to update game_status on the player's that are present in the room
-    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active){
+    //if it's an odd player and within less than n games start the game response
+    public synchronized void game_ready_to_start(int plyr_id,String type){
+        //2,4,6,8 -> all joining players
+        if (plyr_id % 2 == 0){
+            if (type == "start_game") room_games_status.put(String.valueOf(Math.round(plyr_id/2.0)),true);
+            for (Player plyr : players_hm.values()){
+                if (plyr.getId() == plyr_id | plyr.getId()+1 == plyr_id ){//player or the opponent
+                    String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\",\"plyr_id\": \"%d\"}",type,Math.round(plyr_id/2.0),plyr.getId());
+                    plyr.sendMessage(new_msg);
+                }
+            }
+        }
+    }
 
-        for (Player plyr : players_hm.values()){
+    //Method to update game_status on the player's that are present in the room
+    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type){
+        String new_msg = "";
+        for (Player plyr : rm.players_hm.values()){
             try {
-                String new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/%d) active players\"}",plyr_nm,players_active,rm.n_games*2);
-                plyr.sendMessage(new_msg);
+                if (!move_msg){
+                    new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s joined (%d/%d) active players\"}",plyr_nm,players_active,rm.n_games*2);
+                    plyr.sendMessage(new_msg);
+                }
+                else if (move_msg && !type.equals("remove_road")){
+                    new_msg = String.format("{\"type\": \"game_status_logs\",\"data\": \"%s has performed a %s \"}",plyr_nm,type);
+                    plyr.sendMessage(new_msg);
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -78,30 +103,42 @@ public class Room {
     public synchronized void apply_to_room_users(String msg,Room rm, Player player){
 
         if (msg.length() >0){
-
             for (Player plyr : rm.getPlayers_hm().values()){
-                if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
-                    System.out.println("plyer id: " + plyr.getId());
-                    try {
-                        String new_msg = msg + ",\"game_no\":\"1\"}";
-                        plyr.sendMessage(new_msg);
+                int game_number = (int) Math.round(plyr.getId()/2.0);
+                System.out.println("plyer id: " + plyr.getId() +" Game num: " +game_number);
+                try {
+                    String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
+                    plyr.sendMessage(new_msg);
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 1"));
-                        remove_player_from_room(plyr);
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game number "+ game_number));
+                    remove_player_from_room(plyr);
                 }
-                else{
-                    try {
-                        String new_msg = msg + ",\"game_no\":\"2\"}";
-                        plyr.sendMessage(new_msg);
-                    } catch (Exception e) {
-                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 2"));
-                        e.printStackTrace();
-                        remove_player_from_room(plyr);
-                    }
-                }
+
+
+                //                if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
+//                    System.out.println("plyer id: " + plyr.getId());
+//                    try {
+//                        String new_msg = msg + ",\"game_no\":\"1\"}";
+//                        plyr.sendMessage(new_msg);
+//
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 1"));
+//                        remove_player_from_room(plyr);
+//                    }
+//                }
+//                else{
+//                    try {
+//                        String new_msg = msg + ",\"game_no\":\"2\"}";
+//                        plyr.sendMessage(new_msg);
+//                    } catch (Exception e) {
+//                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 2"));
+//                        e.printStackTrace();
+//                        remove_player_from_room(plyr);
+//                    }
+//                }
             }
         }
     }

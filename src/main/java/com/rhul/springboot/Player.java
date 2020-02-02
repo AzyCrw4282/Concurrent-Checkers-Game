@@ -4,6 +4,8 @@ import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
 
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -44,7 +46,7 @@ public class Player {
 
     CheckersGame game = new CheckersGame();
 
-    public Player(int id, String name, WebSocketSession session){
+    public Player(int id, String name, WebSocketSession session) throws URISyntaxException, SQLException {
         this.id = id;
         this.name = name;
         this.session = session;
@@ -59,7 +61,6 @@ public class Player {
             BugsnagConfig.bugsnag().notify(new RuntimeException("Error countered in session send message"));
             e.printStackTrace();
         }
-
     }
 
     public Checkers initialize(){
@@ -126,7 +127,6 @@ public class Player {
 
     public void update_game(){
 
-
         if (show_moves_req){
             this.show_moves();
             show_moves_req = false;
@@ -182,8 +182,5 @@ public class Player {
             String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
             this.sendMessage(mesg);
         }
-
-
     }
-
 }

@@ -66,6 +66,14 @@ which most have been adapted and changes to fit my game.
     margin-bottom:1%;
 }
 
+#console_status_id{
+    overflow-y: scroll;
+    height: 92%;
+    margin-top: 5%;
+    margin-bottom:1%;
+}
+
+
 #btnMsg{
     border:none;
     border-radius: 3px;
@@ -209,6 +217,12 @@ body , html{
     z-index:  7;
     display: none;
 }
+
+.game_options {
+    margin-top: 10px;
+    margin-left: 5px;
+}
+
 
 hr {
     border-top: 1px solid #cc000b;
