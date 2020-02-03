@@ -491,51 +491,51 @@ class Game {
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
-            cur_block[i] = new checkers_squares(square_class[i], i);
+            cur_block[i] = new checkers_squares(cur_square_class[i], i);
         }
         /*================Initializing white black counters =================================*/
         // white piece
         for (var i = 1; i <= 4; i++) {
-            w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(game_no);
+            cur_w_checker[i] = new checkers(cur_w_checker_class[i], "white", 2 * i - 1,i);
+            cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i - 1].occupied = true;
-            cur_block[2 * i - 1].pieceId = w_checker[i];
+            cur_block[2 * i - 1].pieceId = cur_w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
-            w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
-            w_checker[i].set_coords(game_no);
+            cur_w_checker[i] = new checkers(cur_w_checker_class[i], "white", 2 * i,i);
+            cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i].occupied = true;
-            cur_block[2 * i].pieceId = w_checker[i];
+            cur_block[2 * i].pieceId = cur_w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
-            w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(game_no);
+            cur_w_checker[i] = new checkers(cur_w_checker_class[i], "white", 2 * i - 1,i);
+            cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i - 1].occupied = true;
-            cur_block[2 * i - 1].pieceId = w_checker[i];
+            cur_block[2 * i - 1].pieceId = cur_w_checker[i];
         }
 
         //black piece
         for (var i = 1; i <= 4; i++) {
-            b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
-            b_checker[i].set_coords(game_no);
+            cur_b_checker[i] = new checkers(cur_b_checker_class[i], "black", 56 + 2 * i,i);
+            cur_b_checker[i].set_coords(game_no);
             cur_block[56 + 2 * i].occupied = true;
-            cur_block[56 + 2 * i].pieceId = b_checker[i];
+            cur_block[56 + 2 * i].pieceId = cur_b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
-            b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
-            b_checker[i].set_coords(game_no);
+            cur_b_checker[i] = new checkers(cur_b_checker_class[i], "black", 40 + 2 * i - 1,i);
+            cur_b_checker[i].set_coords(game_no);
             cur_block[40 + 2 * i - 1].occupied = true;
-            cur_block[40 + 2 * i - 1].pieceId = b_checker[i];
+            cur_block[40 + 2 * i - 1].pieceId = cur_b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
-            b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
-            b_checker[i].set_coords(game_no);
+            cur_b_checker[i] = new checkers(cur_b_checker_class[i], "black", 24 + 2 * i,i);
+            cur_b_checker[i].set_coords(game_no);
             cur_block[24 + 2 * i].occupied = true;
-            cur_block[24 + 2 * i].pieceId = b_checker[i];
+            cur_block[24 + 2 * i].pieceId = cur_b_checker[i];
         }
         user_action = "initialize";
         this.connect();
@@ -817,7 +817,7 @@ class Game {
                     console.log("make the move");
                     var index = packet.data;
                     game_move = packet.game_no;
-                    this.set_game_data(game_move);
+                    // this.set_game_data(game_move);
                     this.move_attack(index,game_move);
                     break;
 
@@ -837,7 +837,6 @@ class Game {
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
                     game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
-
                     this.update_the_checker(game_no,false);
                     console.log(the_cur_checker.cur);
                     the_cur_checker.cur[piece_id].move_coords(x_coord,y_coord,game_no);
@@ -901,6 +900,7 @@ class Game {
                         player_game = dict_game_rm[String(user_permit_val)];
                         for(var game_no=1;game_no<=num_games;game_no++){
                             game.initialize_game(game_no);
+                            console.log("initialize ",game_no);
                         }
                     }
                     break;
