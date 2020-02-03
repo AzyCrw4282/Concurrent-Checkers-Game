@@ -615,6 +615,7 @@ class Game {
 
     //sets the correct checker value
     change_turns(game_num){
+        console.log(the_cur_checker.cur,game_num)
         if (game_num == 1){
             if (the_cur_checker.cur == w_checker ){
                 document.getElementById("cur_player_img_id").src = "black_checker.jpg";
@@ -630,7 +631,7 @@ class Game {
 
         if (game_num == 2){
             if (the_cur_checker.cur == w_checker2 ){
-                document.getElementById("cur_player_img_id").src = "black_checker.jpg";
+                document.getElementById("cur_player_img_id2").src = "black_checker.jpg";
                 the_cur_checker.cur == b_checker2;
                 the_checker2= b_checker2;
 
@@ -638,26 +639,26 @@ class Game {
             else{
                 the_cur_checker.cur == w_checker2;
                 the_checker2 = w_checker2;
-                document.getElementById("cur_player_img_id").src = "white_checker.png";
+                document.getElementById("cur_player_img_id2").src = "white_checker.png";
             }
         }
 
         if (game_num == 3){
             if (the_cur_checker.cur == w_checker3 ){
-                document.getElementById("cur_player_img_id").src = "black_checker.jpg";
+                document.getElementById("g2_cur_player_img_id").src = "black_checker.jpg";
                 the_cur_checker.cur == b_checker3;
                 the_checker3 = b_checker3;
             }
             else{
                 the_cur_checker.cur == w_checker3;
                 the_checker3= w_checker3;
-                document.getElementById("cur_player_img_id").src = "white_checker.png";
+                document.getElementById("g2_cur_player_img_id").src = "white_checker.png";
             }
         }
 
         if (game_num == 4){
             if (the_cur_checker.cur == w_checker4 ){
-                document.getElementById("cur_player_img_id").src = "black_checker.jpg";
+                document.getElementById("g2_cur_player_img_id2").src = "black_checker.jpg";
                 the_cur_checker.cur == b_checker4;
                 the_checker4 = b_checker4;
 
@@ -665,7 +666,7 @@ class Game {
             else{
                 the_cur_checker.cur == w_checker4;
                 the_checker4 = w_checker4;
-                document.getElementById("cur_player_img_id").src = "white_checker.png";
+                document.getElementById("g2_cur_player_img_id2").src = "white_checker.png";
             }
         }
 
