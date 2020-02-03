@@ -342,6 +342,7 @@ function get_document_element(element_id){
 
 var chatbox_logs = {};
 var gameStatus_logs = {};
+var previous_msg;//
 
 chatbox_logs.log = (function (msg) {
     var chatbox = document.getElementById("console_id");
@@ -359,9 +360,11 @@ chatbox_logs.log = (function (msg) {
 });
 
 gameStatus_logs.log = (function (msg) {
-    if (msg === undefined) msg = "Game Status will appear below";
+    if (msg === undefined || previous_msg == msg) return;
+
     var gameStatus = document.getElementById("console_status_id");
     var p_msg = document.createElement('h4');
+    previous_msg = msg;
     p_msg.style.wordWrap = 'break-word';
     var parsed_msg = msg.replace(/_/g, ' ');
     p_msg.innerHTML = parsed_msg;
@@ -615,7 +618,7 @@ class Game {
 
     //sets the correct checker value
     change_turns(game_num){
-        console.log(the_cur_checker.cur,game_num)
+        console.log(the_cur_checker.cur,game_num);
         if (game_num == 1){
             if (the_cur_checker.cur == w_checker ){
                 document.getElementById("cur_player_img_id").src = "black_checker.jpg";
@@ -948,6 +951,12 @@ class Game {
                 var check_permits = {"type": "get_room_permits", "room_value" : room_value};
                 game.send_data(check_permits);
             }
+        },3000);
+
+        setInterval(function () {
+            var check_permits = {"type": "ping"};
+            game.send_data(check_permits);
+
         },3000);
     }
 

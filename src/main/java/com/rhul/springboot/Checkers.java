@@ -212,7 +212,8 @@ public class Checkers {
 
         boolean isMove = false;
         boolean must_attack = false;
-        this.plyr_name =cur_player;
+        this.plyr_name = cur_player;
+
         if (!game_started & selected_piece == 0){
             return false;
         }else if (up_left != index && up_right != index && down_left != index && down_right != index){
