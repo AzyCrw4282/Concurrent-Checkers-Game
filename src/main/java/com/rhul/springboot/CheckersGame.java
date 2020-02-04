@@ -78,18 +78,14 @@ public class CheckersGame {
         return rm_name;
     }
 
-
+    //one game obj for 2 players. even number players hold game object
     public static Checkers get_game_obj(Player plyr){
         int playr_id = plyr.getId();
 
-        if (playr_id <3){
-            return (get_player_obj(2).checks_obj);
+        if (playr_id % 2 == 1){
+            playr_id+=1;
         }
-        else if (playr_id > 2 && playr_id < 5){
-            return (get_player_obj(4).checks_obj);
-        }
-        return null;
-
+        return (get_player_obj(playr_id).checks_obj);
     }
 
     public static Player get_player_obj(int id){

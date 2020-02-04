@@ -42,7 +42,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             <button class=".btn" id="button1" onclick="enterName()">Enter Name</button>
         </div>
 
-        <!--the Different Options To Play Are Shown-->
+        <!--the Play Options To Play Are Shown-->
         <div class="col-md-4 btn-group" id="div_id_menu">
             <button class=".btn" id="create_room" style="margin-top: 15px" onclick="create_room()">Create a Room  </button>
             <button class=".btn" id="join_room" style="margin-top: 15px" onclick="join_a_room()"> Join a Room </button>
@@ -100,11 +100,11 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             </tbody>
         </table>
     </div>
-<!--    Row 1-->
+
+    <!--Row 1-->
     <div class="row">
         <!--Game 1-->
         <div class="col-lg-4 col-md-4">
-
             <!-- These 2 are set for indexing of classes starting at 1-->
             <div class="checker white_checker" style="display:none"> </div>
             <div class="checker black_checker" style="display:none"> </div>
@@ -244,16 +244,9 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
             </div>
 
-            <div class="game_options" >
-                <div id="start_div" style="display:none;">
-                    <button class=".btn" id="button5" onclick="start_game_btn()">Start</button>
-                </div>
-
-                <div id="cancel_div" style="display:none;">
-                    <button class=".btn" id="cancelar" onclick="cancel_game_btn()"> Cancel </button>
-                </div>
+            <div class="game_options"  id="start_div1" style="display:none;">
+                <button type="button" class="btn btn-success" id="button_div" onclick="start_game_btn(1,'start_div1')">Start Game</button>
             </div>
-
         </div>
         <!--Game 2-->
         <div class="col-lg-4 col-md-4">
@@ -291,7 +284,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
                 <div class="checker black_checker2"> </div>
                 <div class="checker black_checker2"> </div>
                 <div class="checker black_checker2"> </div>
-                <div class="checker black_checker2" style="display: none"> </div>
+                <div class="checker black_checker2"> </div>
 
 
                 <div class="square2 black_square2"> </div>
@@ -385,21 +378,14 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
 
                 </div>
 
-                <!--alternate text on player 1/2-->
+                <!--Alternate text on player 1/2-->
                 <div class="cur_player" style="margin-left: 175px" >
                     <img class="cur_player" id="cur_player_img_id2" src="white_checker.png" alt="Player image"><!-- white_checker.png /// black_checker.jpg-->
                 </div>
-
             </div>
 
-            <div class="game_options2" >
-                <div id="start_div2" style="display:none;">
-                    <button class=".btn" id="button25" onclick="start_game_btn2()">Start</button>
-                </div>
-
-                <div id="cancel_div2" style="display:none;">
-                    <button class=".btn" id="cancelar2" onclick="cancel_game_btn()"> Cancel </button>
-                </div>
+            <div class="game_options"  id="start_div2" style="display:none;">
+                <button type="button" class="btn btn-success" id="button_div2" onclick="start_game_btn(2,'start_div2')">Start Game</button>
             </div>
         </div>
         <!-- Chat -->
@@ -411,6 +397,7 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             </div>
         </div>
     </div>
+
     <!-- Row 2-->
     <div class="row">
         <!--Game 1-->
@@ -539,7 +526,6 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
             </div>
 
             <div class="game_status" id = "g2_game_status" style="border: 1px solid #ba967e;width: 400px;height: 140px; display: none">
-
                 <h5 style="color: green;left: 50px;margin-left: 50px">Game Status- Prev State and Current Player</h5>
                 <hr>
 
@@ -554,14 +540,8 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
                 </div>
             </div>
 
-            <div class="game_options" >
-                <div id="g2_start_div" style="display:none;">
-                    <button class=".btn" id="g2_button5" onclick="start_game_btn()">Start</button>
-                </div>
-
-                <div id="g2_cancel_div" style="display:none;">
-                    <button class=".btn" id="g2_cancelar" onclick="cancel_game_btn()"> Cancel </button>
-                </div>
+            <div class="game_options"  id="start_div2_3" style="display:none;">
+                <button type="button" class="btn btn-success"  id="button_div21" onclick="start_game_btn(3,'start_div2_3')">Start Game</button>
             </div>
         </div>
         <!--Game 2-->
@@ -698,14 +678,8 @@ Contains adapted code from here https://codepen.io/calincojo/pen/wBQqYm
                 </div>
             </div>
 
-            <div class="game_options2" >
-                <div id="g2_start_div2" style="display:none;">
-                    <button class=".btn" id="g2_button25" onclick="start_game_btn2()">Start</button>
-                </div>
-
-                <div id="g2_cancel_div2" style="display:none;">
-                    <button class=".btn" id="g2_cancelar2" onclick="cancel_game_btn()"> Cancel </button>
-                </div>
+            <div class="game_options"  id="start_div2_4" style="display:none;">
+                <button type="button" class="btn btn-success"  id="button_div22" onclick="start_game_btn(4,'start_div2_4')">Start Game</button>
             </div>
         </div>
         <!-- Game status Id -->

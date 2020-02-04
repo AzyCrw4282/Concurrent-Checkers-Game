@@ -5,6 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.lang.reflect.Array;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+
 /** This class handles all board related functionalities. An instance is user for each game, so 2 players use 1 game.
  * Some of the algorithms that check and performs checker move has been taken and adpted from the repo of the mentioned author.
  * @author Azky & Elise(From github)
@@ -29,6 +32,7 @@ public class Checkers {
     private boolean attack_possible = false;
     private Checkers the_checker[];
     private Player plyr;
+    private String plyr_name;
     private CheckersSquare cs;
 
 
@@ -55,7 +59,6 @@ public class Checkers {
         this.plyr = plyr;
         this.cs = cS;
     }
-
 
     public Checkers(int square_piece, String colour, int square){
         this.id = square_piece;
@@ -104,7 +107,6 @@ public class Checkers {
         this.coordY += Y;
     }
 
-
     public void checkIfKing(){
 
         if(this.coordY == 8 && !this.king && this.colour.equals("white")){
@@ -123,21 +125,12 @@ public class Checkers {
         this.alive = alive;
     }
 
-
-
-
-
-
-
-
-    public synchronized boolean show_moves(Checkers piece,Room rm){
+    public synchronized boolean show_moves(Checkers piece,Room rm,String cur_player){
         System.out.println("prev selected piece: " + selected_piece);
+        this.plyr_name =cur_player;
 
         boolean match =false;
         attack_possible = false;
-
-
-
 
 
         if(selected_piece > 0){
@@ -215,11 +208,11 @@ public class Checkers {
 
     }
 
-
-    public synchronized boolean make_move(int index,String colour,Room rm){
+    public synchronized boolean make_move(int index,String colour,Room rm,String cur_player){
 
         boolean isMove = false;
         boolean must_attack = false;
+        this.plyr_name = cur_player;
 
         if (!game_started & selected_piece == 0){
             return false;
@@ -309,10 +302,9 @@ public class Checkers {
                 another_move = attack_move(the_checker[selected_piece],rm);
             }
             if (another_move){
-                show_moves(the_checker[selected_piece],null);
+                show_moves(the_checker[selected_piece],null,this.plyr_name);
             }
             else{
-
                 change_turns(the_checker);
                 boolean game_over = check_if_lost(the_checker);
                 if (game_over){
@@ -324,14 +316,13 @@ public class Checkers {
         return true;
     }
 
-
     public int check_move(Checkers piece, int top_limit, int LimitSide, int moveDirection, int theDirection,Room rm){
         if (piece.coordY != top_limit){
             if (piece.coordX != LimitSide && !cs.block[piece.occupiedSquare + moveDirection].isOccupied()){
                 int value = piece.occupiedSquare + moveDirection;
                 java.lang.String sdfg = "";
 
-                apply_front_changes(rm,value,"apply_road",null);
+                apply_front_changes(rm,value,"Looking_For_Moves",null);
                 theDirection = piece.occupiedSquare + moveDirection;
             }
             else{
@@ -350,16 +341,14 @@ public class Checkers {
         if (piece.coordX * negX >= negX * X && piece.coordY * negY <= Y * negY && cs.block[piece.occupiedSquare + squareMove].isOccupied() && cs.block[piece.occupiedSquare + squareMove].getPieceId().colour != piece.colour && !cs.block[piece.occupiedSquare + squareMove * 2].isOccupied()){
             attack_possible = true;
             direction = (piece.occupiedSquare + squareMove * 2);
-            apply_front_changes(rm,direction,"move_attack",null);
+            apply_front_changes(rm,direction,"Move_Attack",null);
             return direction;
         }
         else{
             direction = 0;
             return direction;
         }
-
     }
-
 
     public boolean attack_move(Checkers piece, Room rm){
 
@@ -422,7 +411,7 @@ public class Checkers {
     public  void execute_move(String cur_player,int index, int X, int Y, int nSquare,Room rm,Checkers piece){
         if (cur_player.equals("white")){
             w_checkers[selected_piece].changeCoordinates(X,Y);
-            apply_front_changes(rm,0,"non_attack_move",w_checkers[selected_piece]);
+            apply_front_changes(rm,0,"Non_Attack_Move",w_checkers[selected_piece]);
             w_checkers[selected_piece].setCoordinates(0,0);
             cs.block[w_checkers[selected_piece].occupiedSquare].setOccupied(false);
             cs.block[w_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);
@@ -433,7 +422,7 @@ public class Checkers {
         else if (cur_player.equals("black")){
             System.out.println("sdfsd "+ X + " "+ Y);
             b_checkers[selected_piece].changeCoordinates(X,Y);
-            apply_front_changes(rm,0,"non_attack_move",b_checkers[selected_piece]);
+            apply_front_changes(rm,0,"Non_Attack_Move",b_checkers[selected_piece]);
             b_checkers[selected_piece].setCoordinates(0,0);
             cs.block[b_checkers[selected_piece].occupiedSquare].setOccupied(false);
             cs.block[b_checkers[selected_piece].occupiedSquare+nSquare].setOccupied(true);
@@ -445,15 +434,13 @@ public class Checkers {
 
     }
 
-
     public  void eliminate_check(int index,Room rm) {
         if (index > 0 && index < 65){
             Checkers piece = cs.block[index].getPieceId();
             System.out.println("Eliminate Id " + piece + " index: " +index);
             piece.setAlive(false);
             cs.block[index].setOccupied(false);
-
-            apply_front_changes(rm,piece.getId(),"eliminate_piece",null);
+            apply_front_changes(rm,piece.getId(),"Eliminate_Piece",null);
 
         }
     }
@@ -465,7 +452,6 @@ public class Checkers {
         else{
             the_checker = w_checkers;
         }
-
 
     }
 
@@ -480,35 +466,53 @@ public class Checkers {
     }
 
     public void declare_winner(){
-
+        try{
+            boolean existing_user = plyr.getLeaderbd().check_if_usr_exists();
+            if (existing_user){
+                update_leaderbd_cmds();
+            }
+            else{//new user
+                if (plyr.getLeaderbd().create_new_user()){
+                    update_leaderbd_cmds();
+                }
+            }
+        }catch (SQLException e){
+            BugsnagConfig.bugsnag().notify(new RuntimeException("Error in declaring a winner. Likely to do with database update."));
+            e.printStackTrace();
+        }
     }
 
+    public void update_leaderbd_cmds() throws SQLException {
+        plyr.getLeaderbd().update_rank();
+        plyr.getLeaderbd().update_games_competed();
+        plyr.getLeaderbd().update_win_percent();
+        plyr.getLeaderbd().update_long_win_streak();
 
-
-
+    }
 
     public void apply_front_changes(Room rm,int square, String type,Checkers piece) {
         System.out.println("f/e change requested. Type : "+ type);
         String msg = "";
         switch (type) {
-            case "apply_road":
-                msg = String.format("{\"type\": \"apply_road\",\"data\":\"%s\"", square);
+            case "Looking_For_Moves":
+                msg = String.format("{\"type\": \"Looking_For_Moves\",\"data\":\"%s\"", square);
                 break;
             case "remove_road":
                 msg = String.format("{\"type\": \"remove_road\",\"up_left\":\"%d\",\"up_right\":\"%d\",\"down_left\":\"%d\",\"down_right\":\"%d\"", up_left,up_right,down_left,down_right);
                 break;
-            case "eliminate_piece":
-                msg = String.format("{\"type\": \"eliminate_piece\",\"data\":\"%d\"", square);
+            case "Eliminate_Piece":
+                msg = String.format("{\"type\": \"Eliminate_Piece\",\"data\":\"%d\"", square);
                 break;
-            case "move_attack":
-                msg = String.format("{\"type\": \"move_attack\",\"data\":\"%d\"", square);
+            case "Move_Attack":
+                msg = String.format("{\"type\": \"Move_Attack\",\"data\":\"%d\"", square);
                 break;
-            case "non_attack_move":
-                msg = String.format("{\"type\": \"non_attack_move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
+            case "Non_Attack_Move":
+                msg = String.format("{\"type\": \"Non_Attack_Move\",\"id\":\"%d\",\"X\":\"%d\",\"Y\":\"%d\"",piece.getId(), (piece.getCoordX()-1 ) * move_length + move_deviation,(piece.getCoordY()-1) * move_length + move_deviation);
                 System.out.println(msg + " " + piece.getCoordX() + " " + piece.getCoordY());
                 break;
         }
         rm.apply_to_room_users(msg,rm,plyr);
+        rm.apply_game_status(rm,this.plyr_name,0,true,type);
     }
 
 }

@@ -4,6 +4,8 @@ import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.TextMessage;
 
+import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -40,13 +42,15 @@ public class Player {
     private String room_value;
     private String colour;
     private String cur_plyr;
+    private LeaderBoard leaderbd;
 
     CheckersGame game = new CheckersGame();
 
-    public Player(int id, String name, WebSocketSession session){
+    public Player(int id, String name, WebSocketSession session) throws URISyntaxException, SQLException {
         this.id = id;
         this.name = name;
         this.session = session;
+        this.leaderbd = new LeaderBoard(name);
     }
 
     public synchronized void sendMessage(String msg){
@@ -57,7 +61,6 @@ public class Player {
             BugsnagConfig.bugsnag().notify(new RuntimeException("Error countered in session send message"));
             e.printStackTrace();
         }
-
     }
 
     public Checkers initialize(){
@@ -66,8 +69,6 @@ public class Player {
 
         CheckersSquare checks_sqr = new CheckersSquare();
         checks_obj = new Checkers(this, checks_sqr);
-
-
 
         for (int i = 1; i <= 64; i++) {
             checks_sqr.block[i] = new CheckersSquare(i);
@@ -126,7 +127,6 @@ public class Player {
 
     public void update_game(){
 
-
         if (show_moves_req){
             this.show_moves();
             show_moves_req = false;
@@ -148,12 +148,12 @@ public class Player {
 
         if (this.colour.equals("white")) {
             cur_plyr = "white";
-            if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], rm)) {
+            if (checks_obj.show_moves(checks_obj.w_checkers[piece_index], rm,this.getName())) {
                 String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
                 this.sendMessage(mesg);
 
             }
-        } else if (checks_obj.show_moves(checks_obj.b_checkers[piece_index], rm)) {
+        } else if (checks_obj.show_moves(checks_obj.b_checkers[piece_index], rm,this.getName())) {
             cur_plyr = "black";
             System.out.println("black player");
             String mesg = "{\"type\": \"result_move\",\"data\": \"possible\"}";
@@ -173,17 +173,14 @@ public class Player {
 
         if (this.colour.equals("white")) {
             cur_plyr = "white";
-            if (checks_obj.make_move(square_index, cur_plyr, rm)) {
+            if (checks_obj.make_move(square_index, cur_plyr, rm,this.getName())) {
                 String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
                 this.sendMessage(mesg);
             }
-        } else if (checks_obj.make_move(square_index, cur_plyr, rm)) {
+        } else if (checks_obj.make_move(square_index, cur_plyr, rm,this.getName())) {
             cur_plyr = "black";
             String mesg = "{\"type\": \"move_made\",\"data\": \"possible\"}";
             this.sendMessage(mesg);
         }
-
-
     }
-
 }
