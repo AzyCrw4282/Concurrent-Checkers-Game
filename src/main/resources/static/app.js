@@ -12,7 +12,7 @@ var chat = false;
 var game_started = false;
 var get_room_players =false;
 var user_permit_val = 0;//add 1 to get the value held by the user
-var player_game = undefined;//1/2
+var player_game = undefined;//identifies the player's game
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
@@ -384,10 +384,7 @@ class checkers_squares {
         this.occupied = false;
         this.piece_id = undefined;
         this.id.onclick = function () {
-            if (game_started && player_game == 1) {
-                game.make_move(index);
-            }
-            else if (game_started && player_game == 2){
+            if (game_started) {
                 game.make_move(index);
             }
             else{
@@ -412,15 +409,12 @@ class checkers{
             this.coordY = square/8 ;
         }
         this.id.onclick = function () {
-            console.log(game_started,player_game)
-            if (game_started && player_game == 1) {
-                game.show_moves(index, colour);
-            }
-            else if(game_started && player_game == 2){
+            console.log(game_started,player_game);
+            if (game_started) {
                 game.show_moves(index, colour);
             }
             else{
-                alert("You are not playing that game.")
+                alert("Your game has not been started yet. Please wait!!!")
             }
         }
     }
