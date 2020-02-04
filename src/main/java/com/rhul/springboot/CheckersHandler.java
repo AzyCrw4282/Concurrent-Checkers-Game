@@ -240,6 +240,7 @@ public class CheckersHandler extends TextWebSocketHandler {
                     dbpgsql.fetch_all_rows(session);
                     break;
                 case "ping":
+//                    System.out.println("pong");//keeps wss connection alive
                     break;
             }
 

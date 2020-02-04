@@ -12,7 +12,7 @@ var chat = false;
 var game_started = false;
 var get_room_players =false;
 var user_permit_val = 0;//add 1 to get the value held by the user
-var player_game = undefined;//1/2
+var player_game = undefined;//identifies the player's game
 var permit_obtained = false;
 var already_opened = false;
 var player_id = undefined;
@@ -342,6 +342,7 @@ function get_document_element(element_id){
 
 var chatbox_logs = {};
 var gameStatus_logs = {};
+var previous_msg;//
 
 chatbox_logs.log = (function (msg) {
     var chatbox = document.getElementById("console_id");
@@ -359,9 +360,11 @@ chatbox_logs.log = (function (msg) {
 });
 
 gameStatus_logs.log = (function (msg) {
-    if (msg === undefined) msg = "Game Status will appear below";
+    if (msg === undefined || previous_msg == msg) return;
+
     var gameStatus = document.getElementById("console_status_id");
     var p_msg = document.createElement('h4');
+    previous_msg = msg;
     p_msg.style.wordWrap = 'break-word';
     var parsed_msg = msg.replace(/_/g, ' ');
     p_msg.innerHTML = parsed_msg;
@@ -381,10 +384,7 @@ class checkers_squares {
         this.occupied = false;
         this.piece_id = undefined;
         this.id.onclick = function () {
-            if (game_started && player_game == 1) {
-                game.make_move(index);
-            }
-            else if (game_started && player_game == 2){
+            if (game_started) {
                 game.make_move(index);
             }
             else{
@@ -409,15 +409,12 @@ class checkers{
             this.coordY = square/8 ;
         }
         this.id.onclick = function () {
-            console.log(game_started,player_game)
-            if (game_started && player_game == 1) {
-                game.show_moves(index, colour);
-            }
-            else if(game_started && player_game == 2){
+            console.log(game_started,player_game);
+            if (game_started) {
                 game.show_moves(index, colour);
             }
             else{
-                alert("You are not playing that game.")
+                alert("Your game has not been started yet. Please wait!!!")
             }
         }
     }
@@ -491,51 +488,51 @@ class Game {
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
-            cur_block[i] = new checkers_squares(square_class[i], i);
+            cur_block[i] = new checkers_squares(cur_square_class[i], i);
         }
         /*================Initializing white black counters =================================*/
         // white piece
         for (var i = 1; i <= 4; i++) {
-            w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(game_no);
+            cur_w_checker[i] = new checkers(cur_w_checker_class[i], "white", 2 * i - 1,i);
+            cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i - 1].occupied = true;
-            cur_block[2 * i - 1].pieceId = w_checker[i];
+            cur_block[2 * i - 1].pieceId = cur_w_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
-            w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i,i);
-            w_checker[i].set_coords(game_no);
+            cur_w_checker[i] = new checkers(cur_w_checker_class[i], "white", 2 * i,i);
+            cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i].occupied = true;
-            cur_block[2 * i].pieceId = w_checker[i];
+            cur_block[2 * i].pieceId = cur_w_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
-            w_checker[i] = new checkers(white_checker_class[i], "white", 2 * i - 1,i);
-            w_checker[i].set_coords(game_no);
+            cur_w_checker[i] = new checkers(cur_w_checker_class[i], "white", 2 * i - 1,i);
+            cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i - 1].occupied = true;
-            cur_block[2 * i - 1].pieceId = w_checker[i];
+            cur_block[2 * i - 1].pieceId = cur_w_checker[i];
         }
 
         //black piece
         for (var i = 1; i <= 4; i++) {
-            b_checker[i] = new checkers(black_checker_class[i], "black", 56 + 2 * i,i);
-            b_checker[i].set_coords(game_no);
+            cur_b_checker[i] = new checkers(cur_b_checker_class[i], "black", 56 + 2 * i,i);
+            cur_b_checker[i].set_coords(game_no);
             cur_block[56 + 2 * i].occupied = true;
-            cur_block[56 + 2 * i].pieceId = b_checker[i];
+            cur_block[56 + 2 * i].pieceId = cur_b_checker[i];
         }
 
         for (var i = 5; i <= 8; i++) {
-            b_checker[i] = new checkers(black_checker_class[i], "black", 40 + 2 * i - 1,i);
-            b_checker[i].set_coords(game_no);
+            cur_b_checker[i] = new checkers(cur_b_checker_class[i], "black", 40 + 2 * i - 1,i);
+            cur_b_checker[i].set_coords(game_no);
             cur_block[40 + 2 * i - 1].occupied = true;
-            cur_block[40 + 2 * i - 1].pieceId = b_checker[i];
+            cur_block[40 + 2 * i - 1].pieceId = cur_b_checker[i];
         }
 
         for (var i = 9; i <= 12; i++) {
-            b_checker[i] = new checkers(black_checker_class[i], "black", 24 + 2 * i,i);
-            b_checker[i].set_coords(game_no);
+            cur_b_checker[i] = new checkers(cur_b_checker_class[i], "black", 24 + 2 * i,i);
+            cur_b_checker[i].set_coords(game_no);
             cur_block[24 + 2 * i].occupied = true;
-            cur_block[24 + 2 * i].pieceId = b_checker[i];
+            cur_block[24 + 2 * i].pieceId = cur_b_checker[i];
         }
         user_action = "initialize";
         this.connect();
@@ -615,6 +612,7 @@ class Game {
 
     //sets the correct checker value
     change_turns(game_num){
+        console.log(the_cur_checker.cur,game_num);
         if (game_num == 1){
             if (the_cur_checker.cur == w_checker ){
                 document.getElementById("cur_player_img_id").src = "black_checker.jpg";
@@ -630,7 +628,7 @@ class Game {
 
         if (game_num == 2){
             if (the_cur_checker.cur == w_checker2 ){
-                document.getElementById("cur_player_img_id").src = "black_checker.jpg";
+                document.getElementById("cur_player_img_id2").src = "black_checker.jpg";
                 the_cur_checker.cur == b_checker2;
                 the_checker2= b_checker2;
 
@@ -638,26 +636,26 @@ class Game {
             else{
                 the_cur_checker.cur == w_checker2;
                 the_checker2 = w_checker2;
-                document.getElementById("cur_player_img_id").src = "white_checker.png";
+                document.getElementById("cur_player_img_id2").src = "white_checker.png";
             }
         }
 
         if (game_num == 3){
             if (the_cur_checker.cur == w_checker3 ){
-                document.getElementById("cur_player_img_id").src = "black_checker.jpg";
+                document.getElementById("g2_cur_player_img_id").src = "black_checker.jpg";
                 the_cur_checker.cur == b_checker3;
                 the_checker3 = b_checker3;
             }
             else{
                 the_cur_checker.cur == w_checker3;
                 the_checker3= w_checker3;
-                document.getElementById("cur_player_img_id").src = "white_checker.png";
+                document.getElementById("g2_cur_player_img_id").src = "white_checker.png";
             }
         }
 
         if (game_num == 4){
             if (the_cur_checker.cur == w_checker4 ){
-                document.getElementById("cur_player_img_id").src = "black_checker.jpg";
+                document.getElementById("g2_cur_player_img_id2").src = "black_checker.jpg";
                 the_cur_checker.cur == b_checker4;
                 the_checker4 = b_checker4;
 
@@ -665,7 +663,7 @@ class Game {
             else{
                 the_cur_checker.cur == w_checker4;
                 the_checker4 = w_checker4;
-                document.getElementById("cur_player_img_id").src = "white_checker.png";
+                document.getElementById("g2_cur_player_img_id2").src = "white_checker.png";
             }
         }
 
@@ -817,7 +815,7 @@ class Game {
                     console.log("make the move");
                     var index = packet.data;
                     game_move = packet.game_no;
-                    this.set_game_data(game_move);
+                    // this.set_game_data(game_move);
                     this.move_attack(index,game_move);
                     break;
 
@@ -837,7 +835,6 @@ class Game {
                     var x_coord = packet.X;
                     var y_coord = packet.Y;
                     game_no = packet.game_no; //so 1 /2 and elow upodate it as necesary
-
                     this.update_the_checker(game_no,false);
                     console.log(the_cur_checker.cur);
                     the_cur_checker.cur[piece_id].move_coords(x_coord,y_coord,game_no);
@@ -901,6 +898,7 @@ class Game {
                         player_game = dict_game_rm[String(user_permit_val)];
                         for(var game_no=1;game_no<=num_games;game_no++){
                             game.initialize_game(game_no);
+                            console.log("initialize ",game_no);
                         }
                     }
                     break;
@@ -947,6 +945,12 @@ class Game {
                 var check_permits = {"type": "get_room_permits", "room_value" : room_value};
                 game.send_data(check_permits);
             }
+        },3000);
+
+        setInterval(function () {
+            var check_permits = {"type": "ping"};
+            game.send_data(check_permits);
+
         },3000);
     }
 

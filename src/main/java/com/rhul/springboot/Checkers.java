@@ -32,6 +32,7 @@ public class Checkers {
     private boolean attack_possible = false;
     private Checkers the_checker[];
     private Player plyr;
+    private String plyr_name;
     private CheckersSquare cs;
 
 
@@ -58,7 +59,6 @@ public class Checkers {
         this.plyr = plyr;
         this.cs = cS;
     }
-
 
     public Checkers(int square_piece, String colour, int square){
         this.id = square_piece;
@@ -107,7 +107,6 @@ public class Checkers {
         this.coordY += Y;
     }
 
-
     public void checkIfKing(){
 
         if(this.coordY == 8 && !this.king && this.colour.equals("white")){
@@ -126,8 +125,9 @@ public class Checkers {
         this.alive = alive;
     }
 
-    public synchronized boolean show_moves(Checkers piece,Room rm){
+    public synchronized boolean show_moves(Checkers piece,Room rm,String cur_player){
         System.out.println("prev selected piece: " + selected_piece);
+        this.plyr_name =cur_player;
 
         boolean match =false;
         attack_possible = false;
@@ -208,11 +208,11 @@ public class Checkers {
 
     }
 
-
-    public synchronized boolean make_move(int index,String colour,Room rm){
+    public synchronized boolean make_move(int index,String colour,Room rm,String cur_player){
 
         boolean isMove = false;
         boolean must_attack = false;
+        this.plyr_name = cur_player;
 
         if (!game_started & selected_piece == 0){
             return false;
@@ -302,7 +302,7 @@ public class Checkers {
                 another_move = attack_move(the_checker[selected_piece],rm);
             }
             if (another_move){
-                show_moves(the_checker[selected_piece],null);
+                show_moves(the_checker[selected_piece],null,this.plyr_name);
             }
             else{
                 change_turns(the_checker);
@@ -464,7 +464,7 @@ public class Checkers {
         }
         return true;
     }
-    //Todo - send f/e to update user. Update the lederboard table.
+
     public void declare_winner(){
         try{
             boolean existing_user = plyr.getLeaderbd().check_if_usr_exists();
@@ -512,7 +512,7 @@ public class Checkers {
                 break;
         }
         rm.apply_to_room_users(msg,rm,plyr);
-        rm.apply_game_status(rm,this.plyr.getName(),0,true,type);
+        rm.apply_game_status(rm,this.plyr_name,0,true,type);
     }
 
 }

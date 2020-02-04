@@ -78,7 +78,6 @@ public class Room {
         }
     }
 
-    //Method to update game_status on the player's that are present in the room
     public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type){
         String new_msg = "";
         for (Player plyr : rm.players_hm.values()){
@@ -104,7 +103,7 @@ public class Room {
 
         if (msg.length() >0){
             for (Player plyr : rm.getPlayers_hm().values()){
-                int game_number = (int) Math.round(plyr.getId()/2.0);
+                int game_number = (int) Math.round(player.getId()/2.0);//fixed correct game updates
                 System.out.println("plyer id: " + plyr.getId() +" Game num: " +game_number);
                 try {
                     String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
