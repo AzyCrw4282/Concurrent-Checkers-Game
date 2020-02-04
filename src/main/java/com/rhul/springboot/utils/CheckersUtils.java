@@ -1,4 +1,6 @@
-package com.rhul.springboot;
+package com.rhul.springboot.utils;
+
+import com.rhul.springboot.controller.CheckersHandler;
 
 /**Utility class to handle all misc operations such as colour change, board size updating, etc.
  * This will be worked on from the second term.

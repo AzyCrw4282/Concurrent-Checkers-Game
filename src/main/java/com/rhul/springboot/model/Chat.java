@@ -1,4 +1,6 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
+
+import com.rhul.springboot.utils.BugsnagConfig;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,9 +1,13 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
 
 /*
 Acts as the main wrapper for all game funcs in the game, such as game room, player handling etc.
  */
 
+import com.rhul.springboot.model.Chat;
+import com.rhul.springboot.model.Player;
+import com.rhul.springboot.model.Room;
+import com.rhul.springboot.model.Checkers;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -26,8 +30,8 @@ public class CheckersGame {
     public AtomicInteger lobby_plyrs = new AtomicInteger(1);
 
 
-    public static ConcurrentHashMap<Player,Checkers> player_game_hm = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<Integer,Room> rooms_hm = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Player, Checkers> player_game_hm = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Integer, Room> rooms_hm = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
     public static ConcurrentHashMap<Integer,Player> lobby_chat_players = new ConcurrentHashMap<>();
 

@@ -1,4 +1,6 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
+import com.rhul.springboot.utils.BugsnagConfig;
+import com.rhul.springboot.utils.LeaderBoard;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.socket.WebSocketSession;

@@ -1,5 +1,6 @@
-package com.rhul.springboot;
+package com.rhul.springboot.utils;
 
+import com.rhul.springboot.model.DatabasePgSQL;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

@@ -1,7 +1,7 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
+import com.rhul.springboot.utils.BugsnagConfig;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.tomcat.jni.Time;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter @Setter
 public class Room {
 
-    private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
+    private ConcurrentHashMap<Integer, Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
     private Map<String, Boolean> room_games_status;
     private Semaphore smphore;

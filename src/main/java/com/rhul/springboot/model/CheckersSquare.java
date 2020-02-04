@@ -1,4 +1,4 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
 
 /**This class is responsible for each square on the board. This allows to identify if it's occupied or not.
  * For each board 64 instance of this class is used.

@@ -1,4 +1,4 @@
-package com.rhul.springboot;
+package com.rhul.springboot.utils;
 
 import com.bugsnag.Bugsnag;
 import com.bugsnag.BugsnagSpringConfiguration;

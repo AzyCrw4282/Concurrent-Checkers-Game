@@ -1,4 +1,4 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;

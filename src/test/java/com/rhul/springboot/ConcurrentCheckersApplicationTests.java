@@ -1,17 +1,14 @@
 package com.rhul.springboot;
 
+import com.rhul.springboot.main.ConcurrentCheckersApplication;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketHttpHeaders;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.client.WebSocketClient;
+
 import static org.junit.Assert.assertTrue;
-import java.net.URI;
+
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

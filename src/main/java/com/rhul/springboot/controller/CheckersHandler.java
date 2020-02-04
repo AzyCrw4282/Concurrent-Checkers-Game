@@ -1,15 +1,17 @@
-package com.rhul.springboot;
+package com.rhul.springboot.controller;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import org.json.JSONException;//should be fixed
 
-import org.springframework.web.socket.CloseStatus;
+import com.rhul.springboot.model.Checkers;
+import com.rhul.springboot.model.DatabasePgSQL;
+import com.rhul.springboot.model.Player;
+import com.rhul.springboot.model.Room;
+import com.rhul.springboot.utils.BugsnagConfig;
+
+import com.rhul.springboot.model.CheckersGame;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
