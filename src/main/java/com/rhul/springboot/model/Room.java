@@ -114,30 +114,6 @@ public class Room {
                     BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game number "+ game_number));
                     remove_player_from_room(plyr);
                 }
-
-
-                //                if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
-//                    System.out.println("plyer id: " + plyr.getId());
-//                    try {
-//                        String new_msg = msg + ",\"game_no\":\"1\"}";
-//                        plyr.sendMessage(new_msg);
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 1"));
-//                        remove_player_from_room(plyr);
-//                    }
-//                }
-//                else{
-//                    try {
-//                        String new_msg = msg + ",\"game_no\":\"2\"}";
-//                        plyr.sendMessage(new_msg);
-//                    } catch (Exception e) {
-//                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 2"));
-//                        e.printStackTrace();
-//                        remove_player_from_room(plyr);
-//                    }
-//                }
             }
         }
     }
