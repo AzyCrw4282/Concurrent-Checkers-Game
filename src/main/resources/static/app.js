@@ -313,6 +313,14 @@ function enter_game_room(){
     show_number_of_games(number_of_games);
     start_game();
 }
+//Method to handle users joining the room. This is decoupled from earlier
+//method
+//Requires: n_games, permit_vals
+function join_random_room(){
+
+}
+
+
 
 function show_number_of_games(n_of_games) {
     console.log("318",n_of_games)
