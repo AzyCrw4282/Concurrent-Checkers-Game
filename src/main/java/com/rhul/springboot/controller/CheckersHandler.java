@@ -222,8 +222,9 @@ public class CheckersHandler extends TextWebSocketHandler {
                     //find a room and send that to the f/e as the value. And player session held in queue.
                     mesg = "";
                     String rm_name = game.get_room_to_join();
+                    int n_games = game.get_room(rm_name).getN_games();
                     if (rm_name != null){
-                        mesg = String.format("{\"type\": \"join_matchmaking_resp\",\"data\": \"%s\"}",rm_name);//add more game data
+                        mesg = String.format("{\"type\": \"join_matchmaking_resp\",\"data\": \"%s\",\"num_games\": \"%s\"}",rm_name,n_games);//add more game data
                         session.sendMessage(new TextMessage(mesg));
                     }
                     break;

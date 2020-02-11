@@ -234,7 +234,7 @@ function join_matchmaking(){
 
 function show_game_credits(){
     document.getElementById("modalBtnTrigger").click();
-    document.getElementById("modal_message").innerHTML = "Game Credits: Created By: Azky Mubarack. The game does include adopted code from open source to improve the interface. Therefore, code authors where mentioned are credited respectively.";
+    document.getElementById("modal_message").innerHTML = "Game Credits: Created By: Azky Mubarack. The game does include adopted code from open source. Therefore, code authors where mentioned are credited respectively.";
 }
 
 
@@ -313,17 +313,25 @@ function enter_game_room(){
     show_number_of_games(number_of_games);
     start_game();
 }
-//Method to handle users joining the room. This is decoupled from earlier
-//method
-//Requires: n_games, permit_vals
-function join_random_room(){
 
+function join_random_room(){
+    get_document_element('chat_div_id');
+    get_document_element('chat_div_id').style.left = "0px";
+    get_document_element('chat_div_id').style.top = "0px";
+    get_document_element('chat_div_id').style.marginLeft = "0px";
+    document.body.style.backgroundImage = "none";
+    get_document_element("body_id").style.backgroundColor = "#ffffff";
+    get_document_element('div_id_room_settings').style.display = "none";
+    get_document_element('div_id_menu').style.display = "none";
+    get_document_element('chat_div_id').style.display = "none";
+
+    show_number_of_games(num_games);
+    start_game();
 }
 
 
-
 function show_number_of_games(n_of_games) {
-    console.log("318",n_of_games)
+    console.log("318",n_of_games);
     switch (n_of_games) {
         case "4":
             get_document_element('g2_table2').style.display = "block";
@@ -887,6 +895,8 @@ class Game {
                         //join room call
                         room_action = "join_room";
                         room_value = packet.data;
+                        num_games = packet.num_games;
+                        number_of_games = num_games;
                         join_random_room();//join room process
                         document.getElementById("modalBtnTrigger").click();
                         document.getElementById("modal_message").innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
