@@ -21,23 +21,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CheckersGame {
 
+    public AtomicInteger player_ids = new AtomicInteger(1);
+    public AtomicInteger room_ids = new AtomicInteger(1);
+    public AtomicInteger lobby_plyrs = new AtomicInteger(1);
+    public static ConcurrentHashMap<Player, Checkers> player_game_hm = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Integer,Player> lobby_chat_players = new ConcurrentHashMap<>();
+
     private int game_id;
     private String player_name;
     private WebSocketSession session;
     private Chat game_chat = new Chat();
-    public AtomicInteger player_ids = new AtomicInteger(1);
-    public AtomicInteger room_ids = new AtomicInteger(1);
-    public AtomicInteger lobby_plyrs = new AtomicInteger(1);
-
-
-    public static ConcurrentHashMap<Player, Checkers> player_game_hm = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer, Room> rooms_hm = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
-    public static ConcurrentHashMap<Integer,Player> lobby_chat_players = new ConcurrentHashMap<>();
 
     public synchronized void global_broadcast(String msg){
         game_chat.global_broadcast(msg);
-        System.out.println("34");
     }
 
     public synchronized void game_broadcast(String msg){
@@ -65,6 +63,7 @@ public class CheckersGame {
         }
         return rm_obj;
     }
+
     //This method returns. This method prioritizes room in which there are odd players meaning when another joins a game can be started
     //returns null, or in worst case room with even players
     public String get_room_to_join(){
@@ -85,7 +84,7 @@ public class CheckersGame {
     public static Checkers get_game_obj(Player plyr){
         int playr_id = plyr.getId();
 
-        if (playr_id % 2 == 1){
+        if (playr_id % 2 == 1){//Game object is held by player with id of even num.
             playr_id+=1;
         }
         return (get_player_obj(playr_id).checks_obj);
@@ -130,6 +129,5 @@ public class CheckersGame {
         String room_data = String.format("{\"type\": \"room_players_data\",\"data\":[%s]}", sb.toString());
         session.sendMessage(new TextMessage(room_data));
     }
-
 
 }

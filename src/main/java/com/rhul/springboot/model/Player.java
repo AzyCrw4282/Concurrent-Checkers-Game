@@ -25,7 +25,6 @@ public class Player {
 
     public AtomicInteger playerId = new AtomicInteger(0);
     public AtomicInteger roomId = new AtomicInteger(0);
-
     public static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
 
     private final int id;
@@ -45,6 +44,7 @@ public class Player {
     private String colour;
     private String cur_plyr;
     private LeaderBoard leaderbd;
+    private int game_number;
 
     CheckersGame game = new CheckersGame();
 
@@ -185,4 +185,7 @@ public class Player {
             this.sendMessage(mesg);
         }
     }
+
+
+
 }

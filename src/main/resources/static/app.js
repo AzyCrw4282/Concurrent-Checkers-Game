@@ -82,10 +82,6 @@ var dict_game_rm = {
     "1" : 1, "2" : 1, "3" : 2, "4" : 2, "5" : 3, "6" : 3, "7" : 4, "8" : 4,
 };
 
-var dict_user_game = {
-  "1" : false, "2" : false, "3":false, "4": false,
-};
-
 $(document).ready(function(){
     //error with this function. may need to remove this
     // document.getElementById("body_id").src = "bkground.png";
@@ -410,23 +406,16 @@ class checkers_squares {
         this.occupied = false;
         this.piece_id = undefined;
 
-
-        this.id.onclick = function () {
-            console.log(dict_user_game[player_game],player_game);
-            if (game_started && dict_user_game[player_game]) {
+        this.id.onclick = function () {//Bug->TBW
+            if (game_started) {
                 game.make_move(index);
             }
-            else if (game_started){
-                alert("Game not started. Please wait for the other user to join");
-            }
             else{
-                alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
+                alert("Game not started. Please wait for the other user to join");
             }
         }
     }
 }
-
-
 
 class checkers{
     constructor (piece,colour,square,index){
@@ -442,16 +431,12 @@ class checkers{
             this.coordX = 8;
             this.coordY = square/8 ;
         }
-        this.id.onclick = function () {
-            console.log(dict_user_game[player_game],player_game);
-            if (game_started  && dict_user_game[player_game]) {
+        this.id.onclick = function () {//Bug->TBW
+            if (game_started) {
                 game.show_moves(index, colour);
             }
-            else if (game_started){
-                alert("Game not started. Please wait for the other user to join");
-            }
             else{
-                alert("Hold on, you are not playing that game. Any attempt to cheat will eliminate you from the game room");
+                alert("Game not started. Please wait for the other user to join");
             }
         }
     }
@@ -513,7 +498,6 @@ class Game {
 
     constructor(){
         this.socket = null;
-        this.fps = 30;
 
     }
 
@@ -714,7 +698,6 @@ class Game {
     }
     show_moves(index,colour)
     {
-
         console.log("square selected index, ", index );
         user_action = "show_moves";
         var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_colour" : colour};
@@ -916,12 +899,16 @@ class Game {
                         //use a method to intialize the required games
                         permit_obtained = true;
                         player_game = dict_game_rm[String(user_permit_val)];
-                        dict_user_game[player_game] = true;
                         for(var game_no=1;game_no<=num_games;game_no++){
                             game.initialize_game(game_no);
                             console.log("initialize ",game_no);
                         }
                     }
+                    break;
+
+                case "invalid_request":
+
+                    alert("Hold on, you are not playing that game. Any attempt to cheat will eliminate you from the game room");
                     break;
 
                 case "room_players_data":

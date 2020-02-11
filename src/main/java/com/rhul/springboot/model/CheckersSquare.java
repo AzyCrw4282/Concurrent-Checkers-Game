@@ -12,7 +12,6 @@ public class CheckersSquare {
     private boolean occupied;
     private Checkers pieceId;
 
-
     public CheckersSquare(){
 
     }
@@ -25,14 +24,11 @@ public class CheckersSquare {
 
     }
 
-
     public void onClick() throws Exception{
 
         Checkers checkers_obj = new Checkers();
 
     }
-
-
 
     public void setOccupied(){
         this.occupied = true;
@@ -46,17 +42,13 @@ public class CheckersSquare {
         this.pieceId = piece;
     }
 
-
     public Checkers getPieceId() {
         return pieceId;
     }
 
-
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
     }
-
-
 
     public int getId() {
         return id;

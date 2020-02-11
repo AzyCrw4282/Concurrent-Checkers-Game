@@ -151,15 +151,25 @@ public class CheckersHandler extends TextWebSocketHandler {
                     };
                   executor.execute(threads_area);
                   break;
-                case "show_moves":
+                case "show_moves"://both cases must be validated before any moves applied
+
                     Player playre = get_player_obj(json.getInt("player_id"));
                     System.out.println("Current player id"+ playre.getId());
-                    int index = json.getInt("index");
-                    playre.setIndex(index);
-                    playre.setShow_moves_req(true);
-                    break;
+
+                    if (game.check_users_game(json.getString("room_value"),playre.getId())){
+                        int index = json.getInt("index");
+                        playre.setIndex(index);
+                        playre.setShow_moves_req(true);
+                        break;
+                    }
+                    else{
+                        //false attempt
+
+                    }
 
                 case "make_move":
+
+
                     Player plyr = get_player_obj(json.getInt("player_id"));
                     plyr.setSqr_index(json.getInt("sqr_index"));
                     plyr.setMove_req(true);

@@ -49,6 +49,7 @@ public class Room {
             else {
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     players_hm.put(playr.getId(), playr);
+                    playr.setGame_number((int) Math.round(playr.getId()/ 2.0));
                     players_count.getAndIncrement();
                     apply_game_status(this,playr.getName(),players_count.get(),false,null);
                     game_ready_to_start(playr.getId(),"player_joined");//error here for player_did
