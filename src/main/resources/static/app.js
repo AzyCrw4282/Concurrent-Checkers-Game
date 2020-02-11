@@ -6,7 +6,6 @@ var user_name;
 var room_value;
 var room_action;
 var number_of_games;
-var players= [];
 var num_games;
 var chat = false;
 var game_started = false;
@@ -78,9 +77,13 @@ var b_checker4 = [];
 var the_checker4 = w_checker4 ;
 var user_action;
 
-//maps player to a game
+//Maps player to a game
 var dict_game_rm = {
     "1" : 1, "2" : 1, "3" : 2, "4" : 2, "5" : 3, "6" : 3, "7" : 4, "8" : 4,
+};
+
+var dict_user_game = {
+  "1" : false, "2" : false, "3":false, "4": false,
 };
 
 $(document).ready(function(){
@@ -329,7 +332,6 @@ function join_random_room(){
     start_game();
 }
 
-
 function show_number_of_games(n_of_games) {
     console.log("318",n_of_games);
     switch (n_of_games) {
@@ -350,7 +352,6 @@ function show_number_of_games(n_of_games) {
     get_document_element('game_status_id').style.display = "block";
 
     }
-
 }
 
 function start_game_btn(game_no,tag_id){
@@ -408,16 +409,24 @@ class checkers_squares {
         this.id = square;
         this.occupied = false;
         this.piece_id = undefined;
+
+
         this.id.onclick = function () {
-            if (game_started) {
+            console.log(dict_user_game[player_game],player_game);
+            if (game_started && dict_user_game[player_game]) {
                 game.make_move(index);
             }
+            else if (game_started){
+                alert("Game not started. Please wait for the other user to join");
+            }
             else{
-                alert("Game not started. Please wait for the other user to join.")
+                alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
             }
         }
     }
 }
+
+
 
 class checkers{
     constructor (piece,colour,square,index){
@@ -434,12 +443,15 @@ class checkers{
             this.coordY = square/8 ;
         }
         this.id.onclick = function () {
-            console.log(game_started,player_game);
-            if (game_started) {
+            console.log(dict_user_game[player_game],player_game);
+            if (game_started  && dict_user_game[player_game]) {
                 game.show_moves(index, colour);
             }
+            else if (game_started){
+                alert("Game not started. Please wait for the other user to join");
+            }
             else{
-                alert("Your game has not been started yet. Please wait!!!")
+                alert("Hold on, you are not playing that game. Any attempt to cheat will eliminate you from the game room");
             }
         }
     }
@@ -514,6 +526,7 @@ class Game {
         for (var i = 1; i <= 64; i++)
         {
             cur_block[i] = new checkers_squares(cur_square_class[i], i);
+
         }
         /*================Initializing white black counters =================================*/
         // white piece
@@ -522,6 +535,7 @@ class Game {
             cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i - 1].occupied = true;
             cur_block[2 * i - 1].pieceId = cur_w_checker[i];
+
         }
 
         for (var i = 5; i <= 8; i++) {
@@ -529,6 +543,7 @@ class Game {
             cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i].occupied = true;
             cur_block[2 * i].pieceId = cur_w_checker[i];
+
         }
 
         for (var i = 9; i <= 12; i++) {
@@ -536,6 +551,7 @@ class Game {
             cur_w_checker[i].set_coords(game_no);
             cur_block[2 * i - 1].occupied = true;
             cur_block[2 * i - 1].pieceId = cur_w_checker[i];
+
         }
 
         //black piece
@@ -544,6 +560,7 @@ class Game {
             cur_b_checker[i].set_coords(game_no);
             cur_block[56 + 2 * i].occupied = true;
             cur_block[56 + 2 * i].pieceId = cur_b_checker[i];
+
         }
 
         for (var i = 5; i <= 8; i++) {
@@ -551,6 +568,7 @@ class Game {
             cur_b_checker[i].set_coords(game_no);
             cur_block[40 + 2 * i - 1].occupied = true;
             cur_block[40 + 2 * i - 1].pieceId = cur_b_checker[i];
+
         }
 
         for (var i = 9; i <= 12; i++) {
@@ -558,6 +576,7 @@ class Game {
             cur_b_checker[i].set_coords(game_no);
             cur_block[24 + 2 * i].occupied = true;
             cur_block[24 + 2 * i].pieceId = cur_b_checker[i];
+
         }
         user_action = "initialize";
         this.connect();
@@ -695,26 +714,7 @@ class Game {
     }
     show_moves(index,colour)
     {
-        //To be improved
-        //Allows for user click validations
-        // if (player_game === 1){
-        //     if (the_checker === b_checker && colour === "white") {
-        //         alert("It's the black player's turn");
-        //         return false;
-        //     } else if (the_checker === w_checker && colour === "black") {
-        //         alert("It's the white player's turn");
-        //         return false;
-        //     }
-        // }
-        // else if (player_game === 2){
-        //     if (the_checker2 === b_checker2 && colour === "white") {
-        //         alert("It's the black player's turn for game 2");
-        //         return false;
-        //     } else if (the_checker2 === w_checker2 && colour === "black") {
-        //         alert("It's the white player's turn for gamwe 2");
-        //         return false;
-        //     }
-        // }
+
         console.log("square selected index, ", index );
         user_action = "show_moves";
         var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_colour" : colour};
@@ -776,13 +776,6 @@ class Game {
             if (index > 0) cur_block[index].id.style.background = "#007010";
         }
     }
-
-    non_attack_move(id,x,y){
-        console.log("-----",x,y,id);
-        this.id.style.top = y + 'px';
-        id.style.left = x + 'px';
-    }
-
 
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
@@ -923,6 +916,7 @@ class Game {
                         //use a method to intialize the required games
                         permit_obtained = true;
                         player_game = dict_game_rm[String(user_permit_val)];
+                        dict_user_game[player_game] = true;
                         for(var game_no=1;game_no<=num_games;game_no++){
                             game.initialize_game(game_no);
                             console.log("initialize ",game_no);

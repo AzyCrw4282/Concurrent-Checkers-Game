@@ -16,7 +16,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Getter @Setter
 public class Room {
-
     private ConcurrentHashMap<Integer, Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
     private Map<String, Boolean> room_games_status;
@@ -78,7 +77,7 @@ public class Room {
         }
     }
 
-    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type){
+    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type) {
         String new_msg = "";
         for (Player plyr : rm.players_hm.values()){
             try {
@@ -99,12 +98,11 @@ public class Room {
         }
     }
 
-    public synchronized void apply_to_room_users(String msg,Room rm, Player player){
-
-        if (msg.length() >0){
-            for (Player plyr : rm.getPlayers_hm().values()){
+    public synchronized void apply_to_room_users(String msg,Room rm, Player player) {
+        if (msg.length() > 0) {
+            for (Player plyr : rm.getPlayers_hm().values()) {
                 int game_number = (int) Math.round(player.getId()/2.0);//fixed correct game updates
-                System.out.println("plyer id: " + plyr.getId() +" Game num: " +game_number);
+                System.out.println("plyer id: " + plyr.getId() +" Game num: " + game_number);
                 try {
                     String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
                     plyr.sendMessage(new_msg);
