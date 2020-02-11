@@ -122,6 +122,8 @@ function enterName(){
     user_name = $("#id_name_value").val();//gets users name
     document.getElementById('div_id_name').style.display = "none";
     document.getElementById('div_id_menu').style.display = "block";
+    document.getElementById("modalBtnTrigger").click();
+    document.getElementById("modal_message").innerHTML = "By clicking Ok, you agree that the your data can be used by third parties and the developer does not assume any responsibilities for it.";
 
 }
 
@@ -230,6 +232,12 @@ function join_matchmaking(){
 
 }
 
+function show_game_credits(){
+    document.getElementById("modalBtnTrigger").click();
+    document.getElementById("modal_message").innerHTML = "Game Credits: Created By: Azky Mubarack. The game does include adopted code from open source to improve the interface. Therefore, code authors where mentioned are credited respectively.";
+}
+
+
 function show_leaderboard(){
     lb_div = document.getElementById("leaderboard_div_id");
     if (lb_div.style.display === "block"){
@@ -307,6 +315,7 @@ function enter_game_room(){
 }
 
 function show_number_of_games(n_of_games) {
+    console.log("318",n_of_games)
     switch (n_of_games) {
         case "4":
             get_document_element('g2_table2').style.display = "block";
