@@ -67,6 +67,7 @@ public class CheckersGame {
     }
     //This method returns. This method prioritizes room in which there are odd players meaning when another joins a game can be started
     //returns null, or in worst case room with even players
+    //TBF for dynamic
     public String get_room_to_join(){
         String rm_name = null;
 

@@ -887,7 +887,7 @@ class Game {
                         //join room call
                         room_action = "join_room";
                         room_value = packet.data;
-                        enter_game_room();//join room process
+                        join_random_room();//join room process
                         document.getElementById("modalBtnTrigger").click();
                         document.getElementById("modal_message").innerHTML = "You have been allocated to a room. Please wait while the joining process takes place.";
 
