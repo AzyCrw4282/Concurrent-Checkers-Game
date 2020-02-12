@@ -133,14 +133,14 @@ public class CheckersGame {
     public boolean is_this_player_game(String room_Value,String game_check_value,Player player){
         //for each and every player check (if > 2 )? False : true -- so other than himself, its nt the game
         Room rm = get_room(room_Value);
-        int game_validate_counter = 0;
+        int correct_game_plyr = 0;
         for (Player plyr : rm.getPlayers_hm().values()){
             if (plyr.getGame_number() == Integer.parseInt(game_check_value) && plyr.getId() != player.getId()){
-                game_validate_counter++;
+                correct_game_plyr++;
             }
         }
-        System.out.println("142"+ game_validate_counter);
-        return game_validate_counter != 2;//if 1 its his game, if 2 nt
+        System.out.println("142 "+ correct_game_plyr);
+        return correct_game_plyr != 2;//if 1 its his game,else no
     }
 
 }
