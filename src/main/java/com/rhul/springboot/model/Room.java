@@ -1,7 +1,7 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
+import com.rhul.springboot.utils.BugsnagConfig;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.tomcat.jni.Time;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,8 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Getter @Setter
 public class Room {
-
-    private ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<Integer, Player>();
+    private ConcurrentHashMap<Integer, Player> players_hm = new ConcurrentHashMap<Integer, Player>();
     private AtomicInteger players_count = new AtomicInteger(0);
     private Map<String, Boolean> room_games_status;
     private Semaphore smphore;
@@ -50,6 +49,7 @@ public class Room {
             else {
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     players_hm.put(playr.getId(), playr);
+                    playr.setGame_number((int) Math.round(playr.getId()/ 2.0));
                     players_count.getAndIncrement();
                     apply_game_status(this,playr.getName(),players_count.get(),false,null);
                     game_ready_to_start(playr.getId(),"player_joined");//error here for player_did
@@ -78,7 +78,7 @@ public class Room {
         }
     }
 
-    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type){
+    public synchronized void apply_game_status(Room rm, String plyr_nm, int players_active,boolean move_msg,String type) {
         String new_msg = "";
         for (Player plyr : rm.players_hm.values()){
             try {
@@ -99,12 +99,11 @@ public class Room {
         }
     }
 
-    public synchronized void apply_to_room_users(String msg,Room rm, Player player){
-
-        if (msg.length() >0){
-            for (Player plyr : rm.getPlayers_hm().values()){
+    public synchronized void apply_to_room_users(String msg,Room rm, Player player) {
+        if (msg.length() > 0) {
+            for (Player plyr : rm.getPlayers_hm().values()) {
                 int game_number = (int) Math.round(player.getId()/2.0);//fixed correct game updates
-                System.out.println("plyer id: " + plyr.getId() +" Game num: " +game_number);
+                System.out.println("plyer id: " + plyr.getId() +" Game num: " + game_number);
                 try {
                     String new_msg = msg + String.format(",\"game_no\":\"%d\"}",game_number);
                     plyr.sendMessage(new_msg);
@@ -114,33 +113,7 @@ public class Room {
                     BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game number "+ game_number));
                     remove_player_from_room(plyr);
                 }
-
-
-                //                if (this.getRm_owner().getId() == player.getId() || this.getRm_owner().getId()+1 == player.getId()) {
-//                    System.out.println("plyer id: " + plyr.getId());
-//                    try {
-//                        String new_msg = msg + ",\"game_no\":\"1\"}";
-//                        plyr.sendMessage(new_msg);
-//
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 1"));
-//                        remove_player_from_room(plyr);
-//                    }
-//                }
-//                else{
-//                    try {
-//                        String new_msg = msg + ",\"game_no\":\"2\"}";
-//                        plyr.sendMessage(new_msg);
-//                    } catch (Exception e) {
-//                        BugsnagConfig.bugsnag().notify(new RuntimeException("Error in applying user moves to game 2"));
-//                        e.printStackTrace();
-//                        remove_player_from_room(plyr);
-//                    }
-//                }
             }
         }
     }
-
-
 }

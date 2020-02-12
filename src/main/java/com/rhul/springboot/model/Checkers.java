@@ -1,11 +1,10 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
 
+import com.rhul.springboot.utils.BugsnagConfig;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.lang.reflect.Array;
-import java.net.URISyntaxException;
 import java.sql.SQLException;
 
 /** This class handles all board related functionalities. An instance is user for each game, so 2 players use 1 game.

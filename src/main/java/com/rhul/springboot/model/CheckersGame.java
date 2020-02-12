@@ -1,9 +1,13 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
 
 /*
 Acts as the main wrapper for all game funcs in the game, such as game room, player handling etc.
  */
 
+import com.rhul.springboot.model.Chat;
+import com.rhul.springboot.model.Player;
+import com.rhul.springboot.model.Room;
+import com.rhul.springboot.model.Checkers;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -17,23 +21,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class CheckersGame {
 
+    public AtomicInteger player_ids = new AtomicInteger(1);
+    public AtomicInteger room_ids = new AtomicInteger(1);
+    public AtomicInteger lobby_plyrs = new AtomicInteger(1);
+    public static ConcurrentHashMap<Player, Checkers> player_game_hm = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<Integer,Player> lobby_chat_players = new ConcurrentHashMap<>();
+
     private int game_id;
     private String player_name;
     private WebSocketSession session;
     private Chat game_chat = new Chat();
-    public AtomicInteger player_ids = new AtomicInteger(1);
-    public AtomicInteger room_ids = new AtomicInteger(1);
-    public AtomicInteger lobby_plyrs = new AtomicInteger(1);
-
-
-    public static ConcurrentHashMap<Player,Checkers> player_game_hm = new ConcurrentHashMap<>();
-    private static ConcurrentHashMap<Integer,Room> rooms_hm = new ConcurrentHashMap<>();
+    private static ConcurrentHashMap<Integer, Room> rooms_hm = new ConcurrentHashMap<>();
     private static ConcurrentHashMap<Integer,Player> players_hm = new ConcurrentHashMap<>();
-    public static ConcurrentHashMap<Integer,Player> lobby_chat_players = new ConcurrentHashMap<>();
 
     public synchronized void global_broadcast(String msg){
         game_chat.global_broadcast(msg);
-        System.out.println("34");
     }
 
     public synchronized void game_broadcast(String msg){
@@ -61,6 +63,7 @@ public class CheckersGame {
         }
         return rm_obj;
     }
+
     //This method returns. This method prioritizes room in which there are odd players meaning when another joins a game can be started
     //returns null, or in worst case room with even players
     public String get_room_to_join(){
@@ -78,11 +81,10 @@ public class CheckersGame {
         return rm_name;
     }
 
-    //one game obj for 2 players. even number players hold game object
     public static Checkers get_game_obj(Player plyr){
         int playr_id = plyr.getId();
 
-        if (playr_id % 2 == 1){
+        if (playr_id % 2 == 1){//Game object is held by player with id of even num.
             playr_id+=1;
         }
         return (get_player_obj(playr_id).checks_obj);
@@ -128,5 +130,24 @@ public class CheckersGame {
         session.sendMessage(new TextMessage(room_data));
     }
 
+
+
+    //TBR
+    public boolean is_this_player_game(String room_Value,String game_check_value,Player player){
+        //only 1 player other than himself then nt his game
+        //do, id of the player matches their game_number
+
+
+        Room rm = get_room(room_Value);
+        int correct_game_plyr = 0;
+        for (Player plyr : rm.getPlayers_hm().values()){
+            if (plyr.getGame_number() != Integer.parseInt(game_check_value) && plyr.getId() != player.getId()){
+                correct_game_plyr++;
+            }
+        }
+        System.out.println("142 "+ correct_game_plyr);
+
+        return correct_game_plyr != 1 ;
+    }
 
 }

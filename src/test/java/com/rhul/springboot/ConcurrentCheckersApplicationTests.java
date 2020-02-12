@@ -1,17 +1,14 @@
 package com.rhul.springboot;
 
+import com.rhul.springboot.main.ConcurrentCheckersApplication;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.WebSocketHttpHeaders;
-import org.springframework.web.socket.WebSocketSession;
-import org.springframework.web.socket.client.WebSocketClient;
+
 import static org.junit.Assert.assertTrue;
-import java.net.URI;
+
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -38,24 +35,30 @@ public class ConcurrentCheckersApplicationTests {
                 "--server.port=8080"});
     }
 
-    /**
+    /**Connects to the specified server, either heroku or localhost.
      * @throws Exception
      */
     @Test
     public void test_connection() throws Exception {
         System.out.println("----------------------------Testing connection-------------------");
         WebSocketTest Wsc = new WebSocketTest();
-        Wsc.connect("ws://127.0.0.1:8080/springboot");//--TBC for when deployed to heroku
-        System.out.println("Successfully connected");
-        Wsc.disconnect();
+        try{
+            Wsc.connect("ws://127.0.0.1:8080/springboot");//--TBC for when deployed to heroku
+            System.out.println("Successfully connected");
+        }catch (Exception e){
+            Wsc.connect("wss://springboot21.herokuapp.com/springboot");
+            System.out.println("Heroku connection detected");
+        }finally {
+            Wsc.disconnect();
+        }
+
+
     }
 
     /**
-     * This test is used to check players joining  joining upto 4.
-     *
+     * Test performs player joining functionality, check is done upto 4 users.
      * @throws Exception if any joining errors occur
      */
-
     @Test
     public void test_join() throws Exception {
 
@@ -122,8 +125,8 @@ public class ConcurrentCheckersApplicationTests {
     }
 
     /**
-     * start game procedure tested for all players(max 4 atm)
-     *
+     * start game process tested for 4 players to evaluate the game start process.
+     * The test allows to perform when exactly a player can start the game.
      * @throws Exception
      */
     @Test
@@ -200,7 +203,7 @@ public class ConcurrentCheckersApplicationTests {
     }
 
     /**
-     * Tests the show_moves functioanlity. I will pass in a hard coded value of index to perform this test.
+     * Tests the show_moves functionality. This passes in a hard coded value of index to perform this test.
      * @throws Exception
      */
     @Test
@@ -272,7 +275,8 @@ public class ConcurrentCheckersApplicationTests {
     }
 
     /**
-     * Tests done for white coloured players, subject to the chosen index val in earlier test
+     * Tests done for white coloured players, subject to the chosen index value in earlier test.
+     * This assess the moves that are performable in a concurrent situation.
      * @throws Exception
      */
 
@@ -360,10 +364,8 @@ public class ConcurrentCheckersApplicationTests {
 
     }
 
-
-
     /**Test is done to get the value of the remaining permits held by the semaphore. This is important as
-     * without this mechanism it would be impossible to know if the user should be player 2 or in game 1/2
+     * without this mechanism it would be impossible to know the the game player could participate in.
      *
      * @throws Exception
      */
@@ -488,9 +490,8 @@ public class ConcurrentCheckersApplicationTests {
         System.out.println("Screen size change updated for all players");
     }
 
-    /**Send game finish msg to back-end to end the game
-     *
-     *
+    /** Send game finish msg to back-end to end the game
+     * This helps check that game termination has been returned and that this can be asserted.
      */
     @Test
     public void test_finish ()  throws Exception {

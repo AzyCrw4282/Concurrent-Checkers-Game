@@ -1,4 +1,4 @@
-package com.rhul.springboot;
+package com.rhul.springboot.model;
 
 /**This class is responsible for each square on the board. This allows to identify if it's occupied or not.
  * For each board 64 instance of this class is used.
@@ -12,7 +12,6 @@ public class CheckersSquare {
     private boolean occupied;
     private Checkers pieceId;
 
-
     public CheckersSquare(){
 
     }
@@ -25,14 +24,11 @@ public class CheckersSquare {
 
     }
 
-
     public void onClick() throws Exception{
 
         Checkers checkers_obj = new Checkers();
 
     }
-
-
 
     public void setOccupied(){
         this.occupied = true;
@@ -46,17 +42,13 @@ public class CheckersSquare {
         this.pieceId = piece;
     }
 
-
     public Checkers getPieceId() {
         return pieceId;
     }
 
-
     public void setOccupied(boolean occupied) {
         this.occupied = occupied;
     }
-
-
 
     public int getId() {
         return id;
