@@ -151,26 +151,27 @@ public class CheckersHandler extends TextWebSocketHandler {
                     };
                   executor.execute(threads_area);
                   break;
-                case "show_moves"://both cases must be validated before any moves applied
+                case "show_moves":
+//                    Player playre = get_player_obj(json.getInt("player_id"));
+                    Player player_obj = (Player) session.getAttributes().get(game_attribute);
+                    System.out.println("Current player id"+ player_obj.getId());
 
-                    Player playre = get_player_obj(json.getInt("player_id"));
-                    System.out.println("Current player id"+ playre.getId());
-
-                    if (game.check_users_game(json.getString("room_value"),playre.getId())){
+                    if (game.is_this_player_game(json.getString("room_value"),json.getString("player_game"),player_obj)){
                         int index = json.getInt("index");
-                        playre.setIndex(index);
-                        playre.setShow_moves_req(true);
+                        player_obj.setIndex(index);
+                        player_obj.setShow_moves_req(true);
                         break;
                     }
                     else{
                         //false attempt
-
+                        String msg = String.format("{\"type\": \"invalid_game_request\"}");
+                        player_obj.sendMessage(msg);
                     }
 
                 case "make_move":
 
-
-                    Player plyr = get_player_obj(json.getInt("player_id"));
+                    //Player plyr = get_player_obj(json.getInt("player_id"));
+                    Player plyr = (Player) session.getAttributes().get(game_attribute);
                     plyr.setSqr_index(json.getInt("sqr_index"));
                     plyr.setMove_req(true);
                     break;

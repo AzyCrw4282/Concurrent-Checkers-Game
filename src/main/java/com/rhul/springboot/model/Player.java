@@ -30,6 +30,7 @@ public class Player {
     private final int id;
     private final String name;
     private Room room;
+    private int game_number;
     private Thread cur_thread;
     private final WebSocketSession session;
     private int score;
@@ -44,9 +45,8 @@ public class Player {
     private String colour;
     private String cur_plyr;
     private LeaderBoard leaderbd;
-    private int game_number;
+    private CheckersGame game = new CheckersGame();
 
-    CheckersGame game = new CheckersGame();
 
     public Player(int id, String name, WebSocketSession session) throws URISyntaxException, SQLException {
         this.id = id;

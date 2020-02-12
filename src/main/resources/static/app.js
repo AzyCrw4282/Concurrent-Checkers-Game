@@ -700,7 +700,7 @@ class Game {
     {
         console.log("square selected index, ", index );
         user_action = "show_moves";
-        var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_colour" : colour};
+        var str = {"type" : "show_moves","room_action" : "N/A","room_value" : room_value,"index" : index ,"player_id":player_id,"player_game":player_game, "player_colour" : colour};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -906,8 +906,7 @@ class Game {
                     }
                     break;
 
-                case "invalid_request":
-
+                case "invalid_game_request":
                     alert("Hold on, you are not playing that game. Any attempt to cheat will eliminate you from the game room");
                     break;
 
