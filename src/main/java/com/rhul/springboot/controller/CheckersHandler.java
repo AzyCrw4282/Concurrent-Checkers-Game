@@ -152,37 +152,18 @@ public class CheckersHandler extends TextWebSocketHandler {
                     };
                   executor.execute(threads_area);
                   break;
-                case "show_moves"://player obj does ahve the session which we can use...
-                    Player player_obj = get_player_obj(json.getInt("player_id"));
-                    System.out.println(session + "158");
-//                    Player player_obj = (Player) session.getAttributes().get(game_attribute);
-                    System.out.println("Current player id"+ player_obj.getId());
-
-                    if (game.is_this_player_game(json.getString("room_value"),json.getString("player_game"),player_obj)){
-                        int index = json.getInt("index");
-                        player_obj.setIndex(index);
-                        player_obj.setShow_moves_req(true);
-                        break;
-                    }
-                    else{
-                        //false attempt
-                        String msg = String.format("{\"type\": \"invalid_game_request\"}");
-                        player_obj.sendMessage(msg);
-                    }
+                case "show_moves":
+                    Player playre = get_player_obj(json.getInt("player_id"));
+                    System.out.println("Current player id"+ playre.getId());
+                    int index = json.getInt("index");
+                    playre.setIndex(index);
+                    playre.setShow_moves_req(true);
+                    break;
 
                 case "make_move":
-//                    Player plyr = (Player) session.getAttributes().get(game_attribute);
                     Player plyr = get_player_obj(json.getInt("player_id"));
-                    if (game.is_this_player_game(json.getString("room_value"),json.getString("player_game"),plyr)){
-                        plyr.setSqr_index(json.getInt("sqr_index"));
-                        plyr.setMove_req(true);
-                        break;
-                    }
-                    else{
-                        //false attempt
-                        String msg = String.format("{\"type\": \"invalid_game_request\"}");
-                        plyr.sendMessage(msg);
-                    }
+                    plyr.setSqr_index(json.getInt("sqr_index"));
+                    plyr.setMove_req(true);
                     break;
 
                 case "start_game":

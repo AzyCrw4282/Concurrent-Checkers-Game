@@ -94,9 +94,6 @@ which most have been adapted and changes to fit my game.
 
 
 
-
-
-
 .btn-group button {
     border: 1px solid #116280; /* Green border */
     color: #000000; /* White text */
@@ -148,7 +145,7 @@ body , html{
     clear: both;
 }
 
-.table{
+.table,.table2,.table3,.table4{
     position: relative;
     width: 640px;
     height: 640px;
@@ -230,7 +227,7 @@ hr {
 
 
 @media only screen and (max-width : 2700px){
-    .table, .table2{
+    .table,.table2,.table3,.table4{
         width: 400px;
         height: 400px;
     }

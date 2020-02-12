@@ -7,6 +7,7 @@ var room_value;
 var room_action;
 var number_of_games;
 var num_games;
+var cur_game_number;
 var chat = false;
 var game_started = false;
 var get_room_players =false;
@@ -114,7 +115,33 @@ $(document).ready(function(){
         // Enter is pressed
         if (e.key === "Enter") { action_chat_msg();}
     }, false);
+
+    //update game number for each click,i.e. mouse pos or the parent object
+
+
+
+
+
 });
+
+
+$(document).on('click','.table *', function(e){
+    cur_game_number = 1;
+});
+$(document).on('click','.table2 *', function(e){
+    cur_game_number = 2;
+});
+
+$(document).on('click','.table3 *', function(e){
+    cur_game_number = 3;
+});
+
+$(document).on('click','.table4 *', function(e){
+    cur_game_number = 4;
+});
+
+
+
 
 function enterName(){
 
@@ -407,8 +434,12 @@ class checkers_squares {
         this.piece_id = undefined;
 
         this.id.onclick = function () {//Bug->TBW
-            if (game_started) {
+            if (game_started && player_game == cur_game_number) {
                 game.make_move(index);
+            }
+            else if (game_started){
+                alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
+
             }
             else{
                 alert("Game not started. Please wait for the other user to join");
@@ -432,8 +463,12 @@ class checkers{
             this.coordY = square/8 ;
         }
         this.id.onclick = function () {//Bug->TBW
-            if (game_started) {
+            if (game_started && player_game == cur_game_number) {
                 game.show_moves(index, colour);
+            }
+            else if (game_started){
+                alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
+
             }
             else{
                 alert("Game not started. Please wait for the other user to join");
@@ -712,7 +747,7 @@ class Game {
     make_move(index){
         console.log("square clicked");
         user_action = "make_move";
-        var str = {"type" : "make_move","room_action" : "N/A","room_value" : room_value,"sqr_index" : index,"player_id":player_id};
+        var str = {"type" : "make_move","room_action" : "N/A","room_value" : room_value,"sqr_index" : index,"player_id":player_id,"player_game":player_game};
         var json_str = JSON.stringify(str);
         this.socket.send(json_str);
     }
@@ -906,10 +941,6 @@ class Game {
                     }
                     break;
 
-                case "invalid_game_request":
-                    alert("Hold on, you are not playing that game. Any attempt to cheat will eliminate you from the game room");
-                    break;
-
                 case "room_players_data":
                     for (var i=0;i<packet.data.length;i++){
                         update_room_players(packet.data[i].game_id,packet.data[i].game_name,packet.data[i].players_active,packet.data[i].max_permits);
@@ -958,7 +989,7 @@ class Game {
             var check_permits = {"type": "ping"};
             game.send_data(check_permits);
 
-        },3000);
+        },10000);
     }
 
     enter_chat_lobby() {

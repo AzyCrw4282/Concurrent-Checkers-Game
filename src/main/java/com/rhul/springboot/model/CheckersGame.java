@@ -130,17 +130,24 @@ public class CheckersGame {
         session.sendMessage(new TextMessage(room_data));
     }
 
+
+
+    //TBR
     public boolean is_this_player_game(String room_Value,String game_check_value,Player player){
-        //for each and every player check (if > 2 )? False : true -- so other than himself, its nt the game
+        //only 1 player other than himself then nt his game
+        //do, id of the player matches their game_number
+
+
         Room rm = get_room(room_Value);
         int correct_game_plyr = 0;
         for (Player plyr : rm.getPlayers_hm().values()){
-            if (plyr.getGame_number() == Integer.parseInt(game_check_value) && plyr.getId() != player.getId()){
+            if (plyr.getGame_number() != Integer.parseInt(game_check_value) && plyr.getId() != player.getId()){
                 correct_game_plyr++;
             }
         }
         System.out.println("142 "+ correct_game_plyr);
-        return correct_game_plyr != 2;//if 1 its his game,else no
+
+        return correct_game_plyr != 1 ;
     }
 
 }
