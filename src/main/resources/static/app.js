@@ -439,7 +439,6 @@ class checkers_squares {
             }
             else if (game_started){
                 alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
-
             }
             else{
                 alert("Game not started. Please wait for the other user to join");
@@ -468,7 +467,6 @@ class checkers{
             }
             else if (game_started){
                 alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
-
             }
             else{
                 alert("Game not started. Please wait for the other user to join");
@@ -934,6 +932,7 @@ class Game {
                         //use a method to intialize the required games
                         permit_obtained = true;
                         player_game = dict_game_rm[String(user_permit_val)];
+                        cur_game_number = player_game;
                         for(var game_no=1;game_no<=num_games;game_no++){
                             game.initialize_game(game_no);
                             console.log("initialize ",game_no);
