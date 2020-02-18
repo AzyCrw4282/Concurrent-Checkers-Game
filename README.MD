@@ -11,7 +11,7 @@ illustrates 4 games in actions.
 
 ![](/git_images/game_3.png)
 
-![](/git_images/first.png)
+![](/git_images/first.png) ![](/git_images/first.png)
 
 
 ### Requirements
