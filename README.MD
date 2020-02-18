@@ -46,15 +46,15 @@ Mvn spring-boot:run
 
 #### Game Images
 
-#####UI Interface
-![](/git_images/first.png)   [](/git_images/rtyr.png)
+##### UI Interface
+![](/git_images/first.png) [](/git_images/rtyr.png)
 
 
-#####Environment In Action
-![](/git_images/ttt.png)   [](/git_images/hth.png)
+##### Environment In Action
+![](/git_images/ttt.png) [](/git_images/hth.png)
 
-#####All Other Functionalities
-![](/git_images/bgr.png)   [](/git_images/erw.png)
+##### All Other Functionalities
+![](/git_images/bgr.png) [](/git_images/erw.png)
 
 
-![](/git_images/kjy.png)  [](/git_images/yui.png)
+![](/git_images/kjy.png) [](/git_images/yui.png)
