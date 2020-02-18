@@ -11,6 +11,9 @@ illustrates 4 games in actions.
 
 ![](/git_images/game_3.png)
 
+![](/git_images/Annotation 2020-02-18 202924.png)
+
+
 ### Requirements
 ```
 -Java 1.8
