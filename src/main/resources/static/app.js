@@ -119,24 +119,21 @@ $(document).ready(function(){
     //update game number for each click,i.e. mouse pos or the parent object
 
 
-
-
-
 });
 
 
-$(document).on('click','.table *', function(e){
+$(document).on('click','#table *', function(e){
     cur_game_number = 1;
 });
-$(document).on('click','.table2 *', function(e){
+$(document).on('click','#table2 *', function(e){
     cur_game_number = 2;
 });
 
-$(document).on('click','.table3 *', function(e){
+$(document).on('click','#table3 *', function(e){
     cur_game_number = 3;
 });
 
-$(document).on('click','.table4 *', function(e){
+$(document).on('click','#table4 *', function(e){
     cur_game_number = 4;
 });
 
@@ -427,6 +424,8 @@ gameStatus_logs.log = (function (msg) {
     gameStatus.scrollTop = gameStatus.scrollHeight;//scrolls it to height measurement to adjust chatbox
 });
 
+
+
 class checkers_squares {
     constructor(square, index) {
         this.id = square;
@@ -435,7 +434,10 @@ class checkers_squares {
 
         this.id.onclick = function () {//Bug->TBW
             if (game_started && player_game == cur_game_number) {
-                game.make_move(index);
+
+                setTimeout(function () {
+                    if (player_game == cur_game_number) game.make_move(index);
+                },300);
             }
             else if (game_started){
                 alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
@@ -463,7 +465,9 @@ class checkers{
         }
         this.id.onclick = function () {//Bug->TBW
             if (game_started && player_game == cur_game_number) {
-                game.show_moves(index, colour);
+                setTimeout(function () {
+                    if (player_game == cur_game_number) game.show_moves(index, colour);
+                },300);
             }
             else if (game_started){
                 alert("Hold on, you are not playing that game. Any attempts to cheat will eliminate you from the game room");
@@ -484,7 +488,7 @@ class checkers{
         }
         else if (game_no == 2){
             this.id.style.top = y + 'px';
-            this.id.style.left = x+17 + 'px';
+            this.id.style.left = x+2 + 'px';
         }
         else if (game_no == 3){
             this.id.style.top = y + 'px';
@@ -492,7 +496,7 @@ class checkers{
         }
         else if (game_no == 4){
             this.id.style.top = y + 'px';
-            this.id.style.left = x +17 + 'px';
+            this.id.style.left = x +2 + 'px';
         }
     }
 
@@ -506,7 +510,7 @@ class checkers{
         else if (game_no == 2){
             console.log("Game no 2 move");
             this.id.style.top = Y + 'px';
-            let new_x = parseInt(X) + 17;
+            let new_x = parseInt(X) + 2;
             this.id.style.left = new_x + 'px';
         }
         else if (game_no == 3){
@@ -515,7 +519,7 @@ class checkers{
         }
         else if (game_no == 4){
             this.id.style.top = Y + 'px';
-            let new_x = parseInt(X) + 17;
+            let new_x = parseInt(X) + 2;
             this.id.style.left = new_x + 'px';
         }
     }

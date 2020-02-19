@@ -8,8 +8,11 @@ a user who creates a room object and joining users enter the unique id to join
 the game. When the game reaches 2 players the first game starts and when 4 players
 are present then the second game starts. All played concurrently. The image below
 illustrates 4 games in actions.
+### Image Of Game Environment
+Includes: 3 concurrently playable games handling 6 users. Chat system, and game status updater.
+See Imag gallery below.
 
-![](/git_images/game_3.png)
+![](/git_images/new.png)
 
 ### Requirements
 ```
@@ -42,16 +45,16 @@ Mvn spring-boot:run
 
 
 #### Game Images
-UI to handle users creating and joining the room
 
-![](/git_images/game_new_image_1.png)
-
-
-![](/git_images/game_new_image_2.png)
+##### UI Interface
+![](/git_images/first.png) ![](/git_images/rtyr.png)
 
 
-![](/git_images/game_new_image_3.png)
+##### Environment In Action
+![](/git_images/ttt.png) ![](/git_images/hth.png)
 
-Two games in action
+##### All Other Functionalities
+![](/git_images/bgr.png) ![](/git_images/erw.png)
 
-![](/git_images//game_2.PNG)
+
+![](/git_images/kjy.png) ![](/git_images/yui.png)
