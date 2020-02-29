@@ -6,11 +6,10 @@
 A concurrent game that is played through WebSockets. The game is first hosted by
 a user who creates a room object and joining users enter the unique id to join
 the game. When the game reaches 2 players the first game starts and when 4 players
-are present then the second game starts. All played concurrently. The image below
-illustrates 4 games in actions.
+are present then the second game starts, the same logic follows upto 4 games. All games are played concurrently. The image below illustrates 4 games in actions.
 ### Image Of Game Environment
 Includes: 3 concurrently playable games handling 6 users. Chat system, and game status updater.
-See Imag gallery below.
+See Image gallery below.
 
 ![](/git_images/new.png)
 
@@ -40,7 +39,7 @@ Mvn spring-boot:run
 - Application with Spring Boot, MVN, JAVA 8 & WebSockets
 - Illustrates concurrency by using multi threads, locking, semaphore, sessions, concurrent Data-structures
 - Scheduled threads handle back-end operations when a request is made by the user
-- It's a stateful app, i.e. uses browser session id to allocate users after page load
+- It's a stateful app, i.e. uses browser session id to allocate user after page load
 - Developed TDD test cases to check all functionalities in the game
 
 
