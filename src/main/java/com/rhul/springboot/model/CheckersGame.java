@@ -64,8 +64,6 @@ public class CheckersGame {
         return rm_obj;
     }
 
-    //This method returns. This method prioritizes room in which there are odd players meaning when another joins a game can be started
-    //returns null, or in worst case room with even players
     public String get_room_to_join(){
         String rm_name = null;
 
@@ -131,8 +129,6 @@ public class CheckersGame {
     }
 
 
-
-    //TBR
     public boolean is_this_player_game(String room_Value,String game_check_value,Player player){
         //only 1 player other than himself then nt his game
         //do, id of the player matches their game_number

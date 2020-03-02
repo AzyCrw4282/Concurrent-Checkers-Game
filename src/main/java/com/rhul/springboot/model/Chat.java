@@ -4,15 +4,8 @@ import com.rhul.springboot.utils.BugsnagConfig;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**This class will hold variables and methods requires for the chat system. This functionality to be worked on in 2nd term.
+/**This class will hold variables and methods requires for the chat system.
  * @author Azky
- */
-
-/** -> Methods to include
- *
- * broadecast msg->for all the existing snakes send a msgs
- *
- *
  */
 
 public class Chat  {

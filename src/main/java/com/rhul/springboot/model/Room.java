@@ -64,7 +64,6 @@ public class Room {
         }
     }
 
-    //if it's an odd player and within less than n games start the game response
     public synchronized void game_ready_to_start(int plyr_id,String type){
         //2,4,6,8 -> all joining players
         if (plyr_id % 2 == 0){

@@ -30,7 +30,6 @@ public class DatabasePgSQL {
         ResultSet rs = stmt.executeQuery("SELECT * FROM leaderboard ORDER BY gamescompeted DESC LIMIT 10");
         System.out.println("line 31 "+ rs);
         StringBuilder sb = new StringBuilder();
-        //Add it to a 2d array method and send it to user
 
         while (rs.next()){
               sb.append(String.format("{\"user_id\": \"%s\", \"games_competed\": \"%s\",\"win_percent\":\"%s\" ,\"long_win_streak\": \"%s\",\"game_ranking\": \"%s\"}",rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5)));
@@ -50,29 +49,10 @@ public class DatabasePgSQL {
         stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) ,gamesCompeted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");
     }
 
-
-
     public static void add_rows()throws SQLException{
         Statement stmt = cn.createStatement();
         stmt.executeUpdate("");
 
-
-
     }
-
-
-    public static void remove_rows(){
-
-
-
-    }
-
-//requires user id to update a cell for that given row
-    public static void update_cell(String id){
-
-
-
-    }
-
 
 }

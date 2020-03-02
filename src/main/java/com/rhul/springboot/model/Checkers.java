@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.sql.SQLException;
 
 /** This class handles all board related functionalities. An instance is user for each game, so 2 players use 1 game.
- * Some of the algorithms that check and performs checker move has been taken and adpted from the repo of the mentioned author.
+ * Some of the algorithms that check and performs checker move has been taken and adopted from the repo of the mentioned author.
  * @author Azky & Elise(From github)
  */
 @Getter @Setter @NoArgsConstructor
@@ -350,8 +350,6 @@ public class Checkers {
     }
 
     public boolean attack_move(Checkers piece, Room rm){
-
-
         up_left=0;
         up_right=0;
         down_left=0;
@@ -430,7 +428,6 @@ public class Checkers {
             b_checkers[selected_piece].occupiedSquare += nSquare;
 
         }
-
     }
 
     public  void eliminate_check(int index,Room rm) {
