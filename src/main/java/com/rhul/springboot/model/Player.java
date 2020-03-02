@@ -18,8 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * this is where scheduled thread performs an operation if it's requested by the user.
  * @author Azky
  */
-
-
 @Getter @Setter
 public class Player {
 

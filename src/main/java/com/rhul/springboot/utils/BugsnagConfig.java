@@ -6,6 +6,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+
+/**
+ * This class implements the BugsNag error reporting system using its api.
+ */
 @Configuration
 @Import(BugsnagSpringConfiguration.class)
 public class BugsnagConfig {

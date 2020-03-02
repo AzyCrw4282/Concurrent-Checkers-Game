@@ -50,29 +50,10 @@ public class DatabasePgSQL {
         stmt.executeUpdate("CREATE TABLE leaderboard (user varchar(255) ,gamesCompeted int,WinPerc varchar(255),LongWinStreak int,GameRank varchar(255))");
     }
 
-
-
     public static void add_rows()throws SQLException{
         Statement stmt = cn.createStatement();
         stmt.executeUpdate("");
 
-
-
     }
-
-
-    public static void remove_rows(){
-
-
-
-    }
-
-//requires user id to update a cell for that given row
-    public static void update_cell(String id){
-
-
-
-    }
-
 
 }
