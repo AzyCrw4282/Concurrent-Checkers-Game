@@ -78,14 +78,12 @@ var dict_game_rm = {
 };
 
 $(document).ready(function(){
-    //error with this function. may need to remove this
-    // document.getElementById("body_id").src = "bkground.png";
 
     document.body.style.zoom="100%";//sets default zoom in level
 
     document.getElementsByTagName("BODY")[0].onresize = function(){
 
-        getDimension();//vars here will also need to eb updated on f/e
+        getDimension();
         var screen_check = cur_big_screen ;
 
         if(windowWidth < 2550){
@@ -106,7 +104,6 @@ $(document).ready(function(){
 
     document.getElementById("msg_id").addEventListener("keydown", function(e) {
         if (!e) { var e = window.event; }
-        // Enter is pressed
         if (e.key === "Enter") { action_chat_msg();}
     }, false);
 });
@@ -384,7 +381,6 @@ chatbox_logs.log = (function (msg) {
 
     //optimise the chat box
     while(chatbox.childNodes.length > 20){
-        //remove to keep chat in place
         chatbox.removeChild(chatbox.firstChild);//removes the top element
     }
     chatbox.scrollTop = chatbox.scrollHeight;//scrolls it to height measurement to adjust chatbox
@@ -403,7 +399,6 @@ gameStatus_logs.log = (function (msg) {
 
     //optimise the chat box
     while(gameStatus.childNodes.length > 20){
-        //remove to keep chat in place
         gameStatus.removeChild(gameStatus.firstChild);//removes the top element
     }
     gameStatus.scrollTop = gameStatus.scrollHeight;//scrolls it to height measurement to adjust chatbox
