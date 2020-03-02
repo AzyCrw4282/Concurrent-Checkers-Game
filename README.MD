@@ -1,6 +1,6 @@
 # Concurrent Checkers Game for FYP@RHUL 19/20
 [![Build Status](https://api.travis-ci.com/AzyCrw4282/private_project.svg?token=e3aJwvFiyAMqAUsK6B24&branch=master)](https://travis-ci.com/AzyCrw4282/private_project)
-
+<a href="https://trello.com/b/czSy3gLz/chess"><img src="https://img.shields.io/badge/Project-Trello-brightgreen.svg" /></a>
 ## Overview
 
 A concurrent game that is played through WebSockets. The game is first hosted by

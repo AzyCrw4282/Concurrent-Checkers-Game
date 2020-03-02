@@ -350,8 +350,6 @@ public class Checkers {
     }
 
     public boolean attack_move(Checkers piece, Room rm){
-
-
         up_left=0;
         up_right=0;
         down_left=0;
@@ -430,7 +428,6 @@ public class Checkers {
             b_checkers[selected_piece].occupiedSquare += nSquare;
 
         }
-
     }
 
     public  void eliminate_check(int index,Room rm) {

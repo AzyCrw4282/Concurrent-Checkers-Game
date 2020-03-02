@@ -258,7 +258,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        //TBD
+
 
     }
 
