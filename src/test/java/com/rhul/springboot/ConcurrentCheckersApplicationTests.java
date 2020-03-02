@@ -15,7 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
-//To add Behaviour tests and others.....
 
 /** This is the main test class that performs all TDD tests required for all functionalities in the program.
  * @author Azky
