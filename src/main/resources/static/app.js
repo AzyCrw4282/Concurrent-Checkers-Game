@@ -37,18 +37,13 @@ var white_checker_class_g2_2 = document.getElementsByClassName("white_checker_g2
 var black_checker_class_g2_2 = document.getElementsByClassName("black_checker_g2_2");
 
 var moveSound = document.getElementById("moveSound");
-var winSound = document.getElementById("winSound");
 var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 var windowWidth =  window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 var moveLength = 50 ;
 var moveDeviation = 6;
-var moveLength2 = 150 ;
-var moveDeviation2 = 7;
 
 var cur_big_screen = 1;//takes in the curr pos of the screen
 var cur_colour;
-//appended 2 represents the 2nd game, whilst without it is tfor the first game
-//4 game representation
 var cur_block = [];
 var cur_w_checker = [];
 var cur_b_checker = [];
@@ -78,7 +73,6 @@ var b_checker4 = [];
 var the_checker4 = w_checker4 ;
 var user_action;
 
-//Maps player to a game
 var dict_game_rm = {
     "1" : 1, "2" : 1, "3" : 2, "4" : 2, "5" : 3, "6" : 3, "7" : 4, "8" : 4,
 };
@@ -115,10 +109,6 @@ $(document).ready(function(){
         // Enter is pressed
         if (e.key === "Enter") { action_chat_msg();}
     }, false);
-
-    //update game number for each click,i.e. mouse pos or the parent object
-
-
 });
 
 
@@ -136,8 +126,6 @@ $(document).on('click','#table3 *', function(e){
 $(document).on('click','#table4 *', function(e){
     cur_game_number = 4;
 });
-
-
 
 
 function enterName(){
@@ -215,13 +203,10 @@ function update_leaderboard(user_id,games_competed,win_per,win_streak,rank){
     cell_i.innerHTML = win_streak;
     cell_i = row.insertCell(4);
     cell_i.innerHTML = rank;
-    // cell_i.innerHTML = '<button class="btn btn-primary" type="button" value = "Join Room" onClick=join_a_room('"+ cell_id+'") </button>';
-    // cell_i.innerHTML  = '<button class="btn btn-primary" style="width:120px;height: 50px" type="button" onclick="join_selected_room(\''+game_room+'\')">Join</button>';
     leaderbd_row_counter +=1;
 }
 
 function update_room_players(id,name,num_of_players,max_permits){
-    //here should update all the rows for the fetched records
     var game_room = ""+name;
     var table =document.getElementById("room_players_data");
     var row = table.insertRow(room_row_counter);
@@ -542,7 +527,6 @@ class Game {
     initialize_game(game_no) {
 
         this.set_game_data(game_no);
-        // console.log(square_class,block,w_checker,b_checker,white_checker_class,black_checker_class,game_no);
         /*===============initializingThePlayingFields =================================*/
         for (var i = 1; i <= 64; i++)
         {
@@ -658,22 +642,6 @@ class Game {
 
         if (return_checker) return (the_cur_checker.cur);
     }
-
-    // change_turns(game_num){
-    //     // console.log(w_checker);
-    //     the_cur_checker = this.update_the_checker(game_num,true);
-    //     if (the_cur_checker.cur  == w_checker){
-    //         console.log("602");
-    //         the_cur_checker.cur = b_checker;
-    //         document.getElementById("cur_player_img_id").src = "black_checker.jpg"
-    //     }
-    //     else if (the_cur_checker.cur  ==  b_checker){
-    //         console.log("607");
-    //         the_cur_checker.cur = w_checker;
-    //         document.getElementById("cur_player_img_id").src = "white_checker.png";
-    //     }
-    //     this.set_the_checker_values(game_num);
-    // }
 
     //sets the correct checker value
     change_turns(game_num){
@@ -974,8 +942,6 @@ class Game {
         };
     }
 
-    /*only runs once and communicates the needed msg at first and does all needed once in the case statements*/
-    //fix error on this
     open() { //
         var msg = {"type": "user", "user_action":user_action, "room_action" : room_action,"room_value" : room_value, "plyr_name" : user_name, "n_games" : number_of_games};
         var json_str = JSON.stringify(msg);
