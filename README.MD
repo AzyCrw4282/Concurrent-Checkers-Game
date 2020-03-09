@@ -15,7 +15,7 @@ Includes: 3 concurrently playable games handling 6 users. Chat system, and game 
 See Image gallery below.
 
 Click on Image to watch the video
-[![IMAGE ALT TEXT HERE](/git_images/new.png)]((https://youtu.be/9vP_O2__9DU)
+[![IMAGE ALT TEXT HERE](/git_images/new.png)](https://youtu.be/9vP_O2__9DU)
 
 ### Requirements
 ```
