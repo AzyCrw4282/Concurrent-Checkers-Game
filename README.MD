@@ -14,8 +14,8 @@ are present then the second game starts, the same logic follows upto 4 games. Al
 Includes: 3 concurrently playable games handling 6 users. Chat system, and game status updater.
 See Image gallery below.
 
-![](/git_images/new.png)
-![Game Video](https://youtu.be/9vP_O2__9DU)
+Click on Image to watch the video
+[![IMAGE ALT TEXT HERE](/git_images/new.png)]((https://youtu.be/9vP_O2__9DU)
 
 ### Requirements
 ```
