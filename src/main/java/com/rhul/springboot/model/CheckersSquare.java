@@ -20,14 +20,10 @@ public class CheckersSquare {
         this.id = square_id;
         this.occupied = false;
         this.pieceId = null;
-
-
     }
 
     public void onClick() throws Exception{
-
         Checkers checkers_obj = new Checkers();
-
     }
 
     public void setOccupied(){

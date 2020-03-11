@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.net.URISyntaxException;
 import java.sql.*;
 
-/**This class is responsible for maintaining user record in the leaderboard. Held in a remote db in heroku
+/**This class is responsible for maintaining user record in the leaderboard. Data are held in a remote database hosted by heroku.
  * @Author Azky Mubarack
  *
  */
@@ -24,7 +24,6 @@ public class LeaderBoard {
     private String game_ranking;
     private String games_lost;
     private String cur_win_streak;
-//    private static DatabasePgSQL db = new DatabasePgSQL();
     private static Connection cn;
 
     public LeaderBoard(String player_name) throws URISyntaxException, SQLException {
@@ -63,7 +62,7 @@ public class LeaderBoard {
         else return false;
     }
 
-    /*
+    /* Rank logic
     <20 - newbie
     <50 - Hero
     <150 - Veteran

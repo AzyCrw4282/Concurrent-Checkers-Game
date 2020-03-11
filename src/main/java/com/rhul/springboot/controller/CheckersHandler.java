@@ -27,8 +27,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
 
     private static final String game_attribute = "checkers";
-    private static final String player_white = "White";
-    private static final String player_black = "black";
     private ReentrantLock Lk = new ReentrantLock();
     private WebSocketSession s;
     private Checkers checks_obj;
@@ -37,8 +35,6 @@ public class CheckersHandler extends TextWebSocketHandler {
     CheckersGame game = new CheckersGame();
     DatabasePgSQL dbpgsql = new DatabasePgSQL();
     Executor executor = Executors.newFixedThreadPool(20);
-    String cur_plyr = null;
-    int piece_index = 0;
 
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
@@ -58,10 +54,6 @@ public class CheckersHandler extends TextWebSocketHandler {
                           try{
                               String msg;
                               System.out.println("waiting for lock");
-
-//                              if (game.player_ids.get()> 8){
-//                                  game.player_ids.set(1);
-//                              }
 
                               int player_id = game.player_ids.getAndIncrement();
                               Player plyr = new Player(player_id,json.getString("plyr_name"),session);
@@ -220,7 +212,6 @@ public class CheckersHandler extends TextWebSocketHandler {
 
                 case "join_matchmaking"://makes the request and adds the player to a queue and finds an empty room with permit and f/e request made
                     matchmaking_queue.add(session);
-                    //find a room and send that to the f/e as the value. And player session held in queue.
                     mesg = "";
                     String rm_name = game.get_room_to_join();
                     int n_games = game.get_room(rm_name).getN_games();
@@ -257,7 +248,6 @@ public class CheckersHandler extends TextWebSocketHandler {
     }
 
     public Player get_player_obj(int id){
-
         for (Player p : Player.players_hm.values()){
             if (p.getId() == id){
                 return p;
@@ -268,7 +258,7 @@ public class CheckersHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        //TBD
+
 
     }
 
