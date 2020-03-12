@@ -49,10 +49,11 @@ public class Room {
             else {
                 if (smphore.tryAcquire(5, TimeUnit.SECONDS)) {
                     players_count.getAndIncrement();
-                    players_hm.put(players_count.get(), playr);//error here with value assignment
-                    playr.setGame_number((int) Math.round(playr.getId()/ 2.0));
+                    System.out.println("52 "+ players_count);//TBF
+                    players_hm.put(players_count.get(), playr);
+                    playr.setGame_number((int) Math.round(players_count.get()/ 2.0));
                     apply_game_status(this,playr.getName(),players_count.get(),false,null);
-                    game_ready_to_start(playr.getId(),"player_joined");//error here for player_did
+                    game_ready_to_start(players_count.get(),"player_joined");//error here for player_did
                     return true;
                 }
             }
@@ -69,7 +70,7 @@ public class Room {
         if (plyr_id % 2 == 0){
             if (type == "start_game") room_games_status.put(String.valueOf(Math.round(plyr_id/2.0)),true);
             for (Player plyr : players_hm.values()){
-                if (plyr.getId() == plyr_id | plyr.getId()+1 == plyr_id ){//player or the opponent
+                if (plyr.getGame_number()*2-1 == plyr_id-1 | plyr.getGame_number()*2 == plyr_id ){//error here
                     String new_msg = String.format("{\"type\": \"%s\",\"data\": \"%d\",\"plyr_id\": \"%d\"}",type,Math.round(plyr_id/2.0),plyr.getId());
                     plyr.sendMessage(new_msg);
                 }
