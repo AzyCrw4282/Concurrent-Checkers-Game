@@ -773,8 +773,8 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
         user_action = "initialize";
-         // this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
-          this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
+          this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
+          //this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
 
         /*startTheConnection*/
         this.socket.onopen = () => {
