@@ -627,7 +627,7 @@ class Game {
         //once notifified, f/e changes applied
     }
 
-    //need to achieve dynamic behaviour with this
+//need to achieve dynamic behaviour with this
     update_the_checker(game_num,return_checker){
         console.log(the_checker1,the_checker2,the_checker3,the_checker4);//latter values remains white and not changing it
         if (game_num == 1) the_cur_checker.cur = the_checker1;
@@ -638,17 +638,27 @@ class Game {
         if (return_checker) return (the_cur_checker.cur);
     }
 
+    negate_checker_player(game_num){
+        if (game_num == 1) the_cur_checker.cur == w_checker? the_cur_checker.cur = b_checker : the_cur_checker.cur = w_checker;
+        if (game_num == 2) the_cur_checker.cur == w_checker? the_cur_checker.cur = b_checker2 : the_cur_checker.cur = w_checker2;
+        if (game_num == 3) the_cur_checker.cur == w_checker? the_cur_checker.cur = b_checker3 : the_cur_checker.cur = w_checker3;
+        if (game_num == 4) the_cur_checker.cur == w_checker? the_cur_checker.cur = b_checker4 : the_cur_checker.cur = w_checker4;
+    }
+
+
     //sets the correct checker value
     change_turns(game_num){
         console.log(the_cur_checker.cur,game_num);
         if (game_num == 1){
             if (the_cur_checker.cur == w_checker ){
+                console.log("line 645");
                 document.getElementById("cur_player_img_id").src = "black_checker.jpg";
-                the_cur_checker.cur == b_checker;
+                the_cur_checker.cur = b_checker;
                 the_checker1 = b_checker;
             }
             else{
-                the_cur_checker.cur == w_checker;
+                console.log("line 652");
+                the_cur_checker.cur = w_checker;
                 the_checker1 = w_checker;
                 document.getElementById("cur_player_img_id").src = "white_checker.png";
             }
@@ -657,12 +667,12 @@ class Game {
         if (game_num == 2){
             if (the_cur_checker.cur == w_checker2 ){
                 document.getElementById("cur_player_img_id2").src = "black_checker.jpg";
-                the_cur_checker.cur == b_checker2;
+                the_cur_checker.cur = b_checker2;
                 the_checker2= b_checker2;
 
             }
             else{
-                the_cur_checker.cur == w_checker2;
+                the_cur_checker.cur = w_checker2;
                 the_checker2 = w_checker2;
                 document.getElementById("cur_player_img_id2").src = "white_checker.png";
             }
@@ -671,11 +681,11 @@ class Game {
         if (game_num == 3){
             if (the_cur_checker.cur == w_checker3 ){
                 document.getElementById("g2_cur_player_img_id").src = "black_checker.jpg";
-                the_cur_checker.cur == b_checker3;
+                the_cur_checker.cur = b_checker3;
                 the_checker3 = b_checker3;
             }
             else{
-                the_cur_checker.cur == w_checker3;
+                the_cur_checker.cur = w_checker3;
                 the_checker3= w_checker3;
                 document.getElementById("g2_cur_player_img_id").src = "white_checker.png";
             }
@@ -684,12 +694,12 @@ class Game {
         if (game_num == 4){
             if (the_cur_checker.cur == w_checker4 ){
                 document.getElementById("g2_cur_player_img_id2").src = "black_checker.jpg";
-                the_cur_checker.cur == b_checker4;
+                the_cur_checker.cur = b_checker4;
                 the_checker4 = b_checker4;
 
             }
             else{
-                the_cur_checker.cur == w_checker4;
+                the_cur_checker.cur = w_checker4;
                 the_checker4 = w_checker4;
                 document.getElementById("g2_cur_player_img_id2").src = "white_checker.png";
             }
@@ -763,8 +773,8 @@ class Game {
     /*connect to the server and define the socket methods*/
     connect(msg_data) {
         user_action = "initialize";
-         this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
-        //   this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
+         // this.socket = new WebSocket("wss://springboot21.herokuapp.com/springboot");
+          this.socket = new WebSocket("ws://127.0.0.1:8080/springboot");//https:springboot21.herokuapp.com/
 
         /*startTheConnection*/
         this.socket.onopen = () => {
@@ -820,13 +830,15 @@ class Game {
                     this.move_attack(index,game_move);
                     break;
 
-                case 'Eliminate_Piece':
+                case 'Eliminate_Piece'://cur implementation means that double moves are not possible
                     console.log("Piece elimination");
                     let elim_piece_id = packet.data;
                     var game_num = packet.game_no;
-                    this.set_game_data(game_num);
+                    // this.set_game_data(game_num); no affect in the logic
+                    console.log(the_cur_checker.cur);//may need to set it to opponene here
                     this.update_the_checker(game_num,false);
                     the_cur_checker.cur[elim_piece_id].id.style.display = "none";
+                    this.negate_checker_player(game_num);
                     this.change_turns(game_num);
                     break;
 
@@ -840,7 +852,7 @@ class Game {
                     console.log(the_cur_checker.cur);
                     the_cur_checker.cur[piece_id].move_coords(x_coord,y_coord,game_no);
                     this.change_turns(game_no);
-                    console.log(the_cur_checker.cur);
+                    console.log(the_cur_checker.cur,b_checker);
                     break;
 
                 case "create_room_resp":
