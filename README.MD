@@ -9,7 +9,7 @@
 A concurrent game that is played through WebSockets. The game is first hosted by
 a user who creates a room object and joining users enter the unique id to join
 the game. When the game reaches 2 players the first game starts and when 4 players
-are present then the second game starts, the same logic follows upto 4 games. All games are played concurrently. The image below illustrates 4 games in actions.
+are present then the second game starts, the same logic follows upto 4 games and thus handling 8 concurrent players. All games are played concurrently. The image below illustrates 3 games in actions.
 ### Image Of Game Environment
 Includes: 3 concurrently playable games handling 6 users. Chat system, and game status updater.
 See Image gallery below.
