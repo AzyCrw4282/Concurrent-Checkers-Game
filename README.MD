@@ -59,7 +59,7 @@ Mvn spring-boot:run
 ##### Environment In Action
 ![](/git_images/ttt.png) ![](/git_images/hth.png)
 
-##### All Other Functionalities
+##### All Other Functionalities (Chat system, Leaderboard)
 ![](/git_images/bgr.png) ![](/git_images/erw.png)
 
 
