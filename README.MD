@@ -17,8 +17,6 @@ See Image gallery below.
 Click on Image to watch the video
 [![IMAGE ALT TEXT HERE](/git_images/Picture1.png)](https://youtu.be/9vP_O2__9DU)
 
-![](/git_images/first.png)        ![](/git_images/first.png)
-
 
 ### Requirements
 ```
@@ -48,6 +46,16 @@ Mvn spring-boot:run
 - Scheduled threads handle back-end operations when a request is made by the user
 - It's a stateful app, i.e. uses browser session id to allocate user after page load
 - Developed TDD test cases to check all functionalities in the game
+
+
+#### Features
+
+- Play up to 4 games involving 8 players
+- Chatbox to communicate with the whole room
+- Status updater on the moves being made
+- Matchmaking allocation when you have no one to play with :)
+- Leaderboard on active and highly performing users
+- Global chat to message with people in the lobby
 
 
 #### Game Images
